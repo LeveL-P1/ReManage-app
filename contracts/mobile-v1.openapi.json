@@ -1,0 +1,652 @@
+{
+  "components": {
+    "schemas": {
+      "LogoutMobileSessionDto": {
+        "properties": {
+          "renewableCredential": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "renewableCredential"
+        ],
+        "type": "object"
+      },
+      "LogoutMobileSessionResponseDto": {
+        "properties": {
+          "loggedOut": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "loggedOut"
+        ],
+        "type": "object"
+      },
+      "MobileBootstrapDto": {
+        "properties": {
+          "activeRole": {
+            "enum": [
+              "resident",
+              "guard"
+            ],
+            "type": "string"
+          },
+          "approvedRoles": {
+            "items": {
+              "enum": [
+                "resident",
+                "guard"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/MobileFeatureFlagsDto"
+          },
+          "notificationPolicy": {
+            "$ref": "#/components/schemas/MobileNotificationPolicyDto"
+          },
+          "permissions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "society": {
+            "$ref": "#/components/schemas/MobileBootstrapSocietyDto"
+          },
+          "user": {
+            "$ref": "#/components/schemas/MobileBootstrapUserDto"
+          }
+        },
+        "required": [
+          "user",
+          "society",
+          "approvedRoles",
+          "activeRole",
+          "permissions",
+          "featureFlags",
+          "notificationPolicy"
+        ],
+        "type": "object"
+      },
+      "MobileBootstrapSocietyDto": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object"
+      },
+      "MobileBootstrapUserDto": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ],
+        "type": "object"
+      },
+      "MobileCommunityNotificationPolicyDto": {
+        "properties": {
+          "configurable": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          },
+          "enabled": {
+            "enum": [
+              false
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled",
+          "configurable"
+        ],
+        "type": "object"
+      },
+      "MobileCriticalNotificationPolicyDto": {
+        "properties": {
+          "configurable": {
+            "enum": [
+              false
+            ],
+            "type": "boolean"
+          },
+          "enabled": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled",
+          "configurable"
+        ],
+        "type": "object"
+      },
+      "MobileFeatureFlagsDto": {
+        "properties": {
+          "guardOffline": {
+            "enum": [
+              false
+            ],
+            "type": "boolean"
+          },
+          "guardShell": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          },
+          "nativePush": {
+            "enum": [
+              false
+            ],
+            "type": "boolean"
+          },
+          "residentShell": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "residentShell",
+          "guardShell",
+          "nativePush",
+          "guardOffline"
+        ],
+        "type": "object"
+      },
+      "MobileInstallationDto": {
+        "properties": {
+          "appVersion": {
+            "example": "1.0.0",
+            "type": "string"
+          },
+          "deviceName": {
+            "example": "Pixel 9",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "platform": {
+            "enum": [
+              "android",
+              "ios"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "appVersion"
+        ],
+        "type": "object"
+      },
+      "MobileNotificationPolicyDto": {
+        "properties": {
+          "community": {
+            "$ref": "#/components/schemas/MobileCommunityNotificationPolicyDto"
+          },
+          "critical": {
+            "$ref": "#/components/schemas/MobileCriticalNotificationPolicyDto"
+          },
+          "transactional": {
+            "$ref": "#/components/schemas/MobileTransactionalNotificationPolicyDto"
+          }
+        },
+        "required": [
+          "critical",
+          "transactional",
+          "community"
+        ],
+        "type": "object"
+      },
+      "MobileRoleSwitchDto": {
+        "properties": {
+          "accessExpiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "accessToken": {
+            "type": "string"
+          },
+          "bootstrap": {
+            "$ref": "#/components/schemas/MobileBootstrapDto"
+          }
+        },
+        "required": [
+          "accessToken",
+          "accessExpiresAt",
+          "bootstrap"
+        ],
+        "type": "object"
+      },
+      "MobileSessionIssueDto": {
+        "properties": {
+          "accessExpiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "accessToken": {
+            "type": "string"
+          },
+          "activeRole": {
+            "enum": [
+              "resident",
+              "guard"
+            ],
+            "type": "string"
+          },
+          "deviceSessionId": {
+            "type": "string"
+          },
+          "renewableCredential": {
+            "type": "string"
+          },
+          "renewableExpiresAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "accessToken",
+          "accessExpiresAt",
+          "renewableCredential",
+          "renewableExpiresAt",
+          "deviceSessionId",
+          "activeRole"
+        ],
+        "type": "object"
+      },
+      "MobileTransactionalNotificationPolicyDto": {
+        "properties": {
+          "configurable": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          },
+          "enabled": {
+            "enum": [
+              true
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled",
+          "configurable"
+        ],
+        "type": "object"
+      },
+      "OtpRequestAcceptedDto": {
+        "properties": {
+          "accepted": {
+            "type": "boolean"
+          },
+          "challengeId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "accepted",
+          "challengeId"
+        ],
+        "type": "object"
+      },
+      "OtpRequestDto": {
+        "properties": {
+          "identifier": {
+            "format": "email",
+            "type": "string"
+          },
+          "installation": {
+            "$ref": "#/components/schemas/MobileInstallationDto"
+          }
+        },
+        "required": [
+          "identifier",
+          "installation"
+        ],
+        "type": "object"
+      },
+      "OtpVerifyDto": {
+        "properties": {
+          "challengeId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "code": {
+            "pattern": "^\\d{6}$",
+            "type": "string"
+          },
+          "installation": {
+            "$ref": "#/components/schemas/MobileInstallationDto"
+          }
+        },
+        "required": [
+          "challengeId",
+          "code",
+          "installation"
+        ],
+        "type": "object"
+      },
+      "PasswordLoginRequestDto": {
+        "properties": {
+          "identifier": {
+            "format": "email",
+            "type": "string"
+          },
+          "installation": {
+            "$ref": "#/components/schemas/MobileInstallationDto"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "identifier",
+          "password",
+          "installation"
+        ],
+        "type": "object"
+      },
+      "RefreshMobileSessionDto": {
+        "properties": {
+          "renewableCredential": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "renewableCredential"
+        ],
+        "type": "object"
+      },
+      "UpdateMobileActiveRoleDto": {
+        "properties": {
+          "role": {
+            "enum": [
+              "resident",
+              "guard"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "role"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {},
+    "description": "Web, backend, and dedicated ReManage mobile contracts.",
+    "title": "Society Connect API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/mobile/v1/auth/otp/request": {
+      "post": {
+        "operationId": "MobileAuthController_requestOtp",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpRequestAcceptedDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "mobile-auth"
+        ]
+      }
+    },
+    "/api/mobile/v1/auth/otp/verify": {
+      "post": {
+        "operationId": "MobileAuthController_verifyOtp",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerifyDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileSessionIssueDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "mobile-auth"
+        ]
+      }
+    },
+    "/api/mobile/v1/auth/password": {
+      "post": {
+        "operationId": "MobileAuthController_password",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordLoginRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileSessionIssueDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "mobile-auth"
+        ]
+      }
+    },
+    "/api/mobile/v1/session/active-role": {
+      "put": {
+        "operationId": "MobileSessionController_activeRole",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMobileActiveRoleDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileRoleSwitchDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-session"
+        ]
+      }
+    },
+    "/api/mobile/v1/session/bootstrap": {
+      "get": {
+        "operationId": "MobileSessionController_bootstrap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBootstrapDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-session"
+        ]
+      }
+    },
+    "/api/mobile/v1/session/logout": {
+      "post": {
+        "operationId": "MobileSessionController_logout",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutMobileSessionDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutMobileSessionResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "mobile-session"
+        ]
+      }
+    },
+    "/api/mobile/v1/session/refresh": {
+      "post": {
+        "operationId": "MobileSessionController_refresh",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshMobileSessionDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileSessionIssueDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "mobile-session"
+        ]
+      }
+    }
+  },
+  "servers": [],
+  "tags": []
+}

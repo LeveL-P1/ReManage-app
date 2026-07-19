@@ -50,6 +50,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --runInBand",
+    "api:sync": "node scripts/sync-api-contract.mjs && openapi-typescript contracts/mobile-v1.openapi.json -o src/platform/api/generated/mobile-v1.ts",
+    "api:check": "node scripts/sync-api-contract.mjs --check",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "bundle:check": "expo export --platform all"
