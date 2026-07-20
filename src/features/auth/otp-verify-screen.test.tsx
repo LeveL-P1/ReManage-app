@@ -2,6 +2,7 @@ import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
 
 import { SessionContext, type SessionContextValue } from "@/platform/auth/session-provider";
+import { fakeBootstrap } from "@/testing/fakes";
 
 import { OtpVerifyScreen } from "./otp-verify-screen";
 
@@ -12,7 +13,7 @@ function createSession(overrides: Partial<SessionContextValue> = {}): SessionCon
     signInWithPassword: jest.fn(async () => undefined),
     requestOtp: jest.fn(async () => ({ challengeId: "opaque-challenge-id" })),
     verifyOtp: jest.fn(async () => undefined),
-    switchRole: jest.fn(async () => undefined),
+    switchRole: jest.fn(async () => fakeBootstrap("resident")),
     logout: jest.fn(async () => undefined),
     ...overrides,
   };

@@ -22,9 +22,9 @@ export function RoleSwitcher() {
     setError(null);
     setPendingRole(targetRole);
     try {
-      await switchRole(targetRole);
+      const bootstrap = await switchRole(targetRole);
       queryClient.clear();
-      router.replace(targetRole === "resident" ? "/(resident)" : "/(guard)");
+      router.replace(bootstrap.activeRole === "resident" ? "/(resident)" : "/(guard)");
     } catch {
       setError("We could not switch roles. Please try again.");
     } finally {

@@ -41,7 +41,7 @@ function createProviderController(): { controller: SessionController; restore: j
       signInWithPassword: async () => undefined,
       requestOtp: async () => ({ challengeId: "challenge-1" }),
       verifyOtp: async () => undefined,
-      switchRole: async () => undefined,
+      switchRole: async () => fakeBootstrap("resident"),
       logout: async () => undefined,
     },
   };
@@ -244,7 +244,7 @@ describe("SessionController", () => {
 
     const switching = controller.switchRole("resident");
     expect(controller.getState()).toEqual({ status: "switching_role", bootstrap: initialBootstrap });
-    await switching;
+    await expect(switching).resolves.toEqual(serverBootstrap);
 
     expect(controller.getState()).toEqual({ status: "authenticated", bootstrap: serverBootstrap });
     await controller.switchRole("guard");

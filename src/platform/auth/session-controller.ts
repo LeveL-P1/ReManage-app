@@ -1,4 +1,4 @@
-import type { MobileApi, MobileRole, SessionIssue } from "@/platform/api/mobile-api-client";
+import type { Bootstrap, MobileApi, MobileRole, SessionIssue } from "@/platform/api/mobile-api-client";
 
 import type { CredentialStore } from "./credential-store";
 import { getOrCreateInstallation, type MobileInstallation } from "./installation";
@@ -11,7 +11,7 @@ export interface SessionController {
   signInWithPassword(identifier: string, password: string): Promise<void>;
   requestOtp(identifier: string): Promise<{ challengeId: string }>;
   verifyOtp(challengeId: string, code: string): Promise<void>;
-  switchRole(role: MobileRole): Promise<void>;
+  switchRole(role: MobileRole): Promise<Bootstrap>;
   logout(): Promise<void>;
 }
 
@@ -41,7 +41,7 @@ export class MobileSessionController implements SessionController {
   private refreshGeneration: number | null = null;
   private restoreInFlight: Promise<void> | null = null;
   private restoreGeneration: number | null = null;
-  private roleSwitchInFlight: Promise<void> | null = null;
+  private roleSwitchInFlight: Promise<Bootstrap> | null = null;
   private sessionGeneration = 0;
   private credentialMutations: Promise<void> = Promise.resolve();
   private logoutInFlight: Promise<void> | null = null;
@@ -141,7 +141,7 @@ export class MobileSessionController implements SessionController {
     }
   }
 
-  async switchRole(role: MobileRole): Promise<void> {
+  async switchRole(role: MobileRole): Promise<Bootstrap> {
     if (this.roleSwitchInFlight) throw new Error("A role switch is already in progress.");
     if (this.state.status !== "authenticated" || !this.accessToken) {
       throw new Error("An authenticated session is required to switch roles.");
@@ -150,7 +150,7 @@ export class MobileSessionController implements SessionController {
     const switchPromise = this.performRoleSwitch(role, generation);
     this.roleSwitchInFlight = switchPromise;
     try {
-      await switchPromise;
+      return await switchPromise;
     } finally {
       if (this.roleSwitchInFlight === switchPromise) this.roleSwitchInFlight = null;
     }
@@ -191,7 +191,7 @@ export class MobileSessionController implements SessionController {
     await Promise.allSettled(pending);
   }
 
-  private async performRoleSwitch(role: MobileRole, generation: number): Promise<void> {
+  private async performRoleSwitch(role: MobileRole, generation: number): Promise<Bootstrap> {
     this.dispatch({ type: "switching_role" });
     try {
       const result = await this.runAuthorized((accessToken) => this.dependencies.api.switchRole(accessToken, role), generation);
@@ -200,6 +200,7 @@ export class MobileSessionController implements SessionController {
       this.accessToken = result.accessToken;
       this.accessExpiresAt = result.accessExpiresAt;
       this.dispatch({ type: "authenticated", bootstrap: result.bootstrap });
+      return result.bootstrap;
     } catch (error) {
       if (this.isCurrent(generation)) {
         this.dispatch({ type: "recoverable_error", message: "Unable to switch roles." });

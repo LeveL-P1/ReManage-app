@@ -5,9 +5,10 @@ import { AppState } from "react-native";
 
 export function ReactNativeQueryLifecycle(): null {
   useEffect(() => {
-    return onlineManager.setEventListener((setOnline) =>
-      NetInfo.addEventListener((networkState) => setOnline(Boolean(networkState.isConnected))),
-    );
+    const unsubscribe = NetInfo.addEventListener((networkState) => {
+      onlineManager.setOnline(Boolean(networkState.isConnected));
+    });
+    return unsubscribe;
   }, []);
 
   useEffect(() => {

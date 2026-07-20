@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useSyncExternalStore, type ReactNode } from "react";
 
-import { createMobileApi, type MobileRole } from "@/platform/api/mobile-api-client";
+import { createMobileApi, type Bootstrap, type MobileRole } from "@/platform/api/mobile-api-client";
 
 import { createCredentialStore } from "./credential-store";
 import { createSessionController, type SessionController } from "./session-controller";
@@ -12,7 +12,7 @@ export interface SessionContextValue {
   signInWithPassword(identifier: string, password: string): Promise<void>;
   requestOtp(identifier: string): Promise<{ challengeId: string }>;
   verifyOtp(challengeId: string, code: string): Promise<void>;
-  switchRole(role: MobileRole): Promise<void>;
+  switchRole(role: MobileRole): Promise<Bootstrap>;
   logout(): Promise<void>;
 }
 

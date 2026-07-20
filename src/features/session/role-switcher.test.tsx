@@ -29,7 +29,7 @@ function createSession(overrides: Partial<SessionContextValue> = {}): SessionCon
     signInWithPassword: jest.fn(async () => undefined),
     requestOtp: jest.fn(async () => ({ challengeId: "challenge-1" })),
     verifyOtp: jest.fn(async () => undefined),
-    switchRole: jest.fn(async () => undefined),
+    switchRole: jest.fn(async () => fakeBootstrap("resident")),
     logout: jest.fn(async () => undefined),
     ...overrides,
   };
@@ -75,7 +75,7 @@ describe("RoleSwitcher", () => {
   });
 
   it("calls switchRole once and blocks double taps", async () => {
-    const pending = deferred<void>();
+    const pending = deferred<ReturnType<typeof fakeBootstrap>>();
     const session = createSession({ switchRole: jest.fn(() => pending.promise) });
     const { getByRole } = await renderSwitcher(session);
     const button = getByRole("button", { name: "Switch to Guard" });
@@ -85,11 +85,11 @@ describe("RoleSwitcher", () => {
 
     expect(session.switchRole).toHaveBeenCalledTimes(1);
     expect(button.props.accessibilityState.disabled).toBe(true);
-    await act(async () => pending.resolve());
+    await act(async () => pending.resolve(fakeBootstrap("guard")));
   });
 
-  it("navigates only after the server returns the requested active role", async () => {
-    const pending = deferred<void>();
+  it("navigates only after resolution to the server-authoritative active role", async () => {
+    const pending = deferred<ReturnType<typeof fakeBootstrap>>();
     const switchRole = jest.fn(() => pending.promise);
     const session = createSession({ switchRole });
     const rendered = await renderSwitcher(session);
@@ -97,18 +97,9 @@ describe("RoleSwitcher", () => {
     await fireEvent.press(rendered.getByRole("button", { name: "Switch to Guard" }));
     expect(mockReplace).not.toHaveBeenCalled();
 
-    await rendered.rerender(
-      <SessionContext.Provider value={createSession({
-        state: { status: "authenticated", bootstrap: fakeBootstrap("guard") },
-        switchRole,
-      })}>
-        <RoleSwitcher />
-      </SessionContext.Provider>,
-    );
-
     expect(mockReplace).not.toHaveBeenCalled();
-    await act(async () => pending.resolve());
-    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/(guard)"));
+    await act(async () => pending.resolve(fakeBootstrap("resident")));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/(resident)"));
   });
 
   it("preserves the original role shell when switching fails", async () => {

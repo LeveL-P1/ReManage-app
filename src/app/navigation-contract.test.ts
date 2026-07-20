@@ -48,6 +48,7 @@ describe("role-aware navigation contract", () => {
     for (const navigationSource of navigationSources) {
       expect(navigationSource).not.toMatch(/combined dashboard/i);
       expect(navigationSource).not.toMatch(/params\s*:\s*\{[^}]*role/i);
+      expect(navigationSource).not.toMatch(/use(?:Global|Local)SearchParams\s*<[^>]*\brole\b/i);
     }
   });
 });
