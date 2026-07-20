@@ -8,16 +8,17 @@ const { readFileSync, readdirSync } = require("fs") as {
   readdirSync(path: string, options: { withFileTypes: true }): DirectoryEntry[];
 };
 const { join } = require("path") as { join(...paths: string[]): string };
+const appDirectory = join(__dirname, "..", "app");
 
 const residentLabels = ["Home", "Visitors", "Bills", "More"];
 const guardLabels = ["Gate", "Parcels", "Incidents", "More"];
 
 function source(relativePath: string): string {
-  return readFileSync(join(__dirname, relativePath), "utf8");
+  return readFileSync(join(appDirectory, relativePath), "utf8");
 }
 
 function filesIn(relativeDirectory: string): string[] {
-  const directory = join(__dirname, relativeDirectory);
+  const directory = join(appDirectory, relativeDirectory);
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = join(relativeDirectory, entry.name);
     return entry.isDirectory() ? filesIn(path) : [path];

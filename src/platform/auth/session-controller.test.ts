@@ -29,6 +29,14 @@ function SessionContextProbe({ onValue }: { onValue(value: SessionContextValue):
   return null;
 }
 
+function sessionProviderElement(controller: SessionController, children: React.ReactNode = null): React.ReactElement {
+  return React.createElement(
+    SessionProvider,
+    { controller } as React.ComponentProps<typeof SessionProvider>,
+    children,
+  );
+}
+
 function createProviderController(): { controller: SessionController; restore: jest.Mock<Promise<void>, []> } {
   const state: SessionState = { status: "signed_out" };
   const restore = jest.fn(async () => undefined);
@@ -555,18 +563,12 @@ describe("SessionController", () => {
     const second = createProviderController();
 
     const rendered = await render(
-      React.createElement(SessionProvider, {
-        controller: firstController,
-        children: null,
-      }),
+      sessionProviderElement(firstController),
     );
     await waitFor(() => expect(firstApi.refresh).toHaveBeenCalledTimes(1));
 
     await rendered.rerender(
-      React.createElement(SessionProvider, {
-        controller: second.controller,
-        children: null,
-      }),
+      sessionProviderElement(second.controller),
     );
     refresh.resolve(fakeSessionIssue({ accessToken: "late-access", renewableCredential: "late-renewable" }));
     await Promise.resolve();
@@ -601,12 +603,12 @@ describe("SessionController", () => {
     });
 
     const rendered = await render(
-      React.createElement(SessionProvider, { controller: firstController, children: null }),
+      sessionProviderElement(firstController),
     );
     await waitFor(() => expect(sharedCredentials.setRenewableCredential).toHaveBeenCalledTimes(1));
 
     await rendered.rerender(
-      React.createElement(SessionProvider, { controller: secondController, children: null }),
+      sessionProviderElement(secondController),
     );
     await Promise.resolve();
     const refreshesBeforeOldWriteSettles = secondApi.refresh.mock.calls.length;
@@ -637,14 +639,14 @@ describe("SessionController", () => {
       await sharedCredentials.setRenewableCredential("replacement-renewable");
     });
     const rendered = await render(
-      React.createElement(SessionProvider, { controller: firstController, children: null }),
+      sessionProviderElement(firstController),
     );
     await waitFor(() => expect(firstApi.bootstrap).toHaveBeenCalledTimes(2));
 
     const loggingOut = firstController.logout();
     await waitFor(() => expect(firstApi.logout).toHaveBeenCalledTimes(1));
     await rendered.rerender(
-      React.createElement(SessionProvider, { controller: replacement.controller, children: null }),
+      sessionProviderElement(replacement.controller),
     );
     await Promise.resolve();
     await Promise.resolve();
@@ -669,17 +671,17 @@ describe("SessionController", () => {
     const second = createProviderController();
 
     const rendered = await render(
-      React.createElement(SessionProvider, { controller: firstController, children: null }),
+      sessionProviderElement(firstController),
     );
     await waitFor(() => expect(first.restore).toHaveBeenCalledTimes(1));
 
     await rendered.rerender(
-      React.createElement(SessionProvider, { controller: second.controller, children: null }),
+      sessionProviderElement(second.controller),
     );
     await waitFor(() => expect(cancelFirst).toHaveBeenCalledTimes(1));
 
     await rendered.rerender(
-      React.createElement(SessionProvider, { controller: firstController, children: null }),
+      sessionProviderElement(firstController),
     );
     firstCancellation.resolve();
 
@@ -702,7 +704,7 @@ describe("SessionController", () => {
       React.createElement(
         React.StrictMode,
         null,
-        React.createElement(SessionProvider, { controller, children: null }),
+        sessionProviderElement(controller),
       ),
     );
     await waitFor(() => expect(api.refresh).toHaveBeenCalledTimes(1));
@@ -726,12 +728,9 @@ describe("SessionController", () => {
       React.createElement(
         React.StrictMode,
         null,
-        React.createElement(SessionProvider, {
-          controller: first.controller,
-          children: React.createElement(SessionContextProbe, {
+        sessionProviderElement(first.controller, React.createElement(SessionContextProbe, {
             onValue: (nextValue: SessionContextValue) => (value = nextValue),
-          }),
-        }),
+          })),
       ),
     );
 
@@ -755,12 +754,9 @@ describe("SessionController", () => {
       React.createElement(
         React.StrictMode,
         null,
-        React.createElement(SessionProvider, {
-          controller: second.controller,
-          children: React.createElement(SessionContextProbe, {
+        sessionProviderElement(second.controller, React.createElement(SessionContextProbe, {
             onValue: (nextValue: SessionContextValue) => (value = nextValue),
-          }),
-        }),
+          })),
       ),
     );
 

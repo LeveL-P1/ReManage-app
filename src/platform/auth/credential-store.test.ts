@@ -1,13 +1,13 @@
+import * as SecureStore from "expo-secure-store";
+
+import { createCredentialStore, type CredentialStore } from "./credential-store";
+
 jest.mock("expo-secure-store", () => ({
   WHEN_UNLOCKED_THIS_DEVICE_ONLY: "WHEN_UNLOCKED_THIS_DEVICE_ONLY",
   deleteItemAsync: jest.fn(),
   getItemAsync: jest.fn(),
   setItemAsync: jest.fn(),
 }));
-
-import * as SecureStore from "expo-secure-store";
-
-import { createCredentialStore, type CredentialStore } from "./credential-store";
 
 const renewableCredentialKey = "remanage.mobile.renewable-credential";
 const installationIdKey = "remanage.mobile.installation-id";

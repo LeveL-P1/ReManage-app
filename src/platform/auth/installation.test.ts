@@ -1,3 +1,11 @@
+import Constants from "expo-constants";
+import * as Crypto from "expo-crypto";
+import * as Device from "expo-device";
+import { Platform } from "react-native";
+
+import type { CredentialStore } from "./credential-store";
+import { getOrCreateInstallation } from "./installation";
+
 jest.mock("expo-constants", () => ({
   __esModule: true,
   default: { expoConfig: { version: "1.0.0" } },
@@ -6,14 +14,6 @@ jest.mock("expo-constants", () => ({
 jest.mock("expo-crypto", () => ({ randomUUID: jest.fn() }));
 
 jest.mock("expo-device", () => ({ deviceName: "Pixel 9" }));
-
-import Constants from "expo-constants";
-import * as Crypto from "expo-crypto";
-import * as Device from "expo-device";
-import { Platform } from "react-native";
-
-import type { CredentialStore } from "./credential-store";
-import { getOrCreateInstallation } from "./installation";
 
 function fakeCredentialStore(storedId: string | null): CredentialStore {
   return {
