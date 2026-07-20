@@ -147,7 +147,8 @@ export class MobileSessionController implements SessionController {
       throw new Error("An authenticated session is required to switch roles.");
     }
     const generation = this.sessionGeneration;
-    const switchPromise = this.performRoleSwitch(role, generation);
+    const priorBootstrap = this.state.bootstrap;
+    const switchPromise = this.performRoleSwitch(role, generation, priorBootstrap);
     this.roleSwitchInFlight = switchPromise;
     try {
       return await switchPromise;
@@ -191,7 +192,7 @@ export class MobileSessionController implements SessionController {
     await Promise.allSettled(pending);
   }
 
-  private async performRoleSwitch(role: MobileRole, generation: number): Promise<Bootstrap> {
+  private async performRoleSwitch(role: MobileRole, generation: number, priorBootstrap: Bootstrap): Promise<Bootstrap> {
     this.dispatch({ type: "switching_role" });
     try {
       const result = await this.runAuthorized((accessToken) => this.dependencies.api.switchRole(accessToken, role), generation);
@@ -203,7 +204,7 @@ export class MobileSessionController implements SessionController {
       return result.bootstrap;
     } catch (error) {
       if (this.isCurrent(generation)) {
-        this.dispatch({ type: "recoverable_error", message: "Unable to switch roles." });
+        this.dispatch({ type: "authenticated", bootstrap: priorBootstrap });
       }
       throw error;
     }

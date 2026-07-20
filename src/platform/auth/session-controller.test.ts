@@ -175,6 +175,18 @@ describe("SessionController", () => {
     expect(api.switchRole).toHaveBeenCalledTimes(2);
   });
 
+  it("restores the prior authenticated role shell when a role switch fails", async () => {
+    const originalBootstrap = fakeBootstrap("resident");
+    api.bootstrapResult = originalBootstrap;
+    api.switchRole.mockRejectedValueOnce(new Error("role service unavailable"));
+    const controller = createController();
+    await controller.signInWithPassword("resident@example.com", "password");
+
+    await expect(controller.switchRole("guard")).rejects.toThrow("role service unavailable");
+
+    expect(controller.getState()).toEqual({ status: "authenticated", bootstrap: originalBootstrap });
+  });
+
   it("persists password-login credentials before bootstrap and keeps tokens out of state", async () => {
     const controller = createController();
 
