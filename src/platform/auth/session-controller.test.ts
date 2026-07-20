@@ -184,7 +184,12 @@ describe("SessionController", () => {
 
     await expect(controller.switchRole("guard")).rejects.toThrow("role service unavailable");
 
-    expect(controller.getState()).toEqual({ status: "authenticated", bootstrap: originalBootstrap });
+    expect(controller.getState()).toEqual({
+      status: "authenticated",
+      bootstrap: originalBootstrap,
+      roleSwitchError: "We could not switch roles. Please try again.",
+    });
+    expect(JSON.stringify(controller.getState())).not.toContain("role service unavailable");
   });
 
   it("persists password-login credentials before bootstrap and keeps tokens out of state", async () => {

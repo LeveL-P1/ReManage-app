@@ -27,7 +27,11 @@ describe("sessionReducer", () => {
   });
 
   it("transitions authenticated sessions through role switching to the returned bootstrap", () => {
-    const authenticated: SessionState = { status: "authenticated", bootstrap };
+    const authenticated: SessionState = {
+      status: "authenticated",
+      bootstrap,
+      roleSwitchError: "We could not switch roles. Please try again.",
+    };
     const switchedBootstrap: Bootstrap = { ...bootstrap, activeRole: "guard" };
 
     const switching = sessionReducer(authenticated, { type: "switching_role" });

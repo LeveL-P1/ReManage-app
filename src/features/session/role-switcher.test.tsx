@@ -46,6 +46,14 @@ async function renderSwitcher(session = createSession()) {
   );
 }
 
+function RoleShell({ session }: { session: SessionContextValue }) {
+  return (
+    <SessionContext.Provider value={session}>
+      {session.state.status === "authenticated" ? <RoleSwitcher /> : null}
+    </SessionContext.Provider>
+  );
+}
+
 describe("RoleSwitcher", () => {
   beforeEach(() => mockReplace.mockReset());
 
@@ -102,14 +110,43 @@ describe("RoleSwitcher", () => {
     await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/(resident)"));
   });
 
-  it("preserves the original role shell when switching fails", async () => {
-    const session = createSession({ switchRole: jest.fn(async () => Promise.reject(new Error("unavailable"))) });
-    const { findByText, getByRole } = await renderSwitcher(session);
+  it("retains generic failure feedback after switching unmounts and remounts the resident shell", async () => {
+    const pending = deferred<ReturnType<typeof fakeBootstrap>>();
+    const switchRole = jest.fn(() => pending.promise);
+    const originalBootstrap = fakeBootstrap("resident");
+    const rendered = await render(
+      <RoleShell session={createSession({
+        state: { status: "authenticated", bootstrap: originalBootstrap },
+        switchRole,
+      })}
+      />,
+    );
 
-    await fireEvent.press(getByRole("button", { name: "Switch to Guard" }));
+    await fireEvent.press(rendered.getByRole("button", { name: "Switch to Guard" }));
+    await rendered.rerender(
+      <RoleShell session={createSession({
+        state: { status: "switching_role", bootstrap: originalBootstrap },
+        switchRole,
+      })}
+      />,
+    );
+    expect(rendered.queryByRole("button", { name: "Switch to Guard" })).toBeNull();
 
-    expect(await findByText("We could not switch roles. Please try again.")).toBeTruthy();
+    await act(async () => pending.reject(new Error("server implementation detail")));
+    await rendered.rerender(
+      <RoleShell session={createSession({
+        state: {
+          status: "authenticated",
+          bootstrap: originalBootstrap,
+          roleSwitchError: "We could not switch roles. Please try again.",
+        },
+        switchRole,
+      })}
+      />,
+    );
+
+    expect(await rendered.findByText("We could not switch roles. Please try again.")).toBeTruthy();
     expect(mockReplace).not.toHaveBeenCalled();
-    expect(getByRole("button", { name: "Switch to Guard" })).toBeTruthy();
+    expect(rendered.getByRole("button", { name: "Switch to Guard" })).toBeTruthy();
   });
 });

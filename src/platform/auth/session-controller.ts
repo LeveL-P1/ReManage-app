@@ -25,6 +25,8 @@ function isUnauthorized(error: unknown): boolean {
   return typeof error === "object" && error !== null && "status" in error && error.status === 401;
 }
 
+const roleSwitchFailureMessage = "We could not switch roles. Please try again.";
+
 class SessionOperationSupersededError extends Error {
   constructor() {
     super("Session operation was superseded.");
@@ -204,7 +206,7 @@ export class MobileSessionController implements SessionController {
       return result.bootstrap;
     } catch (error) {
       if (this.isCurrent(generation)) {
-        this.dispatch({ type: "authenticated", bootstrap: priorBootstrap });
+        this.dispatch({ type: "authenticated", bootstrap: priorBootstrap, roleSwitchError: roleSwitchFailureMessage });
       }
       throw error;
     }

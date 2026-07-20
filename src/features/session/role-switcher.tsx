@@ -10,7 +10,6 @@ export function RoleSwitcher() {
   const { state, switchRole } = useSession();
   const router = useRouter();
   const [pendingRole, setPendingRole] = useState<"resident" | "guard" | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   if (state.status !== "authenticated" || state.bootstrap.approvedRoles.length < 2) return null;
 
@@ -19,14 +18,13 @@ export function RoleSwitcher() {
 
   async function selectRole() {
     if (pendingRole) return;
-    setError(null);
     setPendingRole(targetRole);
     try {
       const bootstrap = await switchRole(targetRole);
       queryClient.clear();
       router.replace(bootstrap.activeRole === "resident" ? "/(resident)" : "/(guard)");
     } catch {
-      setError("We could not switch roles. Please try again.");
+      // Session state provides generic feedback after the protected role shell remounts.
     } finally {
       setPendingRole(null);
     }
@@ -44,7 +42,7 @@ export function RoleSwitcher() {
       >
         <Text style={styles.buttonText}>{pendingRole ? "Switching roles…" : label}</Text>
       </Pressable>
-      {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+      {state.roleSwitchError ? <Text accessibilityRole="alert" style={styles.error}>{state.roleSwitchError}</Text> : null}
     </View>
   );
 }
