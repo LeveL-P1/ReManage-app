@@ -96,7 +96,10 @@ describe("RoleSwitcher", () => {
     await act(async () => pending.resolve(fakeBootstrap("guard")));
   });
 
-  it("navigates only after resolution to the server-authoritative active role", async () => {
+  it.each([
+    ["resident", "/(resident)/(tabs)"],
+    ["guard", "/(guard)/(tabs)"],
+  ] as const)("navigates only after resolution to the server-authoritative %s role", async (activeRole, destination) => {
     const pending = deferred<ReturnType<typeof fakeBootstrap>>();
     const switchRole = jest.fn(() => pending.promise);
     const session = createSession({ switchRole });
@@ -106,8 +109,8 @@ describe("RoleSwitcher", () => {
     expect(mockReplace).not.toHaveBeenCalled();
 
     expect(mockReplace).not.toHaveBeenCalled();
-    await act(async () => pending.resolve(fakeBootstrap("resident")));
-    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/(resident)"));
+    await act(async () => pending.resolve(fakeBootstrap(activeRole)));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith(destination));
   });
 
   it("retains generic failure feedback after switching unmounts and remounts the resident shell", async () => {

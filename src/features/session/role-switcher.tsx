@@ -22,7 +22,7 @@ export function RoleSwitcher() {
     try {
       const bootstrap = await switchRole(targetRole);
       queryClient.clear();
-      router.replace(bootstrap.activeRole === "resident" ? "/(resident)" : "/(guard)");
+      router.replace(bootstrap.activeRole === "resident" ? "/(resident)/(tabs)" : "/(guard)/(tabs)");
     } catch {
       // Session state provides generic feedback after the protected role shell remounts.
     } finally {

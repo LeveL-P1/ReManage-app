@@ -1,4 +1,5 @@
 import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
 
 import { createCredentialStore, type CredentialStore } from "./credential-store";
 
@@ -14,11 +15,16 @@ const installationIdKey = "remanage.mobile.installation-id";
 
 const secureStore = SecureStore as jest.Mocked<typeof SecureStore>;
 
+function setPlatformOs(os: string): void {
+  Object.defineProperty(Platform, "OS", { configurable: true, value: os });
+}
+
 describe("createCredentialStore", () => {
   let store: CredentialStore;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    setPlatformOs("ios");
     store = createCredentialStore();
   });
 
@@ -60,6 +66,26 @@ describe("createCredentialStore", () => {
     expect(secureStore.deleteItemAsync).toHaveBeenCalledTimes(2);
     expect(secureStore.deleteItemAsync).toHaveBeenCalledWith(renewableCredentialKey);
     expect(secureStore.deleteItemAsync).toHaveBeenCalledWith(installationIdKey);
+  });
+
+  it("keeps web-preview device state only in memory", async () => {
+    setPlatformOs("web");
+    store = createCredentialStore();
+    secureStore.getItemAsync.mockResolvedValue(null);
+    secureStore.setItemAsync.mockResolvedValue(undefined);
+
+    await store.setRenewableCredential("web-renewable");
+    await store.setInstallationId("web-installation");
+
+    await expect(store.getRenewableCredential()).resolves.toBe("web-renewable");
+    await expect(store.getInstallationId()).resolves.toBe("web-installation");
+    await store.clearCredentials();
+
+    await expect(store.getRenewableCredential()).resolves.toBeNull();
+    await expect(store.getInstallationId()).resolves.toBe("web-installation");
+    expect(secureStore.getItemAsync).not.toHaveBeenCalled();
+    expect(secureStore.setItemAsync).not.toHaveBeenCalled();
+    expect(secureStore.deleteItemAsync).not.toHaveBeenCalled();
   });
 
   it("does not provide any persistence path for access tokens or bootstrap payloads", () => {

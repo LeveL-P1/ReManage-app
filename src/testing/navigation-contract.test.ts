@@ -30,6 +30,7 @@ describe("role-aware navigation contract", () => {
     const residentLayout = source("(resident)/(tabs)/_layout.tsx");
     const guardLayout = source("(guard)/(tabs)/_layout.tsx");
     const rootLayout = source("_layout.tsx");
+    const indexRoute = source("index.tsx");
 
     for (const label of residentLabels) expect(residentLayout).toContain(label);
     for (const label of ["Gate", "Parcels", "Incidents"]) expect(residentLayout).not.toContain(label);
@@ -39,6 +40,8 @@ describe("role-aware navigation contract", () => {
     expect(rootLayout.match(/<Stack\.Protected/g)?.length).toBeGreaterThanOrEqual(2);
     expect(rootLayout).toContain('authenticated && role === "resident"');
     expect(rootLayout).toContain('authenticated && role === "guard"');
+    expect(indexRoute).toContain('"/(resident)/(tabs)"');
+    expect(indexRoute).toContain('"/(guard)/(tabs)"');
 
     const navigationSources = [
       ...filesIn("(resident)"),
