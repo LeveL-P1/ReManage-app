@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { demoCredentials, demoOtpUnavailableMessage } from "@/platform/auth/development-demo-auth";
 import { useSession } from "@/platform/auth/session-provider";
 import { colors, residentTheme } from "@/platform/theme/tokens";
 
 export interface PasswordSignInScreenProps {
+  demoMode?: boolean;
   onOtpChallenge(challengeId: string): void;
 }
 
@@ -14,7 +16,7 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-export function PasswordSignInScreen({ onOtpChallenge }: PasswordSignInScreenProps) {
+export function PasswordSignInScreen({ demoMode = false, onOtpChallenge }: PasswordSignInScreenProps) {
   const { requestOtp, signInWithPassword } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +24,7 @@ export function PasswordSignInScreen({ onOtpChallenge }: PasswordSignInScreenPro
   const [pendingAction, setPendingAction] = useState<"password" | "otp" | null>(null);
   const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
   const isPending = pendingAction !== null;
+  const otpDisabled = isPending || demoMode;
 
   const validateEmail = (): string | null => {
     if (normalizeEmail(email)) return null;
@@ -48,7 +51,7 @@ export function PasswordSignInScreen({ onOtpChallenge }: PasswordSignInScreenPro
   }
 
   async function handleOtpRequest() {
-    if (isPending) return;
+    if (otpDisabled) return;
     const emailError = validateEmail();
     if (emailError) {
       setError(emailError);
@@ -73,6 +76,7 @@ export function PasswordSignInScreen({ onOtpChallenge }: PasswordSignInScreenPro
         <Text accessibilityRole="header" style={styles.brand}>ReManage</Text>
         <Text style={styles.heading}>Sign in to your account</Text>
         <Text style={styles.copy}>Accounts are provided by your society management.</Text>
+        {demoMode ? <Text style={styles.demoHint}>Web demo credentials: {demoCredentials.email} / {demoCredentials.password}</Text> : null}
 
         <Text style={styles.label}>Email address</Text>
         <TextInput
@@ -119,14 +123,14 @@ export function PasswordSignInScreen({ onOtpChallenge }: PasswordSignInScreenPro
         </Pressable>
 
         <Pressable
-          accessibilityLabel="Email me a code"
+          accessibilityLabel={demoMode ? "Email code unavailable in web demo" : "Email me a code"}
           accessibilityRole="button"
-          accessibilityState={{ disabled: isPending }}
-          disabled={isPending}
+          accessibilityState={{ disabled: otpDisabled }}
+          disabled={otpDisabled}
           onPress={() => void handleOtpRequest()}
-          style={({ pressed }) => [styles.secondaryAction, (pressed || isPending) && styles.secondaryActionPressed, isPending && styles.disabled]}
+          style={({ pressed }) => [styles.secondaryAction, (pressed || otpDisabled) && styles.secondaryActionPressed, otpDisabled && styles.disabled]}
         >
-          <Text style={styles.secondaryActionText}>{pendingAction === "otp" ? "Sending code…" : "Email me a code"}</Text>
+          <Text style={styles.secondaryActionText}>{demoMode ? demoOtpUnavailableMessage : pendingAction === "otp" ? "Sending code…" : "Email me a code"}</Text>
         </Pressable>
       </View>
     </View>
@@ -139,6 +143,7 @@ const styles = StyleSheet.create({
   brand: { color: colors.orange, fontFamily: "System", fontSize: 32, fontWeight: "800" },
   heading: { color: residentTheme.text, fontFamily: "System", fontSize: 24, fontWeight: "700", marginTop: 8 },
   copy: { color: residentTheme.text, fontFamily: "System", fontSize: 16, lineHeight: 22, marginBottom: 14 },
+  demoHint: { color: residentTheme.text, fontFamily: "System", fontSize: 14, lineHeight: 20 },
   label: { color: residentTheme.text, fontFamily: "System", fontSize: 15, fontWeight: "600", marginTop: 4 },
   input: { backgroundColor: residentTheme.surface, borderColor: colors.charcoal, borderRadius: 8, borderWidth: 1, color: residentTheme.text, fontFamily: "System", fontSize: 16, minHeight: 48, paddingHorizontal: 14 },
   inputFocused: { borderColor: colors.orange, borderWidth: 3, paddingHorizontal: 12 },

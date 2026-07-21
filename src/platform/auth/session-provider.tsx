@@ -1,9 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useSyncExternalStore, type ReactNode } from "react";
 
-import { createMobileApi, type Bootstrap, type MobileRole } from "@/platform/api/mobile-api-client";
+import { type Bootstrap, type MobileRole } from "@/platform/api/mobile-api-client";
 
-import { createCredentialStore } from "./credential-store";
-import { createSessionController, type SessionController } from "./session-controller";
+import { createRuntimeSessionController } from "./session-runtime";
+import type { SessionController } from "./session-controller";
 import type { SessionState } from "./session-reducer";
 
 export interface SessionContextValue {
@@ -34,7 +34,7 @@ function cancelPendingOperations(controller: SessionController): Promise<void> {
 
 export function SessionProvider({ children, controller: suppliedController }: SessionProviderProps): ReactNode {
   const controller = useMemo(
-    () => suppliedController ?? createSessionController({ api: createMobileApi(), credentials: createCredentialStore() }),
+    () => suppliedController ?? createRuntimeSessionController(),
     [suppliedController],
   );
   const state = useSyncExternalStore(controller.subscribe, controller.getState, controller.getState);

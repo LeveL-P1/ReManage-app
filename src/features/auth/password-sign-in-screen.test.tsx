@@ -19,11 +19,11 @@ function createSession(overrides: Partial<SessionContextValue> = {}): SessionCon
   };
 }
 
-async function renderScreen(session = createSession(), onOtpChallenge = jest.fn()) {
+async function renderScreen(session = createSession(), onOtpChallenge = jest.fn(), demoMode = false) {
   return Object.assign(
     await render(
       <SessionContext.Provider value={session}>
-        <PasswordSignInScreen onOtpChallenge={onOtpChallenge} />
+        <PasswordSignInScreen demoMode={demoMode} onOtpChallenge={onOtpChallenge} />
       </SessionContext.Provider>,
     ),
     { onOtpChallenge, session },
@@ -89,6 +89,18 @@ describe("PasswordSignInScreen", () => {
 
     await waitFor(() => expect(session.requestOtp).toHaveBeenCalledWith("resident@example.com"));
     expect(onOtpChallenge).toHaveBeenCalledWith("opaque-challenge-id");
+  });
+
+  it("shows development demo credentials and disables OTP without sending a request", async () => {
+    const session = createSession();
+    const { getByRole, getByText } = await renderScreen(session, jest.fn(), true);
+
+    expect(getByText("Web demo credentials: demo@remanage.local / ReManageDemo2026!")).toBeTruthy();
+    const otpButton = getByRole("button", { name: "Email code unavailable in web demo" });
+    expect(otpButton.props.accessibilityState.disabled).toBe(true);
+
+    await fireEvent.press(otpButton);
+    expect(session.requestOtp).not.toHaveBeenCalled();
   });
 
   it("shows a generic message for rejected credentials", async () => {
