@@ -41,11 +41,21 @@ describe("development demo authentication", () => {
     });
 
     await expect(api.bootstrap(issue.accessToken)).resolves.toEqual(
-      expect.objectContaining({ activeRole: "resident", approvedRoles: ["resident", "guard"] }),
+      expect.objectContaining({
+        activeRole: "resident",
+        approvedRoles: ["resident", "guard"],
+        permissions: expect.arrayContaining(["society:finance.read"]),
+      }),
     );
-    await expect(api.switchRole(issue.accessToken, "guard")).resolves.toEqual(
-      expect.objectContaining({ bootstrap: expect.objectContaining({ activeRole: "guard" }) }),
+
+    const switched = await api.switchRole(issue.accessToken, "guard");
+    expect(switched.bootstrap).toEqual(
+      expect.objectContaining({
+        activeRole: "guard",
+        permissions: expect.arrayContaining(["operations:gate.manage"]),
+      }),
     );
+    expect(switched.bootstrap.permissions).not.toContain("society:finance.read");
   });
 
   it("rejects demo OTP rather than sending an email request", async () => {

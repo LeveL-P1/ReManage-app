@@ -7,6 +7,7 @@ import type {
   RoleSwitchResult,
   SessionIssue,
 } from "@/platform/api/mobile-api-client";
+import { RESIDENT_DEMO_PERMISSIONS } from "@/features/resident/catalog/resident-module-catalog";
 import type { CredentialStore } from "@/platform/auth/credential-store";
 import type { MobileInstallation } from "@/platform/auth/installation";
 
@@ -16,6 +17,13 @@ export const fakeInstallation: MobileInstallation = {
   appVersion: "1.0.0",
   deviceName: "Pixel 9",
 };
+
+const guardDemoPermissions = [
+  "operations:gate.manage",
+  "operations:read",
+  "operations:sos.raise",
+  "community:read",
+] as const;
 
 export function fakeBootstrap(role: MobileRole = "resident"): Bootstrap {
   return {
@@ -27,7 +35,7 @@ export function fakeBootstrap(role: MobileRole = "resident"): Bootstrap {
       critical: { configurable: false, enabled: true },
       transactional: { configurable: true, enabled: true },
     },
-    permissions: ["dashboard.read"],
+    permissions: role === "resident" ? [...RESIDENT_DEMO_PERMISSIONS] : [...guardDemoPermissions],
     society: { id: "society-1", name: "Green Acres" },
     user: { email: "resident@example.com", id: "user-1", name: "Resident" },
   };

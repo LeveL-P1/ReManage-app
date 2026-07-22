@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 
+import { RESIDENT_DEMO_PERMISSIONS } from "@/features/resident/catalog/resident-module-catalog";
 import type {
   Bootstrap,
   MobileApi,
@@ -20,6 +21,13 @@ export interface SessionRuntime {
   isDevelopment: boolean;
   platform: string;
 }
+
+const guardDemoPermissions = [
+  "operations:gate.manage",
+  "operations:read",
+  "operations:sos.raise",
+  "community:read",
+] as const;
 
 export const developmentDemoInstallation: MobileInstallation = {
   id: "development-web-demo-installation",
@@ -44,7 +52,7 @@ function demoBootstrap(activeRole: MobileRole): Bootstrap {
       critical: { configurable: false, enabled: true },
       transactional: { configurable: true, enabled: true },
     },
-    permissions: ["dashboard.read"],
+    permissions: activeRole === "resident" ? [...RESIDENT_DEMO_PERMISSIONS] : [...guardDemoPermissions],
     society: { id: "demo-society", name: "ReManage Demo Society" },
     user: { id: "demo-user", name: "Demo User", email: demoCredentials.email },
   };
