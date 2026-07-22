@@ -1,6 +1,5 @@
-import { ResidentShellScreen } from "@/features/resident/resident-shell-screen";
-import { RoleSwitcher } from "@/features/session/role-switcher";
+import { ResidentMoreScreen } from "@/features/resident/more/resident-more-screen";
 
 export default function ResidentMoreRoute() {
-  return <ResidentShellScreen title="More"><RoleSwitcher /></ResidentShellScreen>;
+  return <ResidentMoreScreen />;
 }

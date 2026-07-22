@@ -10,7 +10,7 @@ const { readFileSync, readdirSync } = require("fs") as {
 const { join } = require("path") as { join(...paths: string[]): string };
 const appDirectory = join(__dirname, "..", "app");
 
-const residentLabels = ["Home", "Visitors", "Bills", "More"];
+const residentLabels = ["Home", "Visitors", "Community", "Bills", "More"];
 const guardLabels = ["Gate", "Parcels", "Incidents", "More"];
 
 function source(relativePath: string): string {
@@ -33,6 +33,8 @@ describe("role-aware navigation contract", () => {
     const indexRoute = source("index.tsx");
 
     for (const label of residentLabels) expect(residentLayout).toContain(label);
+    const residentLabelIndices = residentLabels.map((label) => residentLayout.indexOf(`title: "${label}"`));
+    expect(residentLabelIndices).toEqual([...residentLabelIndices].sort((left, right) => left - right));
     for (const label of ["Gate", "Parcels", "Incidents"]) expect(residentLayout).not.toContain(label);
     for (const label of guardLabels) expect(guardLayout).toContain(label);
     for (const label of ["Home", "Visitors", "Bills"]) expect(guardLayout).not.toContain(label);
