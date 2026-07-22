@@ -22,6 +22,7 @@ const iconNames: Record<ResidentIconKey, ComponentProps<typeof Ionicons>["name"]
   poll: "stats-chart-outline",
   document: "folder-open-outline",
   move: "swap-horizontal-outline",
+  more: "ellipsis-horizontal",
 };
 
 export function ResidentIcon({

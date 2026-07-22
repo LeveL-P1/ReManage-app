@@ -53,7 +53,8 @@ export type ResidentIconKey =
   | "meeting"
   | "poll"
   | "document"
-  | "move";
+  | "move"
+  | "more";
 
 export type ResidentTabHref =
   | "/(resident)/(tabs)/visitors"
