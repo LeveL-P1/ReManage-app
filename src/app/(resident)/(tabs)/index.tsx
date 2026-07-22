@@ -1,5 +1,5 @@
-import { ResidentShellScreen } from "@/features/resident/resident-shell-screen";
+import { ResidentHomeScreen } from "@/features/resident/home/resident-home-screen";
 
 export default function ResidentHomeRoute() {
-  return <ResidentShellScreen title="Home" />;
+  return <ResidentHomeScreen />;
 }
