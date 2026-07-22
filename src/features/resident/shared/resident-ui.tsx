@@ -114,7 +114,12 @@ export function ResidentActionTile(props: ResidentActionTileProps) {
       <View style={styles.actionIcon}>
         <ResidentIcon color={residentTheme.icon} name={props.icon} />
       </View>
-      <Text numberOfLines={2} style={styles.actionLabel}>{props.label}</Text>
+      <Text
+        numberOfLines={2}
+        style={[styles.actionLabel, props.columns === 5 && styles.actionLabelCompact]}
+      >
+        {props.label}
+      </Text>
     </Pressable>
   );
 }
@@ -123,13 +128,15 @@ export function ResidentStatTile({
   label,
   value,
   detail,
+  compact = false,
 }: {
   label: string;
   value: string;
   detail?: string;
+  compact?: boolean;
 }) {
   return (
-    <View style={styles.statTile}>
+    <View style={[styles.statTile, compact && styles.statTileCompact]}>
       <Text style={styles.statLabel}>{label}</Text>
       <Text style={styles.statValue}>{value}</Text>
       {detail ? <Text style={styles.statDetail}>{detail}</Text> : null}
@@ -243,6 +250,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
     minHeight: 32,
   },
+  actionLabelCompact: { fontSize: 10, lineHeight: 14, minHeight: 28 },
   statTile: {
     minWidth: 112,
     flexGrow: 1,
@@ -252,6 +260,7 @@ const styles = StyleSheet.create({
     borderColor: residentTheme.border,
     borderWidth: StyleSheet.hairlineWidth,
   },
+  statTileCompact: { minWidth: 0, paddingHorizontal: 10, paddingVertical: 12 },
   statLabel: { color: residentTheme.muted, fontSize: 13, lineHeight: 18 },
   statValue: { color: residentTheme.ink, fontSize: 22, lineHeight: 28, fontWeight: "700", marginTop: 4 },
   statDetail: { color: residentTheme.muted, fontSize: 12, lineHeight: 17, marginTop: 2 },

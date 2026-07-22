@@ -45,10 +45,10 @@ export function ResidentCommunityScreen({
   const { state } = useSession();
   const [selectedModule, setSelectedModule] = useState<ResidentModuleDefinition | null>(null);
   const bootstrap = state.status === "authenticated" ? state.bootstrap : null;
-  const actions = useMemo(
-    () => filterResidentModules(bootstrap?.permissions ?? []).filter(({ id }) => communityActionIds.includes(id)),
-    [bootstrap?.permissions],
-  );
+  const actions = useMemo(() => {
+    const visibleModules = filterResidentModules(bootstrap?.permissions ?? []);
+    return communityActionIds.flatMap((id) => visibleModules.filter((module) => module.id === id));
+  }, [bootstrap?.permissions]);
 
   return (
     <View style={styles.screen}>
@@ -68,7 +68,7 @@ export function ResidentCommunityScreen({
               <Text style={styles.overviewTitle}>Connected living,<Text style={styles.accent}> made simpler.</Text></Text>
             </View>
             <View style={styles.stats}>
-              {viewModel.stats.map((stat) => <ResidentStatTile detail="Society-wide" key={stat.id} {...stat} />)}
+              {viewModel.stats.map((stat) => <ResidentStatTile compact detail="Society-wide" key={stat.id} {...stat} />)}
             </View>
           </View>
 

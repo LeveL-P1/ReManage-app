@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { ResidentModuleDefinition } from "@/features/resident/catalog/resident-module-catalog";
 import { residentTheme } from "@/platform/theme/tokens";
@@ -44,11 +44,12 @@ const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 24,
     paddingTop: 26,
-    paddingBottom: 28,
+    paddingBottom: Platform.OS === "web" ? 88 : 28,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     backgroundColor: residentTheme.surface,
     alignItems: "center",
+    zIndex: 1000,
   },
   icon: {
     width: 56,
