@@ -13,6 +13,12 @@ export const residentTheme = {
   text: colors.charcoal,
   accent: colors.orange,
   highlight: colors.yellow,
+  canvas: "#EEEAE3",
+  header: "#F4F1EC",
+  muted: "#697071",
+  border: "#DEDAD3",
+  ink: "#1F2324",
+  icon: "#123D41",
 } as const;
 
 export const guardTheme = {
