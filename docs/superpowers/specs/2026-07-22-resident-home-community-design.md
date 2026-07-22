@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-22
 
-**Status:** Approved conversational design; awaiting written-spec review
+**Status:** Approved for implementation
 
 **Mobile repository:** `C:\Users\pawan\Projects\ReManage-app`
 

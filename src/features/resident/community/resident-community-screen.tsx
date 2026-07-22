@@ -32,6 +32,8 @@ const communityActionIds: readonly ResidentModuleId[] = [
   "parking",
 ];
 
+const governanceHighlightIds: readonly ResidentModuleId[] = ["meetings", "polls", "documents"];
+
 function showComingNext(title: string, message: string) {
   Alert.alert(title, message);
 }
@@ -45,10 +47,20 @@ export function ResidentCommunityScreen({
   const { state } = useSession();
   const [selectedModule, setSelectedModule] = useState<ResidentModuleDefinition | null>(null);
   const bootstrap = state.status === "authenticated" ? state.bootstrap : null;
-  const actions = useMemo(() => {
-    const visibleModules = filterResidentModules(bootstrap?.permissions ?? []);
-    return communityActionIds.flatMap((id) => visibleModules.filter((module) => module.id === id));
-  }, [bootstrap?.permissions]);
+  const visibleModules = useMemo(
+    () => filterResidentModules(bootstrap?.permissions ?? []),
+    [bootstrap?.permissions],
+  );
+  const actions = useMemo(
+    () => communityActionIds.flatMap((id) => visibleModules.filter((module) => module.id === id)),
+    [visibleModules],
+  );
+  const governanceHighlights = useMemo(
+    () => governanceHighlightIds.flatMap((id) => visibleModules.filter((module) => module.id === id)),
+    [visibleModules],
+  );
+  const helpdesk = visibleModules.find(({ id }) => id === "helpdesk") ?? null;
+  const sos = visibleModules.find(({ id }) => id === "sos") ?? null;
 
   return (
     <View style={styles.screen}>
@@ -123,22 +135,47 @@ export function ResidentCommunityScreen({
           </View>
 
           <ResidentSectionHeader title="Safety & support" />
-          <ResidentContentCard
-            accent="#C62828"
-            description={viewModel.safety.detail}
-            icon="sos"
-            onPress={() => setSelectedModule(filterResidentModules(bootstrap?.permissions ?? []).find(({ id }) => id === "sos") ?? null)}
-            title={viewModel.safety.title}
-          />
+          <View style={styles.cardList}>
+            {sos ? (
+              <ResidentContentCard
+                accent="#C62828"
+                description={viewModel.safety.detail}
+                icon="sos"
+                onPress={() => setSelectedModule(sos)}
+                title={viewModel.safety.title}
+              />
+            ) : null}
+            {helpdesk ? (
+              <ResidentContentCard
+                accent={residentTheme.icon}
+                description="For non-emergency safety and security support"
+                icon="helpdesk"
+                onPress={() => setSelectedModule(helpdesk)}
+                title="Message society helpdesk"
+              />
+            ) : null}
+          </View>
 
           <ResidentSectionHeader title="Governance highlights" />
-          <ResidentContentCard
-            accent={residentTheme.accent}
-            description={viewModel.dues.detail}
-            icon="bill"
-            onPress={() => router.push("/(resident)/(tabs)/bills")}
-            title={viewModel.dues.amount}
-          />
+          <View style={styles.cardList}>
+            {governanceHighlights.map((module) => (
+              <ResidentContentCard
+                accent={residentTheme.icon}
+                description={module.description}
+                icon={module.icon}
+                key={module.id}
+                onPress={() => setSelectedModule(module)}
+                title={module.label}
+              />
+            ))}
+            <ResidentContentCard
+              accent={residentTheme.accent}
+              description={viewModel.dues.detail}
+              icon="bill"
+              onPress={() => router.push("/(resident)/(tabs)/bills")}
+              title={viewModel.dues.amount}
+            />
+          </View>
 
           <View style={styles.tenureCard}>
             <Text style={styles.tenureHeart}>♥</Text>

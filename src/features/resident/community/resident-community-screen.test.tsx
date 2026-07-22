@@ -52,6 +52,9 @@ describe("ResidentCommunityScreen", () => {
     for (const heading of ["Happening nearby", "Find your circle", "Safety & support", "Governance highlights"]) {
       expect(screen.getByText(heading)).toBeTruthy();
     }
+    for (const label of ["Message society helpdesk", "Meetings", "Polls & Voting", "Document Vault"]) {
+      expect(screen.getByRole("button", { name: label })).toBeTruthy();
+    }
     expect(screen.getByText("Part of ReManage for 1 month")).toBeTruthy();
 
     await fireEvent.press(screen.getByRole("button", { name: "More" }));
