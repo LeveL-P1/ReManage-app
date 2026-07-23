@@ -38,9 +38,12 @@ describe("ResidentMoreScreen", () => {
     mockReplace.mockReset();
   });
 
-  it("shows the permission-filtered catalog and handles route and feedback modules", async () => {
+  it("shows the permission-filtered account hub and routes every permitted service", async () => {
     const screen = await render(shell());
 
+    expect(screen.getByRole("header", { name: "More" })).toBeTruthy();
+    expect(screen.getByText("Your home in ReManage")).toBeTruthy();
+    expect(screen.getByText("Account & access")).toBeTruthy();
     expect(screen.getByText("Daily priorities")).toBeTruthy();
     expect(screen.getByText("Community & shared life")).toBeTruthy();
     expect(screen.getByText("Governance & records")).toBeTruthy();
@@ -51,8 +54,8 @@ describe("ResidentMoreScreen", () => {
 
     await fireEvent.press(screen.getByRole("button", { name: "My Bills" }));
     expect(mockPush).toHaveBeenCalledWith("/(resident)/(tabs)/bills");
-    await fireEvent.press(screen.getByRole("button", { name: "Document Vault" }));
-    expect(screen.getByText("This mobile module is coming in the next ReManage phase.")).toBeTruthy();
+    await fireEvent.press(screen.getByRole("button", { name: "Helpdesk" }));
+    expect(mockPush).toHaveBeenCalledWith("/(resident)/more/helpdesk");
   });
 
   it("reveals Move-In / Out only with its explicit permission", async () => {
