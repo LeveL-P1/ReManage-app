@@ -1,5 +1,4 @@
 import React from "react";
-import { Alert } from "react-native";
 import { fireEvent, render } from "@testing-library/react-native";
 
 import { SessionContext, type SessionContextValue } from "@/platform/auth/session-provider";
@@ -39,41 +38,42 @@ async function renderHome(
 describe("ResidentHomeScreen", () => {
   beforeEach(() => mockPush.mockReset());
 
-  it("renders the resident overview and handles implemented and upcoming actions", async () => {
+  it("renders the reference-informed Home feed without advertisements", async () => {
     const screen = await renderHome();
 
-    expect(screen.getByText("Your society, at a glance")).toBeTruthy();
-    for (const label of ["Pay bill", "Approve visitor", "Raise complaint", "Raise SOS"]) {
+    expect(screen.getByText("Quick Actions")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Customise" })).toBeTruthy();
+    for (const label of [
+      "Pre-Approve",
+      "Security",
+      "Ask Society",
+      "Posts",
+      "Find Daily Help",
+      "Raise Alert",
+      "Pay Bills",
+      "View More",
+    ]) {
       expect(screen.getByRole("button", { name: label })).toBeTruthy();
     }
-    expect(screen.getByText("Today")).toBeTruthy();
-    expect(screen.getByText("Recent activity")).toBeTruthy();
-    expect(screen.getByText("From your community")).toBeTruthy();
-
-    await fireEvent.press(screen.getByRole("button", { name: "Pay bill" }));
-    expect(mockPush).toHaveBeenCalledWith("/(resident)/(tabs)/bills");
-    await fireEvent.press(screen.getByRole("button", { name: "Approve visitor" }));
-    expect(mockPush).toHaveBeenCalledWith("/(resident)/(tabs)/visitors");
-    await fireEvent.press(screen.getByRole("button", { name: "Raise complaint" }));
-    expect(screen.getByText("This mobile module is coming in the next ReManage phase.")).toBeTruthy();
+    expect(screen.getByText("You have no new updates")).toBeTruthy();
+    expect(screen.getByText("Today’s Entry Updates")).toBeTruthy();
+    expect(screen.getByText("Community Posts")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "New Post" })).toBeTruthy();
+    expect(screen.getByText("You are all caught up!")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "View Older Posts" })).toBeTruthy();
+    expect(screen.queryByText("Your society, at a glance")).toBeNull();
   });
 
-  it("only shows quick actions permitted by bootstrap", async () => {
-    const screen = await renderHome(["society:finance.read"]);
+  it("opens dedicated pop-out screens for Home features", async () => {
+    const screen = await renderHome();
 
-    expect(screen.getByRole("button", { name: "Pay bill" })).toBeTruthy();
-    expect(screen.queryByRole("button", { name: "Approve visitor" })).toBeNull();
-    expect(screen.queryByRole("button", { name: "Raise complaint" })).toBeNull();
-    expect(screen.queryByRole("button", { name: "Raise SOS" })).toBeNull();
-  });
+    fireEvent.press(screen.getByRole("button", { name: "Pre-Approve" }));
+    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/home/pre-approve");
 
-  it("renders an honest empty state and truthful Search feedback", async () => {
-    const alert = jest.spyOn(Alert, "alert").mockImplementation(() => undefined);
-    const screen = await renderHome(undefined, { ...residentHomeFixture, activity: [] });
+    fireEvent.press(screen.getByRole("button", { name: "New Post" }));
+    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/home/new-post");
 
-    expect(screen.getByText("No recent activity yet.")).toBeTruthy();
-    await fireEvent.press(screen.getByRole("button", { name: "Search" }));
-    expect(alert).toHaveBeenCalledWith("Search", "Resident search is coming in the next ReManage phase.");
-    alert.mockRestore();
+    fireEvent.press(screen.getByRole("button", { name: "View Older Posts" }));
+    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/home/older-posts");
   });
 });

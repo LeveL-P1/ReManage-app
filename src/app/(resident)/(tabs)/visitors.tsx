@@ -1,5 +1,5 @@
-import { ResidentShellScreen } from "@/features/resident/resident-shell-screen";
+import { ResidentVisitorsScreen } from "@/features/resident/visitors/resident-visitors-screen";
 
 export default function ResidentVisitorsRoute() {
-  return <ResidentShellScreen title="Visitors" />;
+  return <ResidentVisitorsScreen />;
 }
