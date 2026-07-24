@@ -1,2 +1,5 @@
-import { ResidentHomeFeatureScreen } from "@/features/resident/home/resident-home-feature-screen";
-export default function NotificationsRoute() { return <ResidentHomeFeatureScreen featureId="notifications" />; }
+import { ResidentNotificationsScreen } from "@/features/resident/home/resident-notifications-screen";
+
+export default function NotificationsRoute() {
+  return <ResidentNotificationsScreen />;
+}

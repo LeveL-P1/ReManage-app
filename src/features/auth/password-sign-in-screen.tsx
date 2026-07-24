@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { demoCredentials, demoOtpUnavailableMessage } from "@/platform/auth/development-demo-auth";
 import { useSession } from "@/platform/auth/session-provider";
@@ -23,6 +24,7 @@ export function PasswordSignInScreen({ demoMode = false, onOtpChallenge }: Passw
   const [error, setError] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<"password" | "otp" | null>(null);
   const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const isPending = pendingAction !== null;
   const otpDisabled = isPending || demoMode;
 
@@ -73,64 +75,88 @@ export function PasswordSignInScreen({ demoMode = false, onOtpChallenge }: Passw
   return (
     <View style={styles.screen}>
       <View style={styles.content}>
-        <Text accessibilityRole="header" style={styles.brand}>ReManage</Text>
-        <Text style={styles.heading}>Sign in to your account</Text>
-        <Text style={styles.copy}>Accounts are provided by your society management.</Text>
+        <View style={styles.logoMark}>
+          <Ionicons color={residentTheme.icon} name="home-outline" size={28} />
+        </View>
+        <Text accessibilityRole="header" style={styles.heading}>Welcome to ReManage</Text>
+        <Text style={styles.copy}>Sign in with the account provided by your society management.</Text>
         {demoMode ? <Text style={styles.demoHint}>Web demo credentials: {demoCredentials.email} / {demoCredentials.password}</Text> : null}
 
-        <Text style={styles.label}>Email address</Text>
-        <TextInput
-          accessibilityLabel="Email address"
-          autoCapitalize="none"
-          autoComplete="email"
-          keyboardType="email-address"
-          onBlur={() => setFocusedField(null)}
-          onChangeText={setEmail}
-          onFocus={() => setFocusedField("email")}
-          placeholder="you@example.com"
-          placeholderTextColor="#6B6B6B"
-          style={[styles.input, focusedField === "email" && styles.inputFocused]}
-          textContentType="username"
-          value={email}
-        />
+        <View style={[styles.fieldWrap, focusedField === "email" && styles.fieldWrapFocused]}>
+          <Text style={[styles.floatingLabel, (focusedField === "email" || email) && styles.floatingLabelActive]}>Email *</Text>
+          <TextInput
+            accessibilityLabel="Email address"
+            autoCapitalize="none"
+            autoComplete="email"
+            keyboardType="email-address"
+            onBlur={() => setFocusedField(null)}
+            onChangeText={setEmail}
+            onFocus={() => setFocusedField("email")}
+            placeholder=""
+            style={styles.input}
+            textContentType="username"
+            value={email}
+          />
+        </View>
 
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          accessibilityLabel="Password"
-          autoComplete="current-password"
-          onBlur={() => setFocusedField(null)}
-          onChangeText={setPassword}
-          onFocus={() => setFocusedField("password")}
-          placeholder="Your password"
-          placeholderTextColor="#6B6B6B"
-          secureTextEntry
-          style={[styles.input, focusedField === "password" && styles.inputFocused]}
-          textContentType="password"
-          value={password}
-        />
+        <View style={[styles.fieldWrap, focusedField === "password" && styles.fieldWrapFocused]}>
+          <Text style={[styles.floatingLabel, (focusedField === "password" || password) && styles.floatingLabelActive]}>Password *</Text>
+          <View style={styles.passwordRow}>
+            <TextInput
+              accessibilityLabel="Password"
+              autoComplete="current-password"
+              onBlur={() => setFocusedField(null)}
+              onChangeText={setPassword}
+              onFocus={() => setFocusedField("password")}
+              placeholder=""
+              secureTextEntry={!showPassword}
+              style={styles.passwordInput}
+              textContentType="password"
+              value={password}
+            />
+            <Pressable
+              accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+              accessibilityRole="button"
+              onPress={() => setShowPassword((value) => !value)}
+              style={styles.eyeButton}
+            >
+              <Ionicons color={residentTheme.muted} name={showPassword ? "eye-off-outline" : "eye-outline"} size={22} />
+            </Pressable>
+          </View>
+        </View>
+
+        <Pressable accessibilityRole="button" style={styles.forgotLink}>
+          <Text style={styles.forgotText}>Forgot your password?</Text>
+        </Pressable>
 
         {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
 
         <Pressable
-          accessibilityLabel={pendingAction === "password" ? "Signing in" : "Sign in"}
+          accessibilityLabel={pendingAction === "password" ? "Signing in" : "Continue"}
           accessibilityRole="button"
           accessibilityState={{ disabled: isPending }}
           disabled={isPending}
           onPress={() => void handlePasswordSignIn()}
           style={({ pressed }) => [styles.primaryAction, (pressed || isPending) && styles.primaryActionPressed, isPending && styles.disabled]}
         >
-          <Text style={styles.primaryActionText}>{pendingAction === "password" ? "Signing in…" : "Sign in"}</Text>
+          <Text style={styles.primaryActionText}>{pendingAction === "password" ? "Signing in…" : "Continue"}</Text>
         </Pressable>
 
+        <View style={styles.separatorRow}>
+          <View style={styles.separatorLine} />
+          <Text style={styles.separatorText}>or</Text>
+          <View style={styles.separatorLine} />
+        </View>
+
         <Pressable
-          accessibilityLabel={demoMode ? "Email code unavailable in web demo" : "Email me a code"}
+          accessibilityLabel={demoMode ? "Email code unavailable in web demo" : "Sign in with OTP"}
           accessibilityRole="button"
           accessibilityState={{ disabled: otpDisabled }}
           disabled={otpDisabled}
           onPress={() => void handleOtpRequest()}
           style={({ pressed }) => [styles.secondaryAction, (pressed || otpDisabled) && styles.secondaryActionPressed, otpDisabled && styles.disabled]}
         >
-          <Text style={styles.secondaryActionText}>{demoMode ? demoOtpUnavailableMessage : pendingAction === "otp" ? "Sending code…" : "Email me a code"}</Text>
+          <Text style={styles.secondaryActionText}>{demoMode ? demoOtpUnavailableMessage : pendingAction === "otp" ? "Sending code…" : "Sign in with OTP"}</Text>
         </Pressable>
       </View>
     </View>
@@ -138,21 +164,48 @@ export function PasswordSignInScreen({ demoMode = false, onOtpChallenge }: Passw
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: residentTheme.background, justifyContent: "center", padding: 24 },
-  content: { gap: 10, width: "100%", maxWidth: 440, alignSelf: "center" },
-  brand: { color: colors.orange, fontFamily: "System", fontSize: 32, fontWeight: "800" },
-  heading: { color: residentTheme.text, fontFamily: "System", fontSize: 24, fontWeight: "700", marginTop: 8 },
-  copy: { color: residentTheme.text, fontFamily: "System", fontSize: 16, lineHeight: 22, marginBottom: 14 },
-  demoHint: { color: residentTheme.text, fontFamily: "System", fontSize: 14, lineHeight: 20 },
-  label: { color: residentTheme.text, fontFamily: "System", fontSize: 15, fontWeight: "600", marginTop: 4 },
-  input: { backgroundColor: residentTheme.surface, borderColor: colors.charcoal, borderRadius: 8, borderWidth: 1, color: residentTheme.text, fontFamily: "System", fontSize: 16, minHeight: 48, paddingHorizontal: 14 },
-  inputFocused: { borderColor: colors.orange, borderWidth: 3, paddingHorizontal: 12 },
-  error: { color: colors.danger, fontFamily: "System", fontSize: 14, marginTop: 4 },
-  primaryAction: { alignItems: "center", backgroundColor: residentTheme.accent, borderRadius: 8, justifyContent: "center", minHeight: 48, marginTop: 12, paddingHorizontal: 16 },
-  primaryActionPressed: { backgroundColor: "#CC4300" },
-  primaryActionText: { color: colors.white, fontFamily: "System", fontSize: 16, fontWeight: "700" },
-  secondaryAction: { alignItems: "center", backgroundColor: residentTheme.highlight, borderColor: colors.charcoal, borderRadius: 8, borderWidth: 1, justifyContent: "center", minHeight: 48, paddingHorizontal: 16 },
-  secondaryActionPressed: { backgroundColor: "#E0A600" },
-  secondaryActionText: { color: colors.charcoal, fontFamily: "System", fontSize: 16, fontWeight: "700" },
+  screen: { flex: 1, backgroundColor: residentTheme.surface, justifyContent: "center", padding: 24 },
+  content: { gap: 8, width: "100%", maxWidth: 440, alignSelf: "center" },
+  logoMark: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    backgroundColor: "#E6F4F1",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  heading: { color: residentTheme.ink, fontSize: 28, fontWeight: "800", lineHeight: 34 },
+  copy: { color: residentTheme.muted, fontSize: 15, lineHeight: 22, marginBottom: 10 },
+  demoHint: { color: residentTheme.muted, fontSize: 13, lineHeight: 19, marginBottom: 6 },
+  fieldWrap: {
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: residentTheme.border,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingTop: 18,
+    paddingBottom: 10,
+    backgroundColor: residentTheme.surface,
+  },
+  fieldWrapFocused: { borderColor: residentTheme.accent, borderWidth: 2, paddingHorizontal: 13, paddingTop: 17 },
+  floatingLabel: { position: "absolute", left: 14, top: 16, color: residentTheme.muted, fontSize: 16 },
+  floatingLabelActive: { top: 8, fontSize: 12, fontWeight: "600" },
+  input: { color: residentTheme.ink, fontSize: 16, minHeight: 28, padding: 0 },
+  passwordRow: { flexDirection: "row", alignItems: "center" },
+  passwordInput: { flex: 1, color: residentTheme.ink, fontSize: 16, minHeight: 28, padding: 0 },
+  eyeButton: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
+  forgotLink: { alignSelf: "flex-start", marginTop: 4, marginBottom: 4 },
+  forgotText: { color: residentTheme.ink, fontSize: 14, fontWeight: "600", textDecorationLine: "underline" },
+  error: { color: colors.danger, fontSize: 14, marginTop: 4 },
+  primaryAction: { alignItems: "center", backgroundColor: residentTheme.icon, borderRadius: 12, justifyContent: "center", minHeight: 52, marginTop: 8, paddingHorizontal: 16 },
+  primaryActionPressed: { opacity: 0.86 },
+  primaryActionText: { color: colors.white, fontSize: 16, fontWeight: "700" },
+  separatorRow: { flexDirection: "row", alignItems: "center", gap: 12, marginVertical: 8 },
+  separatorLine: { flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: residentTheme.border },
+  separatorText: { color: residentTheme.muted, fontSize: 13, textTransform: "lowercase" },
+  secondaryAction: { alignItems: "center", backgroundColor: residentTheme.surface, borderColor: residentTheme.border, borderRadius: 12, borderWidth: 1, justifyContent: "center", minHeight: 52, paddingHorizontal: 16 },
+  secondaryActionPressed: { backgroundColor: "#FAFAF8" },
+  secondaryActionText: { color: residentTheme.ink, fontSize: 16, fontWeight: "700" },
   disabled: { opacity: 0.65 },
 });

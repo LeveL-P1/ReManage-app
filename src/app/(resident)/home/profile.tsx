@@ -1,2 +1,5 @@
-import { ResidentHomeFeatureScreen } from "@/features/resident/home/resident-home-feature-screen";
-export default function ProfileRoute() { return <ResidentHomeFeatureScreen featureId="profile" />; }
+import { ResidentProfileScreen } from "@/features/resident/home/resident-profile-screen";
+
+export default function ProfileRoute() {
+  return <ResidentProfileScreen />;
+}
