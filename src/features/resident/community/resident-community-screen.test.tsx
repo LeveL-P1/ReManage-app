@@ -49,10 +49,10 @@ describe("ResidentCommunityScreen", () => {
       "More",
     ];
     for (const label of labels) expect(screen.getByRole("button", { name: label })).toBeTruthy();
-    for (const heading of ["Happening nearby", "Find your circle", "Safety & support", "Governance highlights"]) {
+    for (const heading of ["Find Your Tribe", "Happening nearby", "Safety & support", "Governance highlights", "Find Daily Help"]) {
       expect(screen.getByText(heading)).toBeTruthy();
     }
-    for (const label of ["Message society helpdesk", "Meetings", "Polls & Voting", "Document Vault"]) {
+    for (const label of ["Message society helpdesk", "Meetings", "Polls & Voting", "Document Vault", "Host a Class"]) {
       expect(screen.getByRole("button", { name: label })).toBeTruthy();
     }
     expect(screen.getByText("Part of ReManage for 1 month")).toBeTruthy();
@@ -60,7 +60,7 @@ describe("ResidentCommunityScreen", () => {
     await fireEvent.press(screen.getByRole("button", { name: "More" }));
     expect(mockPush).toHaveBeenCalledWith("/(resident)/(tabs)/more");
     await fireEvent.press(screen.getByRole("button", { name: "Helpdesk" }));
-    expect(screen.getByText("This mobile module is coming in the next ReManage phase.")).toBeTruthy();
+    expect(mockPush).toHaveBeenCalledWith("/(resident)/more/helpdesk");
   });
 
   it("hides unavailable community modules but always keeps More", async () => {
