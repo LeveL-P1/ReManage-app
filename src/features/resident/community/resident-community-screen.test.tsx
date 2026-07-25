@@ -42,13 +42,14 @@ describe("ResidentCommunityScreen", () => {
       "Discussion Forum",
       "Events & Calendar",
       "Amenity Booking",
-      "Resident Directory",
       "Staff & Daily Help",
       "Buy & Sell",
       "Parking",
       "More",
     ];
     for (const label of labels) expect(screen.getByRole("button", { name: label })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Resident Directory" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Open Resident Directory" })).toBeTruthy();
     for (const heading of ["Find Your Tribe", "Happening nearby", "Safety & support", "Governance highlights", "Find Daily Help"]) {
       expect(screen.getByText(heading)).toBeTruthy();
     }

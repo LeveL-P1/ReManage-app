@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: "#F2F4F7" },
   content: { paddingBottom: 40 },
   coverWrap: { height: 150, backgroundColor: "#FFD8BF", position: "relative" },
-  coverGradient: { ...StyleSheet.absoluteFillObject, backgroundColor: "#FFB27A" },
+  coverGradient: { ...StyleSheet.absoluteFill, backgroundColor: "#FFB27A" },
   avatarWrap: { position: "absolute", left: 20, bottom: -36 },
   avatar: { width: 88, height: 88, borderRadius: 44, backgroundColor: "#D8E2EA", borderWidth: 4, borderColor: residentTheme.surface, alignItems: "center", justifyContent: "center" },
   avatarText: { color: residentTheme.ink, fontSize: 30, fontWeight: "800" },

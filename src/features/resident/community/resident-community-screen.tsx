@@ -46,7 +46,7 @@ function openModule(router: ReturnType<typeof useRouter>, module: ResidentModule
     return;
   }
   const feature = getResidentMoreFeature(module.id);
-  if (feature) router.push(feature.route);
+  if (feature) router.push(feature.route as never);
 }
 
 export function ResidentCommunityScreen({
@@ -153,7 +153,7 @@ export function ResidentCommunityScreen({
           </View>
 
           <Pressable
-            accessibilityLabel="Resident Directory"
+            accessibilityLabel="Open Resident Directory"
             accessibilityRole="button"
             onPress={() => directory && openModule(router, directory)}
             style={({ pressed }) => [styles.directoryCard, pressed && styles.pressed]}

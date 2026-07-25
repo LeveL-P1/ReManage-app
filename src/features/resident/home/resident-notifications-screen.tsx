@@ -21,7 +21,7 @@ export function ResidentNotificationsScreen() {
   return (
     <View style={styles.screen}>
       <ResidentPopOutHeader backIcon="chevron-back" backLabel="Back" onBack={() => router.back()} title="Notifications" />
-      <ResidentTabBar
+      <ResidentTabBar<NotificationTabId>
         activeTab={activeTab}
         onTabChange={setActiveTab}
         tabs={[

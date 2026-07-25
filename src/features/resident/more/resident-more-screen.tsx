@@ -42,7 +42,7 @@ export function ResidentMoreScreen() {
     }
 
     const feature = getResidentMoreFeature(module.id);
-    if (feature) router.push(feature.route);
+    if (feature) router.push(feature.route as never);
   }
 
   return (

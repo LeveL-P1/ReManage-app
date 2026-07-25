@@ -194,7 +194,7 @@ export function ResidentPopOutHeader({
   return (
     <View style={popOutStyles.header}>
       <Pressable
-        accessibilityLabel={backLabel}
+        accessibilityLabel={backLabel === "Close" ? `Close ${title}` : backLabel}
         accessibilityRole="button"
         onPress={onBack}
         style={popOutStyles.backControl}
@@ -308,7 +308,7 @@ export function ResidentPopOutScreen({
 
 const sheetStyles = StyleSheet.create({
   modal: { flex: 1, justifyContent: "flex-end" },
-  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(31, 35, 36, 0.48)" },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(31, 35, 36, 0.48)" },
   sheet: {
     maxHeight: "88%",
     paddingBottom: Platform.OS === "web" ? 88 : 28,
@@ -324,7 +324,7 @@ const sheetStyles = StyleSheet.create({
 
 const modalStyles = StyleSheet.create({
   modal: { flex: 1, justifyContent: "center", padding: 24 },
-  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(31, 35, 36, 0.48)" },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(31, 35, 36, 0.48)" },
   card: {
     backgroundColor: residentTheme.surface,
     borderRadius: 20,
