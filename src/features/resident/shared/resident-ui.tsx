@@ -1,14 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { ResidentIconKey } from "@/features/resident/catalog/resident-module-catalog";
 import { residentTheme } from "@/platform/theme/tokens";
+import { ResidentCenteredModal } from "./resident-overlays";
 import { ResidentIcon } from "./resident-icon";
 
 interface ResidentSocietyHeaderProps {
   unit: string;
   societyName: string;
+  units?: readonly string[];
   onSearch(): void;
   onNotifications(): void;
   onProfile(): void;
@@ -17,29 +20,51 @@ interface ResidentSocietyHeaderProps {
 export function ResidentSocietyHeader({
   unit,
   societyName,
+  units = ["A-308", "B-104", "C-215"],
   onSearch,
   onNotifications,
   onProfile,
 }: ResidentSocietyHeaderProps) {
+  const [unitPickerVisible, setUnitPickerVisible] = useState(false);
+
   return (
-    <View style={styles.header}>
-      <View style={styles.headerIdentity}>
-        <Text numberOfLines={1} style={styles.unit}>{unit}</Text>
-        <Text numberOfLines={1} style={styles.societyName}>{societyName}</Text>
-      </View>
-      <View style={styles.headerActions}>
-        <HeaderButton accessibilityLabel="Search" icon="search-outline" onPress={onSearch} />
-        <HeaderButton accessibilityLabel="Notifications" icon="notifications-outline" onPress={onNotifications} />
+    <>
+      <View style={styles.header}>
         <Pressable
-          accessibilityLabel="Open profile"
+          accessibilityLabel={`Switch unit ${unit}`}
           accessibilityRole="button"
-          onPress={onProfile}
-          style={({ pressed }) => [styles.profileButton, pressed && styles.pressed]}
+          onPress={() => setUnitPickerVisible(true)}
+          style={({ pressed }) => [styles.headerIdentity, pressed && styles.pressed]}
         >
-          <Text style={styles.profileInitial}>D</Text>
+          <View style={styles.unitRow}>
+            <Text numberOfLines={1} style={styles.unit}>{unit}</Text>
+            <Ionicons color={residentTheme.ink} name="chevron-down" size={18} />
+          </View>
+          <Text numberOfLines={1} style={styles.societyName}>{societyName}</Text>
         </Pressable>
+        <View style={styles.headerActions}>
+          <HeaderButton accessibilityLabel="Search" icon="search-outline" onPress={onSearch} />
+          <HeaderButton accessibilityLabel="Notifications" icon="notifications-outline" onPress={onNotifications} />
+          <Pressable
+            accessibilityLabel="Open profile"
+            accessibilityRole="button"
+            onPress={onProfile}
+            style={({ pressed }) => [styles.profileButton, pressed && styles.pressed]}
+          >
+            <Text style={styles.profileInitial}>D</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+
+      <ResidentCenteredModal
+        message={`This preview shows ${units.length} linked residences. Live unit switching arrives with society services.`}
+        onDismiss={() => setUnitPickerVisible(false)}
+        onPrimary={() => setUnitPickerVisible(false)}
+        primaryLabel="Close"
+        title={`Your units · ${unit}`}
+        visible={unitPickerVisible}
+      />
+    </>
   );
 }
 
@@ -204,6 +229,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   headerIdentity: { flex: 1, paddingRight: 10 },
+  unitRow: { flexDirection: "row", alignItems: "center", gap: 4 },
   unit: { color: residentTheme.ink, fontSize: 20, lineHeight: 25, fontWeight: "700" },
   societyName: { color: residentTheme.muted, fontSize: 14, lineHeight: 20 },
   headerActions: { flexDirection: "row", alignItems: "center", gap: 2 },

@@ -42,7 +42,7 @@ describe("ResidentMoreScreen", () => {
     const screen = await render(shell());
 
     expect(screen.getByRole("header", { name: "More" })).toBeTruthy();
-    expect(screen.getByText("Your home in ReManage")).toBeTruthy();
+    expect(screen.getByText("Alex S.")).toBeTruthy();
     expect(screen.getByText("Account & access")).toBeTruthy();
     expect(screen.getByText("Daily priorities")).toBeTruthy();
     expect(screen.getByText("Community & shared life")).toBeTruthy();

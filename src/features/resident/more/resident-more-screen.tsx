@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import {
@@ -19,6 +19,12 @@ import {
 import { RoleSwitcher } from "@/features/session/role-switcher";
 import { useSession } from "@/platform/auth/session-provider";
 import { residentTheme } from "@/platform/theme/tokens";
+
+const accountStats = [
+  { id: "bookmarks", label: "Bookmarks", value: "12" },
+  { id: "events", label: "Events", value: "3" },
+  { id: "streak", label: "Daily streak", value: "0 days" },
+] as const;
 
 export function ResidentMoreScreen() {
   const router = useRouter();
@@ -56,13 +62,28 @@ export function ResidentMoreScreen() {
             <Text style={styles.subtitle}>Your home, account, and every available society service.</Text>
           </View>
 
-          <View style={styles.profileCard}>
+          <Pressable
+            accessibilityLabel="Open profile"
+            accessibilityRole="button"
+            onPress={() => router.push("/(resident)/home/profile")}
+            style={({ pressed }) => [styles.profileCard, pressed && styles.pressed]}
+          >
             <View style={styles.profileMark}><Text style={styles.profileInitial}>D</Text></View>
             <View style={styles.profileCopy}>
-              <Text style={styles.profileTitle}>Your home in ReManage</Text>
-              <Text style={styles.profileDetail}>A-308 · Resident account</Text>
+              <Text style={styles.profileTitle}>Alex S.</Text>
+              <Text style={styles.profileDetail}>A-308 · Resident account · Approved</Text>
             </View>
             <Ionicons color={residentTheme.icon} name="chevron-forward" size={21} />
+          </Pressable>
+
+          <View style={styles.statsCard}>
+            {accountStats.map((stat, index) => (
+              <View key={stat.id} style={styles.statColumn}>
+                {index > 0 ? <View style={styles.statDivider} /> : null}
+                <Text style={styles.statValue}>{stat.value}</Text>
+                <Text style={styles.statLabel}>{stat.label}</Text>
+              </View>
+            ))}
           </View>
 
           {groups.length ? groups.map((group) => (
@@ -95,13 +116,18 @@ export function ResidentMoreScreen() {
             </View>
           </View>
 
-          <View style={styles.supportCard}>
+          <Pressable
+            accessibilityLabel="Need help"
+            accessibilityRole="button"
+            onPress={() => router.push("/(resident)/more/helpdesk")}
+            style={({ pressed }) => [styles.supportCard, pressed && styles.pressed]}
+          >
             <View style={styles.supportIcon}><Ionicons color={residentTheme.icon} name="headset-outline" size={22} /></View>
             <View style={styles.supportCopy}>
               <Text style={styles.supportTitle}>Need help?</Text>
               <Text style={styles.supportDetail}>Use Helpdesk for society requests and service follow-ups.</Text>
             </View>
-          </View>
+          </Pressable>
 
           <Text style={styles.footer}>ReManage keeps your community essentials in one place.</Text>
         </View>
@@ -123,6 +149,19 @@ const styles = StyleSheet.create({
   profileCopy: { flex: 1 },
   profileTitle: { color: residentTheme.ink, fontSize: 17, fontWeight: "700", lineHeight: 22 },
   profileDetail: { color: residentTheme.muted, fontSize: 13, lineHeight: 18, marginTop: 3 },
+  statsCard: {
+    marginTop: 12,
+    flexDirection: "row",
+    backgroundColor: residentTheme.surface,
+    borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: residentTheme.border,
+    overflow: "hidden",
+  },
+  statColumn: { flex: 1, alignItems: "center", paddingVertical: 16, position: "relative" },
+  statDivider: { position: "absolute", left: 0, top: 16, bottom: 16, width: StyleSheet.hairlineWidth, backgroundColor: residentTheme.border },
+  statValue: { color: residentTheme.ink, fontSize: 20, fontWeight: "800", lineHeight: 24 },
+  statLabel: { color: residentTheme.muted, fontSize: 12, lineHeight: 16, marginTop: 4, textAlign: "center" },
   cardList: { gap: 9 },
   emptyCard: { backgroundColor: residentTheme.surface, borderRadius: 18, marginTop: 20, padding: 22 },
   emptyTitle: { color: residentTheme.ink, fontSize: 16, fontWeight: "700", lineHeight: 22 },
@@ -136,4 +175,5 @@ const styles = StyleSheet.create({
   supportTitle: { color: residentTheme.ink, fontSize: 16, fontWeight: "700", lineHeight: 21 },
   supportDetail: { color: residentTheme.muted, fontSize: 13, lineHeight: 18, marginTop: 3 },
   footer: { color: residentTheme.muted, fontSize: 12, lineHeight: 18, marginHorizontal: 18, marginTop: 26, textAlign: "center" },
+  pressed: { opacity: 0.74 },
 });

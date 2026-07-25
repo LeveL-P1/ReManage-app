@@ -1,11 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { useSession } from "@/platform/auth/session-provider";
 import { residentTheme } from "@/platform/theme/tokens";
 import { ResidentIcon } from "@/features/resident/shared/resident-icon";
+import { ResidentCommentsSheet } from "@/features/resident/shared/resident-comments-sheet";
+import { ResidentBottomSheet } from "@/features/resident/shared/resident-overlays";
 import {
   ResidentActionGrid,
   ResidentActionTile,
@@ -31,6 +33,8 @@ export function ResidentHomeScreen({
 }) {
   const router = useRouter();
   const { state } = useSession();
+  const [commentsPostId, setCommentsPostId] = useState<string | null>(null);
+  const [menuPostId, setMenuPostId] = useState<string | null>(null);
   const bootstrap = state.status === "authenticated" ? state.bootstrap : null;
   const quickActions = useMemo(
     () => residentHomeQuickActionIds
@@ -38,6 +42,7 @@ export function ResidentHomeScreen({
       .filter((feature) => canUseResidentHomeFeature(feature, bootstrap?.permissions ?? [])),
     [bootstrap?.permissions],
   );
+  const activePost = viewModel.posts.find((post) => post.id === commentsPostId) ?? null;
 
   return (
     <View style={styles.screen}>
@@ -123,39 +128,46 @@ export function ResidentHomeScreen({
           </View>
           <View style={styles.postList}>
             {viewModel.posts.map((post) => (
-              <Pressable
-                accessibilityLabel={`Open ${post.author} post`}
-                accessibilityRole="button"
-                key={post.id}
-                onPress={() => pushHomeFeature(router, "community-posts")}
-                style={({ pressed }) => [styles.postCard, pressed && styles.pressed]}
-              >
+              <View key={post.id} style={styles.postCard}>
                 <View style={styles.postAuthorRow}>
                   <View style={styles.avatar}><Text style={styles.avatarText}>{post.initials}</Text></View>
                   <View style={styles.postAuthorCopy}>
                     <Text style={styles.postAuthor}>{post.author}</Text>
                     <Text style={styles.postMeta}>{post.unit} · {post.when} · <Ionicons color={residentTheme.muted} name="lock-closed" size={12} /></Text>
                   </View>
-                  <Ionicons color={residentTheme.ink} name="ellipsis-vertical" size={20} />
+                  <Pressable
+                    accessibilityLabel={`Open menu for ${post.author} post`}
+                    accessibilityRole="button"
+                    onPress={() => setMenuPostId(post.id)}
+                  >
+                    <Ionicons color={residentTheme.ink} name="ellipsis-vertical" size={20} />
+                  </Pressable>
                 </View>
                 <Text style={styles.postBody}>{post.body}</Text>
-                <View style={styles.thoughtBox}>
+                <Pressable
+                  accessibilityLabel={`Add your thoughts on ${post.author} post`}
+                  accessibilityRole="button"
+                  onPress={() => setCommentsPostId(post.id)}
+                  style={({ pressed }) => [styles.thoughtBox, pressed && styles.pressed]}
+                >
                   <Text style={styles.thoughtText}>Add your thoughts…</Text>
                   <Ionicons color={residentTheme.muted} name="send-outline" size={23} />
-                </View>
+                </Pressable>
                 <View style={styles.postFooter}>
                   <View style={styles.postFooterLeft}>
                     <Ionicons color={residentTheme.ink} name="thumbs-up-outline" size={24} />
                     <Ionicons color={residentTheme.ink} name="arrow-redo-outline" size={24} />
                   </View>
-                  <View style={styles.postFooterRight}>
-                    <Ionicons color={residentTheme.muted} name="eye-outline" size={19} />
-                    <Text style={styles.postMetric}>{post.views}</Text>
-                    <Ionicons color="#2E9BE8" name="thumbs-up" size={18} />
-                    <Text style={styles.postMetric}>{post.reactions}</Text>
-                  </View>
+                  <Pressable accessibilityLabel={`View comments on ${post.author} post`} accessibilityRole="button" onPress={() => setCommentsPostId(post.id)}>
+                    <View style={styles.postFooterRight}>
+                      <Ionicons color={residentTheme.muted} name="eye-outline" size={19} />
+                      <Text style={styles.postMetric}>{post.views}</Text>
+                      <Ionicons color="#2E9BE8" name="thumbs-up" size={18} />
+                      <Text style={styles.postMetric}>{post.reactions}</Text>
+                    </View>
+                  </Pressable>
                 </View>
-              </Pressable>
+              </View>
             ))}
           </View>
 
@@ -180,6 +192,28 @@ export function ResidentHomeScreen({
           </View>
         </View>
       </ScrollView>
+
+      <ResidentCommentsSheet
+        comments={activePost?.comments ?? []}
+        onDismiss={() => setCommentsPostId(null)}
+        postAuthor={activePost?.author ?? "this post"}
+        visible={commentsPostId !== null}
+      />
+
+      <ResidentBottomSheet
+        onDismiss={() => setMenuPostId(null)}
+        title="Post options"
+        visible={menuPostId !== null}
+      >
+        <Pressable accessibilityRole="button" onPress={() => setMenuPostId(null)} style={styles.menuRow}>
+          <Ionicons color={residentTheme.ink} name="share-outline" size={22} />
+          <Text style={styles.menuText}>Share preview</Text>
+        </Pressable>
+        <Pressable accessibilityRole="button" onPress={() => setMenuPostId(null)} style={styles.menuRow}>
+          <Ionicons color={residentTheme.ink} name="flag-outline" size={22} />
+          <Text style={styles.menuText}>Report preview</Text>
+        </Pressable>
+      </ResidentBottomSheet>
     </View>
   );
 }
@@ -233,5 +267,7 @@ const styles = StyleSheet.create({
   caughtUpCopy: { color: residentTheme.muted, fontSize: 15, lineHeight: 22, textAlign: "center", marginTop: 8 },
   olderPostsButton: { height: 50, marginTop: 20, paddingHorizontal: 24, borderRadius: 15, borderWidth: 2, borderColor: residentTheme.icon, alignItems: "center", justifyContent: "center" },
   olderPostsText: { color: residentTheme.icon, fontSize: 16, fontWeight: "700" },
+  menuRow: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 14 },
+  menuText: { color: residentTheme.ink, fontSize: 16, fontWeight: "600" },
   pressed: { opacity: 0.74 },
 });

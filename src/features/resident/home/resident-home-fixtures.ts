@@ -1,4 +1,5 @@
 import type { ResidentIconKey } from "@/features/resident/catalog/resident-module-catalog";
+import type { ResidentComment } from "@/features/resident/shared/resident-comments-sheet";
 
 export interface ResidentHomeViewModel {
   unit: string;
@@ -18,6 +19,7 @@ export interface ResidentHomeViewModel {
     body: string;
     views: string;
     reactions: string;
+    comments: readonly ResidentComment[];
   }[];
 }
 
@@ -38,6 +40,34 @@ export const residentHomeFixture: ResidentHomeViewModel = {
       body: "Water pressure may be lower between 11 AM and 1 PM on Saturday while the overhead tank is cleaned.",
       views: "28",
       reactions: "4",
+      comments: [
+        {
+          id: "c1",
+          author: "Meera Shah",
+          initials: "M",
+          when: "6h",
+          body: "Thanks for the heads-up. Will plan laundry accordingly.",
+          likes: 3,
+          replies: [
+            {
+              id: "c1-r1",
+              author: "Society Office",
+              initials: "S",
+              when: "5h",
+              body: "Appreciate the cooperation.",
+              likes: 1,
+            },
+          ],
+        },
+        {
+          id: "c2",
+          author: "Arjun Kumar",
+          initials: "A",
+          when: "4h",
+          body: "Will the clubhouse water supply also be affected?",
+          likes: 1,
+        },
+      ],
     },
     {
       id: "parking-reminder",
@@ -48,6 +78,16 @@ export const residentHomeFixture: ResidentHomeViewModel = {
       body: "Please park only in your assigned slot. This keeps guest and emergency access clear for every resident.",
       views: "24",
       reactions: "6",
+      comments: [
+        {
+          id: "c3",
+          author: "Priya Nair",
+          initials: "P",
+          when: "2d",
+          body: "Could we get a reminder notice near visitor parking too?",
+          likes: 5,
+        },
+      ],
     },
   ],
 };
