@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ResidentIcon } from "@/features/resident/shared/resident-icon";
+import { ResidentCenteredModal } from "@/features/resident/shared/resident-overlays";
 import {
   ResidentActionGrid,
   ResidentActionTile,
@@ -22,6 +24,12 @@ function pushBillsFeature(router: ReturnType<typeof useRouter>, id: ResidentBill
   router.push(getResidentBillsFeature(id).route as never);
 }
 
+const promoFeatures = [
+  { icon: "bill" as const, title: "Digital Invoices", detail: "Receive maintenance invoices directly in the app." },
+  { icon: "bill" as const, title: "Secure Payments", detail: "Review payment options with clear status updates." },
+  { icon: "document" as const, title: "Automated Receipts", detail: "Keep every receipt and reminder together." },
+] as const;
+
 const quickLabels: Record<ResidentBillsFeatureId, string> = {
   "pay-now": "Pay dues",
   invoices: "Invoices",
@@ -36,6 +44,7 @@ export function ResidentBillsScreen({
 }) {
   const router = useRouter();
   const { state } = useSession();
+  const [shareVisible, setShareVisible] = useState(false);
   const societyName = state.status === "authenticated" ? state.bootstrap.society.name : "Your society";
 
   return (
@@ -141,19 +150,26 @@ export function ResidentBillsScreen({
           </View>
 
           <ResidentSectionHeader title="Payments made simpler" />
-          <Pressable
-            accessibilityLabel="Open Payment Help"
-            accessibilityRole="button"
-            onPress={() => pushBillsFeature(router, "help")}
-            style={({ pressed }) => [styles.supportCard, pressed && styles.pressed]}
-          >
-            <View style={styles.supportIcon}><Ionicons color={residentTheme.icon} name="shield-checkmark-outline" size={25} /></View>
-            <View style={styles.supportCopy}>
-              <Text style={styles.supportTitle}>Keep every payment record together</Text>
-              <Text style={styles.supportDescription}>Review invoices, payment references, and help options from one place.</Text>
-            </View>
-            <Ionicons color={residentTheme.icon} name="chevron-forward" size={20} />
-          </Pressable>
+          <View style={styles.promoCard}>
+            <Text style={styles.promoTitle}>Simplify your maintenance payments with ReManage</Text>
+            {promoFeatures.map((feature) => (
+              <View key={feature.title} style={styles.promoRow}>
+                <View style={styles.promoIcon}><ResidentIcon color={residentTheme.icon} name={feature.icon} size={22} /></View>
+                <View style={styles.promoCopy}>
+                  <Text style={styles.promoFeatureTitle}>{feature.title}</Text>
+                  <Text style={styles.promoFeatureDetail}>{feature.detail}</Text>
+                </View>
+              </View>
+            ))}
+            <Pressable
+              accessibilityLabel="Share With Your Committee"
+              accessibilityRole="button"
+              onPress={() => setShareVisible(true)}
+              style={({ pressed }) => [styles.shareButton, pressed && styles.pressed]}
+            >
+              <Text style={styles.shareButtonText}>Share With Your Committee</Text>
+            </Pressable>
+          </View>
 
           <View style={styles.caughtUp}>
             <View style={styles.caughtUpIcon}><Ionicons color={residentTheme.icon} name="checkmark" size={33} /></View>
@@ -162,6 +178,15 @@ export function ResidentBillsScreen({
           </View>
         </View>
       </ScrollView>
+
+      <ResidentCenteredModal
+        message="Sharing payment benefits with your committee is a mobile preview only."
+        onDismiss={() => setShareVisible(false)}
+        onPrimary={() => setShareVisible(false)}
+        primaryLabel="Close"
+        title="Share preview"
+        visible={shareVisible}
+      />
     </View>
   );
 }
@@ -202,11 +227,15 @@ const styles = StyleSheet.create({
   activityDescription: { color: residentTheme.muted, fontSize: 12, lineHeight: 17, marginTop: 2 },
   activityWhen: { color: residentTheme.muted, fontSize: 12, lineHeight: 17 },
   activityDivider: { height: StyleSheet.hairlineWidth, marginLeft: 68, backgroundColor: residentTheme.border },
-  supportCard: { padding: 16, borderRadius: 21, backgroundColor: residentTheme.surface, borderWidth: StyleSheet.hairlineWidth, borderColor: residentTheme.border, flexDirection: "row", alignItems: "center" },
-  supportIcon: { width: 46, height: 46, borderRadius: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#E5F2F0" },
-  supportCopy: { flex: 1, marginHorizontal: 12 },
-  supportTitle: { color: residentTheme.ink, fontSize: 15, lineHeight: 20, fontWeight: "700" },
-  supportDescription: { color: residentTheme.muted, fontSize: 12, lineHeight: 17, marginTop: 2 },
+  promoCard: { padding: 18, borderRadius: 21, backgroundColor: residentTheme.surface, borderWidth: StyleSheet.hairlineWidth, borderColor: residentTheme.border },
+  promoTitle: { color: residentTheme.ink, fontSize: 16, lineHeight: 22, fontWeight: "700", textAlign: "center", marginBottom: 16 },
+  promoRow: { flexDirection: "row", alignItems: "flex-start", gap: 12, marginBottom: 14 },
+  promoIcon: { width: 40, height: 40, borderRadius: 14, backgroundColor: "#E5F2F0", alignItems: "center", justifyContent: "center" },
+  promoCopy: { flex: 1 },
+  promoFeatureTitle: { color: residentTheme.ink, fontSize: 15, fontWeight: "700", lineHeight: 20 },
+  promoFeatureDetail: { color: residentTheme.muted, fontSize: 13, lineHeight: 18, marginTop: 2 },
+  shareButton: { height: 52, borderRadius: 14, backgroundColor: residentTheme.highlight, alignItems: "center", justifyContent: "center", marginTop: 6 },
+  shareButtonText: { color: residentTheme.ink, fontSize: 16, fontWeight: "800" },
   caughtUp: { alignItems: "center", marginTop: 42, paddingBottom: 10 },
   caughtUpIcon: { width: 65, height: 65, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: "#E5F2F0", borderWidth: 5, borderColor: residentTheme.surface },
   caughtUpTitle: { color: residentTheme.ink, fontSize: 20, lineHeight: 26, fontWeight: "700", marginTop: 14 },
