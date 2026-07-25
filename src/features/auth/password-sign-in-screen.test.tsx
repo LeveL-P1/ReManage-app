@@ -1,4 +1,5 @@
 import React from "react";
+import { StyleSheet } from "react-native";
 import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
 
 import { SessionContext, type SessionContextValue } from "@/platform/auth/session-provider";
@@ -34,7 +35,7 @@ describe("PasswordSignInScreen", () => {
   it("requires an email and password before password sign-in", async () => {
     const { getByRole, getByText } = await renderScreen();
 
-    await fireEvent.press(getByRole("button", { name: "Sign in" }));
+    await fireEvent.press(getByRole("button", { name: "Continue" }));
 
     expect(getByText("Enter your email address and password.")).toBeTruthy();
   });
@@ -45,7 +46,7 @@ describe("PasswordSignInScreen", () => {
 
     await fireEvent.changeText(getByLabelText("Email address"), "  Resident@Example.COM  ");
     await fireEvent.changeText(getByLabelText("Password"), "password");
-    await fireEvent.press(getByRole("button", { name: "Sign in" }));
+    await fireEvent.press(getByRole("button", { name: "Continue" }));
 
     await waitFor(() => expect(session.signInWithPassword).toHaveBeenCalledWith("resident@example.com", "password"));
   });
@@ -54,6 +55,13 @@ describe("PasswordSignInScreen", () => {
     const { getByLabelText } = await renderScreen();
 
     expect(getByLabelText("Password").props.secureTextEntry).toBe(true);
+  });
+
+  it("uses the ReManage accent for the Continue action", async () => {
+    const { getByRole } = await renderScreen();
+    const continueButton = getByRole("button", { name: "Continue" });
+
+    expect(StyleSheet.flatten(continueButton.props.style).backgroundColor).toBe("#FF5400");
   });
 
   it("submits a password sign-in once while a request is pending", async () => {
@@ -70,7 +78,7 @@ describe("PasswordSignInScreen", () => {
 
     await fireEvent.changeText(getByLabelText("Email address"), "resident@example.com");
     await fireEvent.changeText(getByLabelText("Password"), "password");
-    const signInButton = getByRole("button", { name: "Sign in" });
+    const signInButton = getByRole("button", { name: "Continue" });
     await fireEvent.press(signInButton);
     await fireEvent.press(signInButton);
 
@@ -85,7 +93,7 @@ describe("PasswordSignInScreen", () => {
     const { getByLabelText, getByRole, onOtpChallenge } = await renderScreen(session);
 
     await fireEvent.changeText(getByLabelText("Email address"), " Resident@Example.com ");
-    await fireEvent.press(getByRole("button", { name: "Email me a code" }));
+    await fireEvent.press(getByRole("button", { name: "Sign in with OTP" }));
 
     await waitFor(() => expect(session.requestOtp).toHaveBeenCalledWith("resident@example.com"));
     expect(onOtpChallenge).toHaveBeenCalledWith("opaque-challenge-id");
@@ -109,7 +117,7 @@ describe("PasswordSignInScreen", () => {
 
     await fireEvent.changeText(getByLabelText("Email address"), "resident@example.com");
     await fireEvent.changeText(getByLabelText("Password"), "wrong-password");
-    await fireEvent.press(getByRole("button", { name: "Sign in" }));
+    await fireEvent.press(getByRole("button", { name: "Continue" }));
 
     expect(await findByText("We could not sign you in. Please try again.")).toBeTruthy();
     expect(queryByText("invalid credentials")).toBeNull();

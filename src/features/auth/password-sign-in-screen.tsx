@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   forgotLink: { alignSelf: "flex-start", marginTop: 4, marginBottom: 4 },
   forgotText: { color: residentTheme.ink, fontSize: 14, fontWeight: "600", textDecorationLine: "underline" },
   error: { color: colors.danger, fontSize: 14, marginTop: 4 },
-  primaryAction: { alignItems: "center", backgroundColor: residentTheme.icon, borderRadius: 12, justifyContent: "center", minHeight: 52, marginTop: 8, paddingHorizontal: 16 },
+  primaryAction: { alignItems: "center", backgroundColor: residentTheme.accent, borderRadius: 12, justifyContent: "center", minHeight: 52, marginTop: 8, paddingHorizontal: 16 },
   primaryActionPressed: { opacity: 0.86 },
   primaryActionText: { color: colors.white, fontSize: 16, fontWeight: "700" },
   separatorRow: { flexDirection: "row", alignItems: "center", gap: 12, marginVertical: 8 },

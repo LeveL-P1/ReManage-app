@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { ResidentCenteredModal } from "@/features/resident/shared/resident-overlays";
 import { useSession } from "@/platform/auth/session-provider";
 import { colors, residentTheme } from "@/platform/theme/tokens";
 
@@ -13,22 +14,35 @@ const genericError = "We could not verify that code. Please try again.";
 
 export function OtpVerifyScreen({ challengeId, onBack }: OtpVerifyScreenProps) {
   const { verifyOtp } = useSession();
-  const [code, setCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [isPending, setIsPending] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  const [resendSeconds, setResendSeconds] = useState(45);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const inputRef = useRef<TextInput>(null);
+  const code = digits.join("");
   const isCodeComplete = code.length === 6;
+
+  useEffect(() => {
+    if (resendSeconds <= 0) return;
+    const timer = setTimeout(() => setResendSeconds((value) => value - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendSeconds]);
+
+  function updateDigits(value: string) {
+    const next = value.replace(/\D/g, "").slice(0, 6).split("");
+    setDigits(Array.from({ length: 6 }, (_, index) => next[index] ?? ""));
+  }
 
   async function handleVerify() {
     if (isPending || !isCodeComplete) return;
 
-    setError(null);
     setIsPending(true);
     try {
       await verifyOtp(challengeId, code);
     } catch {
-      setCode("");
-      setError(genericError);
+      setDigits(["", "", "", "", "", ""]);
+      setErrorModalVisible(true);
+      inputRef.current?.focus();
     } finally {
       setIsPending(false);
     }
@@ -37,27 +51,31 @@ export function OtpVerifyScreen({ challengeId, onBack }: OtpVerifyScreenProps) {
   return (
     <View style={styles.screen}>
       <View style={styles.content}>
-        <Text accessibilityRole="header" style={styles.brand}>ReManage</Text>
-        <Text style={styles.heading}>Check your email</Text>
+        <Text accessibilityRole="header" style={styles.heading}>Check your email</Text>
         <Text style={styles.copy}>Enter the six-digit code we sent to your email address.</Text>
 
-        <Text style={styles.label}>One-time code</Text>
         <TextInput
+          ref={inputRef}
           accessibilityLabel="One-time code"
           autoComplete="one-time-code"
           keyboardType="number-pad"
           maxLength={6}
-          onBlur={() => setIsFocused(false)}
-          onChangeText={(value) => setCode(value.replace(/\D/g, "").slice(0, 6))}
-          onFocus={() => setIsFocused(true)}
-          placeholder="123456"
-          placeholderTextColor="#6B6B6B"
-          style={[styles.input, isFocused && styles.inputFocused]}
+          onChangeText={updateDigits}
+          style={styles.hiddenInput}
           textContentType="oneTimeCode"
           value={code}
         />
+        <Pressable accessibilityRole="button" onPress={() => inputRef.current?.focus()} style={styles.digitRow}>
+          {digits.map((digit, index) => (
+            <View key={index} style={[styles.digitBox, digit && styles.digitBoxFilled]}>
+              <Text style={styles.digitText}>{digit}</Text>
+            </View>
+          ))}
+        </Pressable>
 
-        {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+        <Text style={styles.resendCopy}>
+          {resendSeconds > 0 ? `Resend code in ${resendSeconds}s` : "You can request a new code from sign in."}
+        </Text>
 
         <Pressable
           accessibilityLabel={isPending ? "Verifying code" : "Verify code"}
@@ -80,25 +98,45 @@ export function OtpVerifyScreen({ challengeId, onBack }: OtpVerifyScreenProps) {
           <Text style={styles.backActionText}>Back to sign in</Text>
         </Pressable>
       </View>
+
+      <ResidentCenteredModal
+        message={genericError}
+        onDismiss={() => setErrorModalVisible(false)}
+        onPrimary={() => setErrorModalVisible(false)}
+        primaryLabel="Try again"
+        title="Invalid code"
+        visible={errorModalVisible}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: residentTheme.background, justifyContent: "center", padding: 24 },
+  screen: { flex: 1, backgroundColor: residentTheme.surface, justifyContent: "center", padding: 24 },
   content: { gap: 10, width: "100%", maxWidth: 440, alignSelf: "center" },
-  brand: { color: colors.orange, fontFamily: "System", fontSize: 32, fontWeight: "800" },
-  heading: { color: residentTheme.text, fontFamily: "System", fontSize: 24, fontWeight: "700", marginTop: 8 },
-  copy: { color: residentTheme.text, fontFamily: "System", fontSize: 16, lineHeight: 22, marginBottom: 14 },
-  label: { color: residentTheme.text, fontFamily: "System", fontSize: 15, fontWeight: "600", marginTop: 4 },
-  input: { backgroundColor: residentTheme.surface, borderColor: colors.charcoal, borderRadius: 8, borderWidth: 1, color: residentTheme.text, fontFamily: "System", fontSize: 24, letterSpacing: 8, minHeight: 48, paddingHorizontal: 14, textAlign: "center" },
-  inputFocused: { borderColor: colors.orange, borderWidth: 3, paddingHorizontal: 12 },
-  error: { color: colors.danger, fontFamily: "System", fontSize: 14, marginTop: 4 },
-  primaryAction: { alignItems: "center", backgroundColor: residentTheme.accent, borderRadius: 8, justifyContent: "center", minHeight: 48, marginTop: 12, paddingHorizontal: 16 },
-  primaryActionPressed: { backgroundColor: "#CC4300" },
-  primaryActionText: { color: colors.white, fontFamily: "System", fontSize: 16, fontWeight: "700" },
-  backAction: { alignItems: "center", borderColor: colors.charcoal, borderRadius: 8, borderWidth: 1, justifyContent: "center", minHeight: 48, paddingHorizontal: 16 },
-  backActionPressed: { backgroundColor: colors.yellow },
-  backActionText: { color: colors.charcoal, fontFamily: "System", fontSize: 16, fontWeight: "700" },
+  heading: { color: residentTheme.ink, fontSize: 28, fontWeight: "800", lineHeight: 34 },
+  copy: { color: residentTheme.muted, fontSize: 15, lineHeight: 22, marginBottom: 10 },
+  hiddenInput: { position: "absolute", opacity: 0, height: 0, width: 0 },
+  digitRow: { flexDirection: "row", justifyContent: "space-between", gap: 8, marginTop: 8 },
+  digitBox: {
+    flex: 1,
+    maxWidth: 52,
+    height: 56,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: residentTheme.border,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: residentTheme.surface,
+  },
+  digitBoxFilled: { borderColor: residentTheme.icon },
+  digitText: { color: residentTheme.ink, fontSize: 24, fontWeight: "700" },
+  resendCopy: { color: residentTheme.muted, fontSize: 13, lineHeight: 18, marginTop: 8 },
+  primaryAction: { alignItems: "center", backgroundColor: residentTheme.accent, borderRadius: 12, justifyContent: "center", minHeight: 52, marginTop: 12, paddingHorizontal: 16 },
+  primaryActionPressed: { opacity: 0.86 },
+  primaryActionText: { color: colors.white, fontSize: 16, fontWeight: "700" },
+  backAction: { alignItems: "center", borderColor: residentTheme.border, borderRadius: 12, borderWidth: 1, justifyContent: "center", minHeight: 52, paddingHorizontal: 16 },
+  backActionPressed: { backgroundColor: "#FAFAF8" },
+  backActionText: { color: residentTheme.ink, fontSize: 16, fontWeight: "700" },
   disabled: { opacity: 0.65 },
 });
