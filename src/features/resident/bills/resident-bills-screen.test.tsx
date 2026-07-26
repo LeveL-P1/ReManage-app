@@ -48,6 +48,7 @@ describe("ResidentBillsScreen", () => {
     for (const heading of ["Latest invoice", "Payment activity", "Payments made simpler"]) {
       expect(screen.getByText(heading)).toBeTruthy();
     }
+    expect(screen.getByLabelText("Payments made simpler illustration")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Open July 2026 invoice" })).toBeTruthy();
     expect(screen.queryByText("AD")).toBeNull();
   });

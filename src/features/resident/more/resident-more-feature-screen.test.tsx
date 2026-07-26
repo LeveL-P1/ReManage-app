@@ -25,4 +25,12 @@ describe("ResidentMoreFeatureScreen", () => {
     await fireEvent.press(screen.getByRole("button", { name: "Back" }));
     expect(mockBack).toHaveBeenCalledTimes(1);
   });
+
+  it("adds the approved safety illustration only to the SOS preview", async () => {
+    const screen = await render(
+      <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("sos")} />,
+    );
+
+    expect(screen.getByLabelText("Safety support illustration")).toBeTruthy();
+  });
 });

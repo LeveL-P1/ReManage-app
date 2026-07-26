@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ResidentIcon } from "@/features/resident/shared/resident-icon";
 import { ResidentCenteredModal } from "@/features/resident/shared/resident-overlays";
@@ -151,7 +151,16 @@ export function ResidentBillsScreen({
 
           <ResidentSectionHeader title="Payments made simpler" />
           <View style={styles.promoCard}>
-            <Text style={styles.promoTitle}>Simplify your maintenance payments with ReManage</Text>
+            <View style={styles.promoHero}>
+              <Text style={styles.promoTitle}>Simplify your maintenance payments with ReManage</Text>
+              <Image
+                accessibilityLabel="Payments made simpler illustration"
+                accessibilityRole="image"
+                resizeMode="contain"
+                source={require("../../../../assets/images/resident-wallet.png")}
+                style={styles.promoIllustration}
+              />
+            </View>
             {promoFeatures.map((feature) => (
               <View key={feature.title} style={styles.promoRow}>
                 <View style={styles.promoIcon}><ResidentIcon color={residentTheme.icon} name={feature.icon} size={22} /></View>
@@ -228,7 +237,9 @@ const styles = StyleSheet.create({
   activityWhen: { color: residentTheme.muted, fontSize: 12, lineHeight: 17 },
   activityDivider: { height: StyleSheet.hairlineWidth, marginLeft: 68, backgroundColor: residentTheme.border },
   promoCard: { padding: 18, borderRadius: 21, backgroundColor: residentTheme.surface, borderWidth: StyleSheet.hairlineWidth, borderColor: residentTheme.border },
-  promoTitle: { color: residentTheme.ink, fontSize: 16, lineHeight: 22, fontWeight: "700", textAlign: "center", marginBottom: 16 },
+  promoHero: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 16 },
+  promoTitle: { color: residentTheme.ink, flex: 1, fontSize: 16, lineHeight: 22, fontWeight: "700" },
+  promoIllustration: { width: 88, height: 76 },
   promoRow: { flexDirection: "row", alignItems: "flex-start", gap: 12, marginBottom: 14 },
   promoIcon: { width: 40, height: 40, borderRadius: 14, backgroundColor: "#E5F2F0", alignItems: "center", justifyContent: "center" },
   promoCopy: { flex: 1 },
