@@ -84,6 +84,43 @@ describe("createMobileApi", () => {
     ]);
   });
 
+  it("attaches bearer tokens to guard operations", async () => {
+    const fetch = fakeFetch([
+      jsonResponse({}),
+      jsonResponse([]),
+      jsonResponse({}),
+      jsonResponse({}),
+      jsonResponse({}),
+      jsonResponse({}),
+      jsonResponse({}),
+      jsonResponse({}),
+    ]);
+    const api = createMobileApi({ baseUrl: "https://api.example.test", fetch });
+
+    await api.guardOverview("guard-token");
+    await api.guardVisitors("guard-token", "expected");
+    await api.guardRequestVisitor("guard-token", { flatQuery: "A-308", purpose: "guest", visitorName: "Maya" });
+    await api.guardVisitor("guard-token", "visitor-1");
+    await api.guardVerifyPasscodeLookup("guard-token", "4829");
+    await api.guardVerifyPasscode("guard-token", "visitor-1", "4829");
+    await api.guardCheckIn("guard-token", "visitor-1");
+    await api.guardCheckOut("guard-token", "visitor-1");
+
+    expect(fetch.mock.calls.map((call) => requestHeaders(call as FetchCall).get("authorization"))).toEqual(
+      Array(8).fill("Bearer guard-token"),
+    );
+    expect(fetch.mock.calls.map((call) => requestPath(call as FetchCall))).toEqual([
+      "/api/mobile/v1/guard/gate/overview",
+      "/api/mobile/v1/guard/visitors",
+      "/api/mobile/v1/guard/visitors",
+      "/api/mobile/v1/guard/visitors/visitor-1",
+      "/api/mobile/v1/guard/visitors/passcode/verify",
+      "/api/mobile/v1/guard/visitors/visitor-1/verify-passcode",
+      "/api/mobile/v1/guard/visitors/visitor-1/check-in",
+      "/api/mobile/v1/guard/visitors/visitor-1/check-out",
+    ]);
+  });
+
   it("does not expose or send the deprecated society header", async () => {
     const fetch = fakeFetch([jsonResponse({})]);
     const api = createMobileApi({ baseUrl: "https://api.example.test", fetch });

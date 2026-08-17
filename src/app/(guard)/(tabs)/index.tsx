@@ -1,5 +1,5 @@
-import { GuardShellScreen } from "@/features/guard/guard-shell-screen";
+import { GuardGateScreen } from "@/features/guard/gate/guard-gate-screen";
 
 export default function GuardGateRoute() {
-  return <GuardShellScreen title="Gate" />;
+  return <GuardGateScreen />;
 }

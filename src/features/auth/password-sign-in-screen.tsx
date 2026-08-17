@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { demoCredentials, demoOtpUnavailableMessage } from "@/platform/auth/development-demo-auth";
 import { useSession } from "@/platform/auth/session-provider";
 import { colors, residentTheme } from "@/platform/theme/tokens";
+import { AuthBrand } from "./auth-brand";
 
 export interface PasswordSignInScreenProps {
   demoMode?: boolean;
@@ -75,9 +76,7 @@ export function PasswordSignInScreen({ demoMode = false, onOtpChallenge }: Passw
   return (
     <View style={styles.screen}>
       <View style={styles.content}>
-        <View style={styles.logoMark}>
-          <Ionicons color={residentTheme.icon} name="home-outline" size={28} />
-        </View>
+        <AuthBrand />
         <Text accessibilityRole="header" style={styles.heading}>Welcome to ReManage</Text>
         <Text style={styles.copy}>Sign in with the account provided by your society management.</Text>
         {demoMode ? <Text style={styles.demoHint}>Web demo credentials: {demoCredentials.email} / {demoCredentials.password}</Text> : null}
@@ -166,15 +165,6 @@ export function PasswordSignInScreen({ demoMode = false, onOtpChallenge }: Passw
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: residentTheme.surface, justifyContent: "center", padding: 24 },
   content: { gap: 8, width: "100%", maxWidth: 440, alignSelf: "center" },
-  logoMark: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: "#E6F4F1",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-  },
   heading: { color: residentTheme.ink, fontSize: 28, fontWeight: "800", lineHeight: 34 },
   copy: { color: residentTheme.muted, fontSize: 15, lineHeight: 22, marginBottom: 10 },
   demoHint: { color: residentTheme.muted, fontSize: 13, lineHeight: 19, marginBottom: 6 },

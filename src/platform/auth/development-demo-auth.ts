@@ -4,6 +4,7 @@ import { RESIDENT_DEMO_PERMISSIONS } from "@/features/resident/catalog/resident-
 import type {
   Bootstrap,
   MobileApi,
+  MobileGuardVisitorRequest,
   MobileRole,
   RoleSwitchResult,
   SessionIssue,
@@ -106,6 +107,111 @@ export function createDevelopmentDemoMobileApi(): MobileApi {
     },
     async logout() {
       return { loggedOut: true } as const;
+    },
+    async guardOverview() {
+      return {
+        counts: { expected: 0, inside: 0, pendingApproval: 0, pendingParcels: 0 },
+        gateLabel: "Demo Main Gate",
+      };
+    },
+    async guardVisitors() {
+      return [];
+    },
+    async guardRequestVisitor(_accessToken: string, body: MobileGuardVisitorRequest) {
+      return {
+        arrivedAt: new Date(0).toISOString(),
+        flatNumber: body.flatQuery,
+        id: "demo-visitor",
+        passcodeRequired: false,
+        purpose: body.purpose,
+        status: "expected" as const,
+        visitorName: body.visitorName,
+      };
+    },
+    async guardVisitor(_accessToken: string, visitorId: string) {
+      return {
+        arrivedAt: new Date(0).toISOString(),
+        flatNumber: "A-308",
+        id: visitorId,
+        passcodeRequired: false,
+        purpose: "guest",
+        status: "expected" as const,
+        visitorName: "Demo Visitor",
+      };
+    },
+    async guardVerifyPasscodeLookup() {
+      return {
+        arrivedAt: new Date(0).toISOString(),
+        flatNumber: "A-308",
+        id: "demo-visitor",
+        passcodeRequired: true,
+        purpose: "guest",
+        status: "expected" as const,
+        visitorName: "Demo Visitor",
+      };
+    },
+    async guardVerifyPasscode(_accessToken: string, visitorId: string) {
+      return { id: visitorId, passcodeVerified: true };
+    },
+    async guardCheckIn(_accessToken: string, visitorId: string) {
+      return {
+        arrivedAt: new Date(0).toISOString(),
+        entryTime: new Date(0).toISOString(),
+        flatNumber: "A-308",
+        id: visitorId,
+        passcodeRequired: false,
+        purpose: "guest",
+        status: "inside" as const,
+        visitorName: "Demo Visitor",
+      };
+    },
+    async guardCheckOut(_accessToken: string, visitorId: string) {
+      return {
+        arrivedAt: new Date(0).toISOString(),
+        entryTime: new Date(0).toISOString(),
+        exitTime: new Date(0).toISOString(),
+        flatNumber: "A-308",
+        id: visitorId,
+        passcodeRequired: false,
+        purpose: "guest",
+        status: "exited" as const,
+        visitorName: "Demo Visitor",
+      };
+    },
+    async residentVisitors() {
+      return {
+        flatNumber: "A-308",
+        visitors: [
+          {
+            arrivedAt: new Date(0).toISOString(),
+            createdAt: new Date(0).toISOString(),
+            id: "demo-resident-visitor",
+            purpose: "guest",
+            status: "pending" as const,
+            visitorName: "Demo Visitor",
+          },
+        ],
+      };
+    },
+    async residentApproveVisitor(_accessToken: string, visitorId: string) {
+      return {
+        arrivedAt: new Date(0).toISOString(),
+        createdAt: new Date(0).toISOString(),
+        id: visitorId,
+        purpose: "guest",
+        status: "approved" as const,
+        visitorName: "Demo Visitor",
+      };
+    },
+    async residentRejectVisitor(_accessToken: string, visitorId: string) {
+      return {
+        arrivedAt: new Date(0).toISOString(),
+        createdAt: new Date(0).toISOString(),
+        id: visitorId,
+        purpose: "guest",
+        status: "rejected" as const,
+        visitorName: "Demo Visitor",
+      };
     },
   };
 }

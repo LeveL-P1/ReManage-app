@@ -31,6 +31,12 @@ async function renderScreen(session = createSession(), onBack = jest.fn()) {
 }
 
 describe("OtpVerifyScreen", () => {
+  it("shows the supplied ReManage brand mark", async () => {
+    const { getByLabelText } = await renderScreen();
+
+    expect(getByLabelText("ReManage logo")).toBeTruthy();
+  });
+
   it("accepts exactly six numeric characters", async () => {
     const { getByLabelText, getByRole } = await renderScreen();
     const code = getByLabelText("One-time code");

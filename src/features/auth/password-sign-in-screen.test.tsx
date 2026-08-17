@@ -64,6 +64,12 @@ describe("PasswordSignInScreen", () => {
     expect(StyleSheet.flatten(continueButton.props.style).backgroundColor).toBe("#FF5400");
   });
 
+  it("shows the supplied ReManage brand mark", async () => {
+    const { getByLabelText } = await renderScreen();
+
+    expect(getByLabelText("ReManage logo")).toBeTruthy();
+  });
+
   it("submits a password sign-in once while a request is pending", async () => {
     let resolve!: () => void;
     const session = createSession({

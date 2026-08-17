@@ -17,6 +17,7 @@ import {
   ResidentSocietyHeader,
 } from "@/features/resident/shared/resident-ui";
 import { RoleSwitcher } from "@/features/session/role-switcher";
+import { SessionLogoutButton } from "@/features/session/session-logout-button";
 import { useSession } from "@/platform/auth/session-provider";
 import { residentTheme } from "@/platform/theme/tokens";
 
@@ -113,6 +114,7 @@ export function ResidentMoreScreen() {
             <View style={styles.accountCard}>
               <Text style={styles.accountCopy}>Switch only between roles that are approved for this account.</Text>
               <RoleSwitcher />
+              <SessionLogoutButton />
             </View>
           </View>
 
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
   emptyTitle: { color: residentTheme.ink, fontSize: 16, fontWeight: "700", lineHeight: 22 },
   emptyDetail: { color: residentTheme.muted, fontSize: 13, lineHeight: 19, marginTop: 5 },
   accountSection: { marginTop: 2 },
-  accountCard: { backgroundColor: residentTheme.surface, borderColor: residentTheme.border, borderRadius: 18, borderWidth: StyleSheet.hairlineWidth, padding: 16 },
+  accountCard: { backgroundColor: residentTheme.surface, borderColor: residentTheme.border, borderRadius: 18, borderWidth: StyleSheet.hairlineWidth, gap: 10, padding: 16 },
   accountCopy: { color: residentTheme.muted, fontSize: 13, lineHeight: 19, marginBottom: 12 },
   supportCard: { alignItems: "center", backgroundColor: `${residentTheme.icon}0E`, borderRadius: 18, flexDirection: "row", gap: 12, marginTop: 22, padding: 16 },
   supportIcon: { alignItems: "center", backgroundColor: residentTheme.surface, borderRadius: 15, height: 46, justifyContent: "center", width: 46 },

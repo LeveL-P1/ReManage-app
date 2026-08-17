@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useSyncExternalStore, type ReactNode } from "react";
 
-import { type Bootstrap, type MobileRole } from "@/platform/api/mobile-api-client";
+import { type Bootstrap, type MobileApi, type MobileRole } from "@/platform/api/mobile-api-client";
 
 import { createRuntimeSessionController } from "./session-runtime";
 import type { SessionController } from "./session-controller";
@@ -13,6 +13,7 @@ export interface SessionContextValue {
   requestOtp(identifier: string): Promise<{ challengeId: string }>;
   verifyOtp(challengeId: string, code: string): Promise<void>;
   switchRole(role: MobileRole): Promise<Bootstrap>;
+  runAuthenticated?<T>(operation: (api: MobileApi, accessToken: string) => Promise<T>): Promise<T>;
   logout(): Promise<void>;
 }
 
@@ -92,6 +93,7 @@ export function SessionProvider({ children, controller: suppliedController }: Se
       requestOtp: (identifier) => controller.requestOtp(identifier),
       verifyOtp: (challengeId, code) => controller.verifyOtp(challengeId, code),
       switchRole: (role) => controller.switchRole(role),
+      runAuthenticated: (operation) => controller.runAuthenticated(operation),
       logout: () => controller.logout(),
     }),
     [controller, state],
@@ -104,4 +106,10 @@ export function useSession(): SessionContextValue {
   const value = useContext(SessionContext);
   if (!value) throw new Error("useSession must be used within a SessionProvider.");
   return value;
+}
+
+export function useAuthenticatedApi(): NonNullable<SessionContextValue["runAuthenticated"]> {
+  const value = useSession();
+  if (!value.runAuthenticated) throw new Error("Authenticated API access is not available in this session context.");
+  return value.runAuthenticated;
 }

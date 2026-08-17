@@ -12,6 +12,7 @@ export interface SessionController {
   requestOtp(identifier: string): Promise<{ challengeId: string }>;
   verifyOtp(challengeId: string, code: string): Promise<void>;
   switchRole(role: MobileRole): Promise<Bootstrap>;
+  runAuthenticated<T>(operation: (api: MobileApi, accessToken: string) => Promise<T>): Promise<T>;
   logout(): Promise<void>;
 }
 
@@ -25,7 +26,18 @@ function isUnauthorized(error: unknown): boolean {
   return typeof error === "object" && error !== null && "status" in error && error.status === 401;
 }
 
+function statusFrom(error: unknown): number | null {
+  if (typeof error !== "object" || error === null || !("status" in error)) return null;
+  return typeof error.status === "number" ? error.status : null;
+}
+
+function isTransientRestoreFailure(error: unknown): boolean {
+  const status = statusFrom(error);
+  return status === 0 || (status !== null && status >= 500);
+}
+
 const roleSwitchFailureMessage = "We could not switch roles. Please try again.";
+const restoreFailureMessage = "We could not restore your session. Check your connection and try again.";
 
 class SessionOperationSupersededError extends Error {
   constructor() {
@@ -94,8 +106,13 @@ export class MobileSessionController implements SessionController {
     try {
       await this.refreshAccess(generation);
       await this.bootstrapCurrentAccess(generation);
-    } catch {
-      if (this.isCurrent(generation)) await this.signOutLocally();
+    } catch (error) {
+      if (!this.isCurrent(generation)) return;
+      if (isTransientRestoreFailure(error)) {
+        this.dispatch({ type: "recoverable_error", message: restoreFailureMessage });
+        return;
+      }
+      await this.signOutLocally();
     }
   }
 
@@ -112,7 +129,7 @@ export class MobileSessionController implements SessionController {
       this.ensureCurrent(generation);
       await this.establishSession(issue, generation);
     } catch (error) {
-      if (this.isCurrent(generation)) await this.signOutLocally();
+      if (this.isCurrent(generation) && !isTransientRestoreFailure(error)) await this.signOutLocally();
       throw error;
     }
   }
@@ -138,7 +155,7 @@ export class MobileSessionController implements SessionController {
       this.ensureCurrent(generation);
       await this.establishSession(issue, generation);
     } catch (error) {
-      if (this.isCurrent(generation)) await this.signOutLocally();
+      if (this.isCurrent(generation) && !isTransientRestoreFailure(error)) await this.signOutLocally();
       throw error;
     }
   }
@@ -157,6 +174,13 @@ export class MobileSessionController implements SessionController {
     } finally {
       if (this.roleSwitchInFlight === switchPromise) this.roleSwitchInFlight = null;
     }
+  }
+
+  async runAuthenticated<T>(operation: (api: MobileApi, accessToken: string) => Promise<T>): Promise<T> {
+    if (this.state.status !== "authenticated") {
+      throw new Error("An authenticated session is required for this operation.");
+    }
+    return this.runAuthorized((accessToken) => operation(this.dependencies.api, accessToken), this.sessionGeneration);
   }
 
   logout(): Promise<void> {
@@ -312,7 +336,7 @@ export class MobileSessionController implements SessionController {
       this.ensureCurrent(generation);
       await this.acceptSessionIssue(issue, generation);
     } catch (error) {
-      if (this.isCurrent(generation)) await this.signOutLocally();
+      if (this.isCurrent(generation) && !isTransientRestoreFailure(error)) await this.signOutLocally();
       throw error;
     }
   }

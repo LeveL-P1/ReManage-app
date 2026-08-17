@@ -14,6 +14,37 @@ export interface paths {
   "/api/mobile/v1/auth/password": {
     post: operations["MobileAuthController_password"];
   };
+  "/api/mobile/v1/guard/gate/overview": {
+    get: operations["MobileGuardController_overview"];
+  };
+  "/api/mobile/v1/guard/visitors": {
+    get: operations["MobileGuardController_listVisitors"];
+    post: operations["MobileGuardController_requestVisitor"];
+  };
+  "/api/mobile/v1/guard/visitors/passcode/verify": {
+    post: operations["MobileGuardController_verifyPasscodeLookup"];
+  };
+  "/api/mobile/v1/guard/visitors/{visitorId}": {
+    get: operations["MobileGuardController_getVisitor"];
+  };
+  "/api/mobile/v1/guard/visitors/{visitorId}/check-in": {
+    post: operations["MobileGuardController_checkIn"];
+  };
+  "/api/mobile/v1/guard/visitors/{visitorId}/check-out": {
+    post: operations["MobileGuardController_checkOut"];
+  };
+  "/api/mobile/v1/guard/visitors/{visitorId}/verify-passcode": {
+    post: operations["MobileGuardController_verifyPasscode"];
+  };
+  "/api/mobile/v1/resident/visitors": {
+    get: operations["MobileResidentController_listVisitors"];
+  };
+  "/api/mobile/v1/resident/visitors/{visitorId}/approve": {
+    post: operations["MobileResidentController_approveVisitor"];
+  };
+  "/api/mobile/v1/resident/visitors/{visitorId}/reject": {
+    post: operations["MobileResidentController_rejectVisitor"];
+  };
   "/api/mobile/v1/session/active-role": {
     put: operations["MobileSessionController_activeRole"];
   };
@@ -81,6 +112,42 @@ export interface components {
       /** @enum {boolean} */
       residentShell: true;
     };
+    MobileGuardOverviewCountsDto: {
+      expected: number;
+      inside: number;
+      pendingApproval: number;
+      pendingParcels: number;
+    };
+    MobileGuardOverviewDto: {
+      counts: components["schemas"]["MobileGuardOverviewCountsDto"];
+      gateLabel: string;
+    };
+    MobileGuardPasscodeResultDto: {
+      id: string;
+      passcodeVerified: boolean;
+    };
+    MobileGuardProblemDto: {
+      /** @enum {string} */
+      code: "flat_not_found" | "visitor_not_found" | "visitor_not_approved" | "visitor_not_inside" | "visitor_blacklisted" | "invalid_visitor_passcode" | "passcode_verification_required";
+      message: string;
+      requestId?: string;
+    };
+    MobileGuardVisitorDto: {
+      arrivedAt: string;
+      entryTime?: string | null;
+      exitTime?: string | null;
+      flatNumber: string;
+      id: string;
+      /** @description Whether the visitor must verify a stored passcode before check-in. */
+      passcodeRequired: boolean;
+      phone?: string | null;
+      purpose: string;
+      residentResponse?: string | null;
+      /** @enum {string} */
+      status: "expected" | "inside" | "exited" | "rejected" | "cancelled";
+      vehicleNo?: string | null;
+      visitorName: string;
+    };
     MobileInstallationDto: {
       /** @example 1.0.0 */
       appVersion: string;
@@ -95,6 +162,30 @@ export interface components {
       community: components["schemas"]["MobileCommunityNotificationPolicyDto"];
       critical: components["schemas"]["MobileCriticalNotificationPolicyDto"];
       transactional: components["schemas"]["MobileTransactionalNotificationPolicyDto"];
+    };
+    MobileResidentProblemDto: {
+      code: string;
+      message: string;
+      requestId?: string;
+    };
+    MobileResidentVisitorDto: {
+      arrivedAt?: string | null;
+      createdAt: string;
+      entryTime?: string | null;
+      exitTime?: string | null;
+      expectedAt?: string | null;
+      id: string;
+      passcode?: string | null;
+      phone?: string | null;
+      purpose: string;
+      /** @enum {string} */
+      status: "pending" | "approved" | "inside" | "exited" | "rejected" | "cancelled";
+      vehicleNo?: string | null;
+      visitorName: string;
+    };
+    MobileResidentVisitorsDto: {
+      flatNumber?: string | null;
+      visitors: components["schemas"]["MobileResidentVisitorDto"][];
     };
     MobileRoleSwitchDto: {
       /** Format: date-time */
@@ -144,9 +235,27 @@ export interface components {
     RefreshMobileSessionDto: {
       renewableCredential: string;
     };
+    RequestVisitorDto: {
+      /** @example A-308 */
+      flatQuery: string;
+      /** @example 4829 */
+      passcode?: string;
+      /** @example +919876543210 */
+      phone?: string;
+      /** @example guest */
+      purpose: string;
+      /** @example MH 12 AB 1234 */
+      vehicleNo?: string;
+      /** @example Maya */
+      visitorName: string;
+    };
     UpdateMobileActiveRoleDto: {
       /** @enum {string} */
       role: "resident" | "guard";
+    };
+    VerifyVisitorPasscodeDto: {
+      /** @example 4829 */
+      passcode: string;
     };
   };
   responses: never;
@@ -200,6 +309,250 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["MobileSessionIssueDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_overview: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardOverviewDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_listVisitors: {
+    parameters: {
+      query?: {
+        status?: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardVisitorDto"][];
+        };
+      };
+    };
+  };
+  MobileGuardController_requestVisitor: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RequestVisitorDto"];
+      };
+    };
+    responses: {
+      201: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardVisitorDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_verifyPasscodeLookup: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["VerifyVisitorPasscodeDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardVisitorDto"];
+        };
+      };
+      400: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_getVisitor: {
+    parameters: {
+      path: {
+        visitorId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardVisitorDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_checkIn: {
+    parameters: {
+      path: {
+        visitorId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardVisitorDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+      409: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_checkOut: {
+    parameters: {
+      path: {
+        visitorId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardVisitorDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+      409: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_verifyPasscode: {
+    parameters: {
+      path: {
+        visitorId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["VerifyVisitorPasscodeDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardPasscodeResultDto"];
+        };
+      };
+      400: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+      409: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileResidentController_listVisitors: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentVisitorsDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentProblemDto"];
+        };
+      };
+    };
+  };
+  MobileResidentController_approveVisitor: {
+    parameters: {
+      path: {
+        visitorId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentVisitorDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentProblemDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentProblemDto"];
+        };
+      };
+      409: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentProblemDto"];
+        };
+      };
+    };
+  };
+  MobileResidentController_rejectVisitor: {
+    parameters: {
+      path: {
+        visitorId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentVisitorDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentProblemDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentProblemDto"];
+        };
+      };
+      409: {
+        content: {
+          "application/json": components["schemas"]["MobileResidentProblemDto"];
         };
       };
     };

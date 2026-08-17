@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { ResidentCenteredModal } from "@/features/resident/shared/resident-overlays";
 import { useSession } from "@/platform/auth/session-provider";
 import { colors, residentTheme } from "@/platform/theme/tokens";
+import { AuthBrand } from "./auth-brand";
 
 export interface OtpVerifyScreenProps {
   challengeId: string;
@@ -51,6 +52,7 @@ export function OtpVerifyScreen({ challengeId, onBack }: OtpVerifyScreenProps) {
   return (
     <View style={styles.screen}>
       <View style={styles.content}>
+        <AuthBrand />
         <Text accessibilityRole="header" style={styles.heading}>Check your email</Text>
         <Text style={styles.copy}>Enter the six-digit code we sent to your email address.</Text>
 

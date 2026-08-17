@@ -102,6 +102,80 @@ export class FakeMobileApi implements MobileApi {
   readonly bootstrap = jest.fn(async (_accessToken: string) => this.bootstrapResult);
   readonly switchRole = jest.fn(async (_accessToken: string, _role: MobileRole) => this.roleSwitchResult);
   readonly logout = jest.fn(async (_renewableCredential: string) => ({ loggedOut: true }) as const);
+  readonly guardOverview = jest.fn(async () => ({
+    counts: { expected: 0, inside: 0, pendingApproval: 0, pendingParcels: 0 },
+    gateLabel: "Main Gate",
+  }));
+  readonly guardVisitors = jest.fn(async () => []);
+  readonly guardRequestVisitor = jest.fn(async (_accessToken, body) => ({
+    arrivedAt: new Date(0).toISOString(),
+    flatNumber: body.flatQuery,
+    id: "visitor-1",
+    passcodeRequired: false,
+    purpose: body.purpose,
+    status: "expected" as const,
+    visitorName: body.visitorName,
+  }));
+  readonly guardVisitor = jest.fn(async (_accessToken, visitorId) => ({
+    arrivedAt: new Date(0).toISOString(),
+    flatNumber: "A-308",
+    id: visitorId,
+    passcodeRequired: false,
+    purpose: "guest",
+    status: "expected" as const,
+    visitorName: "Maya",
+  }));
+  readonly guardVerifyPasscode = jest.fn(async (_accessToken, visitorId) => ({ id: visitorId, passcodeVerified: true }));
+  readonly guardVerifyPasscodeLookup = jest.fn(async (_accessToken, _passcode) => ({
+    arrivedAt: new Date(0).toISOString(),
+    flatNumber: "A-308",
+    id: "visitor-1",
+    passcodeRequired: true,
+    purpose: "guest",
+    status: "expected" as const,
+    visitorName: "Maya",
+  }));
+  readonly guardCheckIn = jest.fn(async (_accessToken, visitorId) => ({
+    arrivedAt: new Date(0).toISOString(),
+    entryTime: new Date(0).toISOString(),
+    flatNumber: "A-308",
+    id: visitorId,
+    passcodeRequired: false,
+    purpose: "guest",
+    status: "inside" as const,
+    visitorName: "Maya",
+  }));
+  readonly guardCheckOut = jest.fn(async (_accessToken, visitorId) => ({
+    arrivedAt: new Date(0).toISOString(),
+    entryTime: new Date(0).toISOString(),
+    exitTime: new Date(0).toISOString(),
+    flatNumber: "A-308",
+    id: visitorId,
+    passcodeRequired: false,
+    purpose: "guest",
+    status: "exited" as const,
+    visitorName: "Maya",
+  }));
+  readonly residentVisitors = jest.fn(async () => ({
+    flatNumber: "A-308",
+    visitors: [],
+  }));
+  readonly residentApproveVisitor = jest.fn(async (_accessToken, visitorId) => ({
+    arrivedAt: new Date(0).toISOString(),
+    createdAt: new Date(0).toISOString(),
+    id: visitorId,
+    purpose: "guest",
+    status: "approved" as const,
+    visitorName: "Maya",
+  }));
+  readonly residentRejectVisitor = jest.fn(async (_accessToken, visitorId) => ({
+    arrivedAt: new Date(0).toISOString(),
+    createdAt: new Date(0).toISOString(),
+    id: visitorId,
+    purpose: "guest",
+    status: "rejected" as const,
+    visitorName: "Maya",
+  }));
 }
 
 export function deferred<T>(): { promise: Promise<T>; resolve(value: T): void; reject(reason?: unknown): void } {

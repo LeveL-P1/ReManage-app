@@ -50,6 +50,7 @@ function createProviderController(): { controller: SessionController; restore: j
       requestOtp: async () => ({ challengeId: "challenge-1" }),
       verifyOtp: async () => undefined,
       switchRole: async () => fakeBootstrap("resident"),
+      runAuthenticated: async (operation) => operation(new FakeMobileApi(), "access-token"),
       logout: async () => undefined,
     },
   };
@@ -128,6 +129,21 @@ describe("SessionController", () => {
 
     expect(credentials.clearCredentials).toHaveBeenCalledTimes(1);
     expect(controller.getState()).toEqual({ status: "signed_out" });
+  });
+
+  it("keeps the renewable credential when restore fails because the network is unavailable", async () => {
+    credentials = new FakeCredentialStore("stored-renewable");
+    api.refresh.mockRejectedValueOnce(new MobileApiError(0, "invalid_server_response", "Network unavailable", undefined, undefined));
+    const controller = createController();
+
+    await controller.restore();
+
+    expect(credentials.clearCredentials).not.toHaveBeenCalled();
+    expect(credentials.renewableCredential).toBe("stored-renewable");
+    expect(controller.getState()).toEqual({
+      status: "recoverable_error",
+      message: "We could not restore your session. Check your connection and try again.",
+    });
   });
 
   it("signs out without bootstrapping when SecureStore cannot persist a rotated credential", async () => {
@@ -274,6 +290,20 @@ describe("SessionController", () => {
     expect(controller.getState()).toEqual({ status: "authenticated", bootstrap: serverBootstrap });
     await controller.switchRole("guard");
     expect(api.switchRole.mock.calls[1]?.[0]).toBe("guard-access");
+  });
+
+  it("runs authenticated API operations with refresh retry", async () => {
+    api.passwordIssue = fakeSessionIssue({ accessExpiresAt: "1970-01-01T00:00:00.000Z" });
+    const controller = createController();
+    await controller.signInWithPassword("resident@example.com", "password");
+
+    await expect(controller.runAuthenticated((client, accessToken) => client.guardOverview(accessToken))).resolves.toEqual({
+      counts: { expected: 0, inside: 0, pendingApproval: 0, pendingParcels: 0 },
+      gateLabel: "Main Gate",
+    });
+
+    expect(api.refresh).toHaveBeenCalledTimes(1);
+    expect(api.guardOverview).toHaveBeenCalledWith("refreshed-access");
   });
 
   it("calls online logout before clearing credentials", async () => {
@@ -744,6 +774,7 @@ describe("SessionController", () => {
       "requestOtp",
       "verifyOtp",
       "switchRole",
+      "runAuthenticated",
       "logout",
     ]);
     expect(JSON.stringify(value)).not.toContain("access-token");
