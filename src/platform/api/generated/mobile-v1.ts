@@ -14,6 +14,15 @@ export interface paths {
   "/api/mobile/v1/auth/password": {
     post: operations["MobileAuthController_password"];
   };
+  "/api/mobile/v1/bills": {
+    get: operations["MobileBillController_listBills"];
+  };
+  "/api/mobile/v1/bills/{billId}": {
+    get: operations["MobileBillController_getBill"];
+  };
+  "/api/mobile/v1/bills/{billId}/payments": {
+    get: operations["MobileBillController_getBillPayments"];
+  };
   "/api/mobile/v1/guard/gate/overview": {
     get: operations["MobileGuardController_overview"];
   };
@@ -35,6 +44,27 @@ export interface paths {
   };
   "/api/mobile/v1/guard/visitors/passcode/verify": {
     post: operations["MobileGuardController_verifyPasscodeLookup"];
+  };
+  "/api/mobile/v1/helpdesk": {
+    get: operations["MobileHelpdeskController_listComplaints"];
+  };
+  "/api/mobile/v1/helpdesk/{complaintId}/rate": {
+    post: operations["MobileHelpdeskController_rateComplaint"];
+  };
+  "/api/mobile/v1/helpdesk/{complaintId}/transition": {
+    post: operations["MobileHelpdeskController_transitionComplaint"];
+  };
+  "/api/mobile/v1/helpdesk/raise": {
+    post: operations["MobileHelpdeskController_raiseComplaint"];
+  };
+  "/api/mobile/v1/notices": {
+    get: operations["MobileNoticeController_listNotices"];
+  };
+  "/api/mobile/v1/notices/read": {
+    post: operations["MobileNoticeController_markRead"];
+  };
+  "/api/mobile/v1/notices/unread-count": {
+    get: operations["MobileNoticeController_unreadCount"];
   };
   "/api/mobile/v1/resident/visitors": {
     get: operations["MobileResidentController_listVisitors"];
@@ -72,6 +102,52 @@ export interface components {
     LogoutMobileSessionResponseDto: {
       /** @enum {boolean} */
       loggedOut: true;
+    };
+    MarkNoticeReadBodyDto: {
+      noticeId: string;
+    };
+    MobileBillDto: {
+      id: string;
+      amount: number;
+      /** @enum {string} */
+      billType: "maintenance" | "annual" | "sinking" | "repair" | "parking" | "other";
+      period: string;
+      dueDate: string;
+      /** @enum {string} */
+      status: "pending" | "partial" | "paid";
+      lateFee: number;
+      gstAmount: number;
+      totalAmount?: number | null;
+      description?: string | null;
+      paidAt?: string | null;
+      paidVia?: string | null;
+      paidAmount?: number | null;
+      receiptNumber?: string | null;
+      flatNumber: string;
+      createdAt: string;
+    };
+    MobileBillListDto: {
+      bills: components["schemas"]["MobileBillDto"][];
+      totalPending: number;
+      totalAmount: number;
+    };
+    MobileBillPaymentDto: {
+      id: string;
+      amount: number;
+      method: string;
+      reference?: string | null;
+      status: string;
+      paidAt: string;
+      receiptNumber?: string | null;
+    };
+    MobileBillPaymentsDto: {
+      payments: components["schemas"]["MobileBillPaymentDto"][];
+    };
+    MobileBillProblemDto: {
+      /** @enum {string} */
+      code: "bill_not_found" | "flat_not_linked";
+      message: string;
+      requestId?: string;
     };
     MobileBootstrapDto: {
       user: components["schemas"]["MobileBootstrapUserDto"];
@@ -151,6 +227,56 @@ export interface components {
       entryTime?: string | null;
       exitTime?: string | null;
     };
+    MobileHelpdeskComplaintDto: {
+      id: string;
+      title: string;
+      description: string;
+      /** @enum {string} */
+      category: "plumbing" | "electrical" | "cleanliness" | "security" | "parking" | "general";
+      /** @enum {string} */
+      priority: "low" | "medium" | "high" | "urgent";
+      /** @enum {string} */
+      status: "open" | "in_progress" | "resolved" | "closed";
+      flatNumber: string;
+      raisedBy: string;
+      resolution?: string | null;
+      resolvedAt?: string | null;
+      assignedTo?: string | null;
+      escalationLevel: number;
+      satisfactionRating?: number | null;
+      createdAt: string;
+      slaDueAt?: string | null;
+      slaBreached: boolean;
+    };
+    MobileHelpdeskListDto: {
+      complaints: components["schemas"]["MobileHelpdeskComplaintDto"][];
+    };
+    MobileHelpdeskProblemDto: {
+      /** @enum {string} */
+      code: "complaint_not_found" | "complaint_not_resolved" | "invalid_transition";
+      message: string;
+      requestId?: string;
+    };
+    MobileHelpdeskRaiseResultDto: {
+      created: boolean;
+      complaintId: string;
+      /** @enum {string} */
+      status: "open" | "in_progress" | "resolved" | "closed";
+      /** @enum {string} */
+      priority: "low" | "medium" | "high" | "urgent";
+      slaDueAt: string;
+    };
+    MobileHelpdeskRateResultDto: {
+      rated: boolean;
+      complaintId: string;
+      rating: number;
+    };
+    MobileHelpdeskTransitionResultDto: {
+      transitioned: boolean;
+      complaintId: string;
+      /** @enum {string} */
+      status: "open" | "in_progress" | "resolved" | "closed";
+    };
     MobileInstallationDto: {
       /** Format: uuid */
       id: string;
@@ -160,6 +286,33 @@ export interface components {
       appVersion: string;
       /** @example Pixel 9 */
       deviceName?: string;
+    };
+    MobileNoticeDto: {
+      id: string;
+      title: string;
+      body: string;
+      /** @enum {string} */
+      category: "general" | "event" | "maintenance" | "emergency" | "meeting";
+      postedBy: string;
+      isPinned: boolean;
+      expiresAt?: string | null;
+      createdAt: string;
+      isRead: boolean;
+    };
+    MobileNoticeListDto: {
+      notices: components["schemas"]["MobileNoticeDto"][];
+      unreadCount: number;
+    };
+    MobileNoticeMarkReadDto: {
+      acknowledged: boolean;
+      replayed: boolean;
+      noticeId: string;
+    };
+    MobileNoticeProblemDto: {
+      /** @enum {string} */
+      code: "notice_not_found";
+      message: string;
+      requestId?: string;
     };
     MobileNotificationPolicyDto: {
       critical: components["schemas"]["MobileCriticalNotificationPolicyDto"];
@@ -248,6 +401,15 @@ export interface components {
       password: string;
       installation: components["schemas"]["MobileInstallationDto"];
     };
+    RaiseComplaintBodyDto: {
+      title: string;
+      description: string;
+      /** @enum {string} */
+      category?: "plumbing" | "electrical" | "cleanliness" | "security" | "parking" | "general";
+      /** @enum {string} */
+      priority?: "low" | "medium" | "high" | "urgent";
+      mediaUrls?: string[];
+    };
     RaiseMobileSosDto: {
       /** @example Medical emergency in Block A */
       description?: string;
@@ -256,6 +418,10 @@ export interface components {
        * @enum {string}
        */
       severity?: "low" | "medium" | "high" | "critical";
+    };
+    RateComplaintBodyDto: {
+      rating: number;
+      comment?: string;
     };
     RefreshMobileSessionDto: {
       renewableCredential: string;
@@ -273,6 +439,11 @@ export interface components {
       vehicleNo?: string;
       /** @example 4829 */
       passcode?: string;
+    };
+    TransitionComplaintBodyDto: {
+      /** @enum {string} */
+      action: "start" | "resolve" | "close" | "reopen";
+      resolution?: string;
     };
     UpdateMobileActiveRoleDto: {
       /** @enum {string} */
@@ -334,6 +505,68 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["MobileSessionIssueDto"];
+        };
+      };
+    };
+  };
+  MobileBillController_listBills: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileBillListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileBillProblemDto"];
+        };
+      };
+    };
+  };
+  MobileBillController_getBill: {
+    parameters: {
+      path: {
+        billId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileBillDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileBillProblemDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileBillProblemDto"];
+        };
+      };
+    };
+  };
+  MobileBillController_getBillPayments: {
+    parameters: {
+      path: {
+        billId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileBillPaymentsDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileBillProblemDto"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["MobileBillProblemDto"];
         };
       };
     };
@@ -506,6 +739,134 @@ export interface operations {
       400: {
         content: {
           "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileHelpdeskController_listComplaints: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskProblemDto"];
+        };
+      };
+    };
+  };
+  MobileHelpdeskController_rateComplaint: {
+    parameters: {
+      path: {
+        complaintId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RateComplaintBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskRateResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskProblemDto"];
+        };
+      };
+    };
+  };
+  MobileHelpdeskController_transitionComplaint: {
+    parameters: {
+      path: {
+        complaintId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TransitionComplaintBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskTransitionResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskProblemDto"];
+        };
+      };
+    };
+  };
+  MobileHelpdeskController_raiseComplaint: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RaiseComplaintBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskRaiseResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileHelpdeskProblemDto"];
+        };
+      };
+    };
+  };
+  MobileNoticeController_listNotices: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileNoticeListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileNoticeProblemDto"];
+        };
+      };
+    };
+  };
+  MobileNoticeController_markRead: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MarkNoticeReadBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileNoticeMarkReadDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileNoticeProblemDto"];
+        };
+      };
+    };
+  };
+  MobileNoticeController_unreadCount: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileNoticeListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileNoticeProblemDto"];
         };
       };
     };

@@ -22,6 +22,18 @@ export type MobileResidentVisitor = Schemas["MobileResidentVisitorDto"];
 export type MobileResidentVisitors = Schemas["MobileResidentVisitorsDto"];
 export type MobileSosResult = Schemas["MobileSosResultDto"];
 export type MobileSosRequestBody = Schemas["RaiseMobileSosDto"];
+export type MobileNotice = Schemas["MobileNoticeDto"];
+export type MobileNoticeList = Schemas["MobileNoticeListDto"];
+export type MobileNoticeMarkReadResult = Schemas["MobileNoticeMarkReadDto"];
+export type MobileHelpdeskComplaint = Schemas["MobileHelpdeskComplaintDto"];
+export type MobileHelpdeskList = Schemas["MobileHelpdeskListDto"];
+export type MobileHelpdeskRaiseResult = Schemas["MobileHelpdeskRaiseResultDto"];
+export type MobileHelpdeskTransitionResult = Schemas["MobileHelpdeskTransitionResultDto"];
+export type MobileHelpdeskRateResult = Schemas["MobileHelpdeskRateResultDto"];
+export type MobileBill = Schemas["MobileBillDto"];
+export type MobileBillList = Schemas["MobileBillListDto"];
+export type MobileBillPayment = Schemas["MobileBillPaymentDto"];
+export type MobileBillPayments = Schemas["MobileBillPaymentsDto"];
 
 export interface MobileApi {
   passwordLogin(body: PasswordLoginBody): Promise<SessionIssue>;
@@ -43,6 +55,16 @@ export interface MobileApi {
   residentApproveVisitor(accessToken: string, visitorId: string): Promise<MobileResidentVisitor>;
   residentRejectVisitor(accessToken: string, visitorId: string): Promise<MobileResidentVisitor>;
   raiseSos(accessToken: string, body?: MobileSosRequestBody): Promise<MobileSosResult>;
+  listNotices(accessToken: string, options?: { category?: string; activeOnly?: boolean }): Promise<MobileNoticeList>;
+  unreadNoticeCount(accessToken: string): Promise<{ unreadCount: number }>;
+  markNoticeRead(accessToken: string, noticeId: string): Promise<MobileNoticeMarkReadResult>;
+  listHelpdesk(accessToken: string, options?: { status?: string }): Promise<MobileHelpdeskList>;
+  raiseComplaint(accessToken: string, body: { title: string; description: string; category?: string; priority?: string; mediaUrls?: string[] }): Promise<MobileHelpdeskRaiseResult>;
+  transitionComplaint(accessToken: string, complaintId: string, body: { action: string; resolution?: string }): Promise<MobileHelpdeskTransitionResult>;
+  rateComplaint(accessToken: string, complaintId: string, body: { rating: number; comment?: string }): Promise<MobileHelpdeskRateResult>;
+  listBills(accessToken: string): Promise<MobileBillList>;
+  getBill(accessToken: string, billId: string): Promise<MobileBill>;
+  getBillPayments(accessToken: string, billId: string): Promise<MobileBillPayments>;
 }
 
 export interface MobileApiClientOptions {
@@ -206,6 +228,52 @@ export function createMobileApi(options: MobileApiClientOptions = {}): MobileApi
       unwrap(client.POST("/api/mobile/v1/sos/raise", {
         body,
         headers: bearer(accessToken),
+      })),
+    listNotices: (accessToken, options = {}) =>
+      unwrap(client.GET("/api/mobile/v1/notices", {
+        headers: bearer(accessToken),
+        params: { query: { category: options.category as never, activeOnly: options.activeOnly } },
+      })),
+    unreadNoticeCount: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/notices/unread-count", { headers: bearer(accessToken) })),
+    markNoticeRead: (accessToken, noticeId) =>
+      unwrap(client.POST("/api/mobile/v1/notices/read", {
+        body: { noticeId },
+        headers: bearer(accessToken),
+      })),
+    listHelpdesk: (accessToken, options = {}) =>
+      unwrap(client.GET("/api/mobile/v1/helpdesk", {
+        headers: bearer(accessToken),
+        params: { query: { status: options.status as never } },
+      })),
+    raiseComplaint: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/helpdesk/raise", {
+        body: body as never,
+        headers: bearer(accessToken),
+      })),
+    transitionComplaint: (accessToken, complaintId, body) =>
+      unwrap(client.POST("/api/mobile/v1/helpdesk/{complaintId}/transition", {
+        body: body as never,
+        headers: bearer(accessToken),
+        params: { path: { complaintId } },
+      })),
+    rateComplaint: (accessToken, complaintId, body) =>
+      unwrap(client.POST("/api/mobile/v1/helpdesk/{complaintId}/rate", {
+        body,
+        headers: bearer(accessToken),
+        params: { path: { complaintId } },
+      })),
+    listBills: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/bills", { headers: bearer(accessToken) })),
+    getBill: (accessToken, billId) =>
+      unwrap(client.GET("/api/mobile/v1/bills/{billId}", {
+        headers: bearer(accessToken),
+        params: { path: { billId } },
+      })),
+    getBillPayments: (accessToken, billId) =>
+      unwrap(client.GET("/api/mobile/v1/bills/{billId}/payments", {
+        headers: bearer(accessToken),
+        params: { path: { billId } },
       })),
   };
 }

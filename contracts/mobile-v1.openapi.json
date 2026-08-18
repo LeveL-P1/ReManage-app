@@ -100,6 +100,152 @@
         ]
       }
     },
+    "/api/mobile/v1/bills": {
+      "get": {
+        "operationId": "MobileBillController_listBills",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-bill"
+        ]
+      }
+    },
+    "/api/mobile/v1/bills/{billId}": {
+      "get": {
+        "operationId": "MobileBillController_getBill",
+        "parameters": [
+          {
+            "name": "billId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-bill"
+        ]
+      }
+    },
+    "/api/mobile/v1/bills/{billId}/payments": {
+      "get": {
+        "operationId": "MobileBillController_getBillPayments",
+        "parameters": [
+          {
+            "name": "billId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillPaymentsDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileBillProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-bill"
+        ]
+      }
+    },
     "/api/mobile/v1/guard/gate/overview": {
       "get": {
         "operationId": "MobileGuardController_overview",
@@ -504,6 +650,316 @@
         ]
       }
     },
+    "/api/mobile/v1/helpdesk": {
+      "get": {
+        "operationId": "MobileHelpdeskController_listComplaints",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-helpdesk"
+        ]
+      }
+    },
+    "/api/mobile/v1/helpdesk/{complaintId}/rate": {
+      "post": {
+        "operationId": "MobileHelpdeskController_rateComplaint",
+        "parameters": [
+          {
+            "name": "complaintId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateComplaintBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskRateResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-helpdesk"
+        ]
+      }
+    },
+    "/api/mobile/v1/helpdesk/{complaintId}/transition": {
+      "post": {
+        "operationId": "MobileHelpdeskController_transitionComplaint",
+        "parameters": [
+          {
+            "name": "complaintId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransitionComplaintBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskTransitionResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-helpdesk"
+        ]
+      }
+    },
+    "/api/mobile/v1/helpdesk/raise": {
+      "post": {
+        "operationId": "MobileHelpdeskController_raiseComplaint",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RaiseComplaintBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskRaiseResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileHelpdeskProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-helpdesk"
+        ]
+      }
+    },
+    "/api/mobile/v1/notices": {
+      "get": {
+        "operationId": "MobileNoticeController_listNotices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNoticeListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNoticeProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-notice"
+        ]
+      }
+    },
+    "/api/mobile/v1/notices/read": {
+      "post": {
+        "operationId": "MobileNoticeController_markRead",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkNoticeReadBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNoticeMarkReadDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNoticeProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-notice"
+        ]
+      }
+    },
+    "/api/mobile/v1/notices/unread-count": {
+      "get": {
+        "operationId": "MobileNoticeController_unreadCount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNoticeListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNoticeProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-notice"
+        ]
+      }
+    },
     "/api/mobile/v1/resident/visitors": {
       "get": {
         "operationId": "MobileResidentController_listVisitors",
@@ -868,6 +1324,194 @@
           "loggedOut"
         ]
       },
+      "MarkNoticeReadBodyDto": {
+        "type": "object",
+        "properties": {
+          "noticeId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "noticeId"
+        ]
+      },
+      "MobileBillDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "billType": {
+            "type": "string",
+            "enum": [
+              "maintenance",
+              "annual",
+              "sinking",
+              "repair",
+              "parking",
+              "other"
+            ]
+          },
+          "period": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "partial",
+              "paid"
+            ]
+          },
+          "lateFee": {
+            "type": "number"
+          },
+          "gstAmount": {
+            "type": "number"
+          },
+          "totalAmount": {
+            "type": "number",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "paidAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "paidVia": {
+            "type": "string",
+            "nullable": true
+          },
+          "paidAmount": {
+            "type": "number",
+            "nullable": true
+          },
+          "receiptNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "flatNumber": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "amount",
+          "billType",
+          "period",
+          "dueDate",
+          "status",
+          "lateFee",
+          "gstAmount",
+          "flatNumber",
+          "createdAt"
+        ]
+      },
+      "MobileBillListDto": {
+        "type": "object",
+        "properties": {
+          "bills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileBillDto"
+            }
+          },
+          "totalPending": {
+            "type": "number"
+          },
+          "totalAmount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "bills",
+          "totalPending",
+          "totalAmount"
+        ]
+      },
+      "MobileBillPaymentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "method": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "paidAt": {
+            "type": "string"
+          },
+          "receiptNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "amount",
+          "method",
+          "status",
+          "paidAt"
+        ]
+      },
+      "MobileBillPaymentsDto": {
+        "type": "object",
+        "properties": {
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileBillPaymentDto"
+            }
+          }
+        },
+        "required": [
+          "payments"
+        ]
+      },
+      "MobileBillProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "bill_not_found",
+              "flat_not_linked"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
       "MobileBootstrapDto": {
         "type": "object",
         "properties": {
@@ -1172,6 +1816,217 @@
           "arrivedAt"
         ]
       },
+      "MobileHelpdeskComplaintDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "plumbing",
+              "electrical",
+              "cleanliness",
+              "security",
+              "parking",
+              "general"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "urgent"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "in_progress",
+              "resolved",
+              "closed"
+            ]
+          },
+          "flatNumber": {
+            "type": "string"
+          },
+          "raisedBy": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string",
+            "nullable": true
+          },
+          "resolvedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "assignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "escalationLevel": {
+            "type": "number"
+          },
+          "satisfactionRating": {
+            "type": "number",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "slaDueAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "slaBreached": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "category",
+          "priority",
+          "status",
+          "flatNumber",
+          "raisedBy",
+          "escalationLevel",
+          "createdAt",
+          "slaBreached"
+        ]
+      },
+      "MobileHelpdeskListDto": {
+        "type": "object",
+        "properties": {
+          "complaints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileHelpdeskComplaintDto"
+            }
+          }
+        },
+        "required": [
+          "complaints"
+        ]
+      },
+      "MobileHelpdeskProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "complaint_not_found",
+              "complaint_not_resolved",
+              "invalid_transition"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MobileHelpdeskRaiseResultDto": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "boolean"
+          },
+          "complaintId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "in_progress",
+              "resolved",
+              "closed"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "urgent"
+            ]
+          },
+          "slaDueAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "created",
+          "complaintId",
+          "status",
+          "priority",
+          "slaDueAt"
+        ]
+      },
+      "MobileHelpdeskRateResultDto": {
+        "type": "object",
+        "properties": {
+          "rated": {
+            "type": "boolean"
+          },
+          "complaintId": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "rated",
+          "complaintId",
+          "rating"
+        ]
+      },
+      "MobileHelpdeskTransitionResultDto": {
+        "type": "object",
+        "properties": {
+          "transitioned": {
+            "type": "boolean"
+          },
+          "complaintId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "in_progress",
+              "resolved",
+              "closed"
+            ]
+          }
+        },
+        "required": [
+          "transitioned",
+          "complaintId",
+          "status"
+        ]
+      },
       "MobileInstallationDto": {
         "type": "object",
         "properties": {
@@ -1199,6 +2054,114 @@
           "id",
           "platform",
           "appVersion"
+        ]
+      },
+      "MobileNoticeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "general",
+              "event",
+              "maintenance",
+              "emergency",
+              "meeting"
+            ]
+          },
+          "postedBy": {
+            "type": "string"
+          },
+          "isPinned": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "isRead": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "body",
+          "category",
+          "postedBy",
+          "isPinned",
+          "createdAt",
+          "isRead"
+        ]
+      },
+      "MobileNoticeListDto": {
+        "type": "object",
+        "properties": {
+          "notices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileNoticeDto"
+            }
+          },
+          "unreadCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "notices",
+          "unreadCount"
+        ]
+      },
+      "MobileNoticeMarkReadDto": {
+        "type": "object",
+        "properties": {
+          "acknowledged": {
+            "type": "boolean"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "noticeId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "acknowledged",
+          "replayed",
+          "noticeId"
+        ]
+      },
+      "MobileNoticeProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "notice_not_found"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
         ]
       },
       "MobileNotificationPolicyDto": {
@@ -1518,6 +2481,47 @@
           "installation"
         ]
       },
+      "RaiseComplaintBodyDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "plumbing",
+              "electrical",
+              "cleanliness",
+              "security",
+              "parking",
+              "general"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "urgent"
+            ]
+          },
+          "mediaUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description"
+        ]
+      },
       "RaiseMobileSosDto": {
         "type": "object",
         "properties": {
@@ -1536,6 +2540,22 @@
             "example": "critical"
           }
         }
+      },
+      "RateComplaintBodyDto": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "rating"
+        ]
       },
       "RefreshMobileSessionDto": {
         "type": "object",
@@ -1580,6 +2600,26 @@
           "flatQuery",
           "visitorName",
           "purpose"
+        ]
+      },
+      "TransitionComplaintBodyDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "start",
+              "resolve",
+              "close",
+              "reopen"
+            ]
+          },
+          "resolution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
         ]
       },
       "UpdateMobileActiveRoleDto": {

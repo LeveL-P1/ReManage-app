@@ -221,5 +221,109 @@ export function createDevelopmentDemoMobileApi(): MobileApi {
         notificationsSent: 2,
       };
     },
+    async listNotices() {
+      return {
+        notices: [
+          {
+            id: "demo-notice-1",
+            title: "Annual General Meeting",
+            body: "The AGM will be held on Sunday at 10 AM in the community hall.",
+            category: "meeting" as const,
+            postedBy: "Secretary",
+            isPinned: true,
+            expiresAt: null,
+            createdAt: new Date(0).toISOString(),
+            isRead: false,
+          },
+        ],
+        unreadCount: 1,
+      };
+    },
+    async unreadNoticeCount() {
+      return { unreadCount: 1 };
+    },
+    async markNoticeRead(_accessToken: string, noticeId: string) {
+      return {
+        acknowledged: true as const,
+        replayed: false,
+        noticeId,
+      };
+    },
+    async listHelpdesk() {
+      return { complaints: [] };
+    },
+    async raiseComplaint() {
+      return {
+        created: true as const,
+        complaintId: "demo-complaint-1",
+        status: "open" as const,
+        priority: "medium" as const,
+        category: "general" as const,
+        slaDueAt: new Date().toISOString(),
+      };
+    },
+    async transitionComplaint() {
+      return {
+        transitioned: true as const,
+        complaintId: "demo-complaint-1",
+        status: "in_progress" as const,
+      };
+    },
+    async rateComplaint() {
+      return {
+        rated: true as const,
+        complaintId: "demo-complaint-1",
+        rating: 5,
+      };
+    },
+    async listBills() {
+      return {
+        bills: [
+          {
+            id: "demo-bill-1",
+            amount: 5000,
+            billType: "maintenance" as const,
+            period: "2026-08",
+            dueDate: new Date().toISOString(),
+            status: "pending" as const,
+            lateFee: 0,
+            gstAmount: 0,
+            totalAmount: 5000,
+            description: "Monthly maintenance",
+            paidAt: null,
+            paidVia: null,
+            paidAmount: null,
+            receiptNumber: null,
+            flatNumber: "A-101",
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+        totalPending: 5000,
+        totalAmount: 5000,
+      };
+    },
+    async getBill(_accessToken: string, billId: string) {
+      return {
+        id: billId,
+        amount: 5000,
+        billType: "maintenance" as const,
+        period: "2026-08",
+        dueDate: new Date().toISOString(),
+        status: "pending" as const,
+        lateFee: 0,
+        gstAmount: 0,
+        totalAmount: 5000,
+        description: "Monthly maintenance",
+        paidAt: null,
+        paidVia: null,
+        paidAmount: null,
+        receiptNumber: null,
+        flatNumber: "A-101",
+        createdAt: new Date(0).toISOString(),
+      };
+    },
+    async getBillPayments() {
+      return { payments: [] };
+    },
   };
 }

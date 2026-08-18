@@ -182,6 +182,59 @@ export class FakeMobileApi implements MobileApi {
     acknowledgementRequired: true,
     notificationsSent: 2,
   }));
+  readonly listNotices = jest.fn(async () => ({
+    notices: [],
+    unreadCount: 0,
+  }));
+  readonly unreadNoticeCount = jest.fn(async () => ({ unreadCount: 0 }));
+  readonly markNoticeRead = jest.fn(async (_accessToken, noticeId: string) => ({
+    acknowledged: true as const,
+    replayed: false,
+    noticeId,
+  }));
+  readonly listHelpdesk = jest.fn(async () => ({ complaints: [] }));
+  readonly raiseComplaint = jest.fn(async () => ({
+    created: true as const,
+    complaintId: "demo-complaint-1",
+    status: "open" as const,
+    priority: "medium" as const,
+    category: "general" as const,
+    slaDueAt: new Date().toISOString(),
+  }));
+  readonly transitionComplaint = jest.fn(async () => ({
+    transitioned: true as const,
+    complaintId: "demo-complaint-1",
+    status: "in_progress" as const,
+  }));
+  readonly rateComplaint = jest.fn(async () => ({
+    rated: true as const,
+    complaintId: "demo-complaint-1",
+    rating: 5,
+  }));
+  readonly listBills = jest.fn(async () => ({
+    bills: [],
+    totalPending: 0,
+    totalAmount: 0,
+  }));
+  readonly getBill = jest.fn(async (_accessToken, billId: string) => ({
+    id: billId,
+    amount: 5000,
+    billType: "maintenance" as const,
+    period: "2026-08",
+    dueDate: new Date().toISOString(),
+    status: "pending" as const,
+    lateFee: 0,
+    gstAmount: 0,
+    totalAmount: 5000,
+    description: null,
+    paidAt: null,
+    paidVia: null,
+    paidAmount: null,
+    receiptNumber: null,
+    flatNumber: "A-101",
+    createdAt: new Date().toISOString(),
+  }));
+  readonly getBillPayments = jest.fn(async () => ({ payments: [] }));
 }
 
 export function deferred<T>(): { promise: Promise<T>; resolve(value: T): void; reject(reason?: unknown): void } {
