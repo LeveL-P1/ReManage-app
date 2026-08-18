@@ -21,9 +21,6 @@ export interface paths {
     get: operations["MobileGuardController_listVisitors"];
     post: operations["MobileGuardController_requestVisitor"];
   };
-  "/api/mobile/v1/guard/visitors/passcode/verify": {
-    post: operations["MobileGuardController_verifyPasscodeLookup"];
-  };
   "/api/mobile/v1/guard/visitors/{visitorId}": {
     get: operations["MobileGuardController_getVisitor"];
   };
@@ -35,6 +32,9 @@ export interface paths {
   };
   "/api/mobile/v1/guard/visitors/{visitorId}/verify-passcode": {
     post: operations["MobileGuardController_verifyPasscode"];
+  };
+  "/api/mobile/v1/guard/visitors/passcode/verify": {
+    post: operations["MobileGuardController_verifyPasscodeLookup"];
   };
   "/api/mobile/v1/resident/visitors": {
     get: operations["MobileResidentController_listVisitors"];
@@ -57,6 +57,9 @@ export interface paths {
   "/api/mobile/v1/session/refresh": {
     post: operations["MobileSessionController_refresh"];
   };
+  "/api/mobile/v1/sos/raise": {
+    post: operations["MobileSosController_raiseSos"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -71,56 +74,56 @@ export interface components {
       loggedOut: true;
     };
     MobileBootstrapDto: {
+      user: components["schemas"]["MobileBootstrapUserDto"];
+      society: components["schemas"]["MobileBootstrapSocietyDto"];
+      approvedRoles: ("resident" | "guard")[];
       /** @enum {string} */
       activeRole: "resident" | "guard";
-      approvedRoles: ("resident" | "guard")[];
+      permissions: string[];
       featureFlags: components["schemas"]["MobileFeatureFlagsDto"];
       notificationPolicy: components["schemas"]["MobileNotificationPolicyDto"];
-      permissions: string[];
-      society: components["schemas"]["MobileBootstrapSocietyDto"];
-      user: components["schemas"]["MobileBootstrapUserDto"];
     };
     MobileBootstrapSocietyDto: {
       id: string;
       name: string;
     };
     MobileBootstrapUserDto: {
-      /** Format: email */
-      email: string;
       id: string;
       name: string;
+      /** Format: email */
+      email: string;
     };
     MobileCommunityNotificationPolicyDto: {
       /** @enum {boolean} */
-      configurable: true;
-      /** @enum {boolean} */
       enabled: false;
+      /** @enum {boolean} */
+      configurable: true;
     };
     MobileCriticalNotificationPolicyDto: {
       /** @enum {boolean} */
-      configurable: false;
-      /** @enum {boolean} */
       enabled: true;
+      /** @enum {boolean} */
+      configurable: false;
     };
     MobileFeatureFlagsDto: {
       /** @enum {boolean} */
-      guardOffline: false;
+      residentShell: true;
       /** @enum {boolean} */
       guardShell: true;
       /** @enum {boolean} */
       nativePush: false;
       /** @enum {boolean} */
-      residentShell: true;
+      guardOffline: false;
     };
     MobileGuardOverviewCountsDto: {
-      expected: number;
       inside: number;
+      expected: number;
       pendingApproval: number;
       pendingParcels: number;
     };
     MobileGuardOverviewDto: {
-      counts: components["schemas"]["MobileGuardOverviewCountsDto"];
       gateLabel: string;
+      counts: components["schemas"]["MobileGuardOverviewCountsDto"];
     };
     MobileGuardPasscodeResultDto: {
       id: string;
@@ -133,35 +136,35 @@ export interface components {
       requestId?: string;
     };
     MobileGuardVisitorDto: {
+      id: string;
+      flatNumber: string;
+      visitorName: string;
+      purpose: string;
+      /** @enum {string} */
+      status: "expected" | "inside" | "exited" | "rejected" | "cancelled";
+      /** @description Whether the visitor must verify a stored passcode before check-in. */
+      passcodeRequired: boolean;
+      residentResponse?: string | null;
+      phone?: string | null;
+      vehicleNo?: string | null;
       arrivedAt: string;
       entryTime?: string | null;
       exitTime?: string | null;
-      flatNumber: string;
-      id: string;
-      /** @description Whether the visitor must verify a stored passcode before check-in. */
-      passcodeRequired: boolean;
-      phone?: string | null;
-      purpose: string;
-      residentResponse?: string | null;
-      /** @enum {string} */
-      status: "expected" | "inside" | "exited" | "rejected" | "cancelled";
-      vehicleNo?: string | null;
-      visitorName: string;
     };
     MobileInstallationDto: {
-      /** @example 1.0.0 */
-      appVersion: string;
-      /** @example Pixel 9 */
-      deviceName?: string;
       /** Format: uuid */
       id: string;
       /** @enum {string} */
       platform: "android" | "ios";
+      /** @example 1.0.0 */
+      appVersion: string;
+      /** @example Pixel 9 */
+      deviceName?: string;
     };
     MobileNotificationPolicyDto: {
-      community: components["schemas"]["MobileCommunityNotificationPolicyDto"];
       critical: components["schemas"]["MobileCriticalNotificationPolicyDto"];
       transactional: components["schemas"]["MobileTransactionalNotificationPolicyDto"];
+      community: components["schemas"]["MobileCommunityNotificationPolicyDto"];
     };
     MobileResidentProblemDto: {
       code: string;
@@ -169,46 +172,59 @@ export interface components {
       requestId?: string;
     };
     MobileResidentVisitorDto: {
-      arrivedAt?: string | null;
-      createdAt: string;
-      entryTime?: string | null;
-      exitTime?: string | null;
-      expectedAt?: string | null;
       id: string;
-      passcode?: string | null;
-      phone?: string | null;
+      visitorName: string;
       purpose: string;
       /** @enum {string} */
       status: "pending" | "approved" | "inside" | "exited" | "rejected" | "cancelled";
+      phone?: string | null;
       vehicleNo?: string | null;
-      visitorName: string;
+      passcode?: string | null;
+      arrivedAt?: string | null;
+      expectedAt?: string | null;
+      entryTime?: string | null;
+      exitTime?: string | null;
+      createdAt: string;
     };
     MobileResidentVisitorsDto: {
       flatNumber?: string | null;
       visitors: components["schemas"]["MobileResidentVisitorDto"][];
     };
     MobileRoleSwitchDto: {
+      accessToken: string;
       /** Format: date-time */
       accessExpiresAt: string;
-      accessToken: string;
       bootstrap: components["schemas"]["MobileBootstrapDto"];
     };
     MobileSessionIssueDto: {
+      accessToken: string;
       /** Format: date-time */
       accessExpiresAt: string;
-      accessToken: string;
-      /** @enum {string} */
-      activeRole: "resident" | "guard";
-      deviceSessionId: string;
       renewableCredential: string;
       /** Format: date-time */
       renewableExpiresAt: string;
+      deviceSessionId: string;
+      /** @enum {string} */
+      activeRole: "resident" | "guard";
+    };
+    MobileSosProblemDto: {
+      /** @enum {string} */
+      code: never;
+      message: string;
+      requestId?: string;
+    };
+    MobileSosResultDto: {
+      incidentId: string;
+      /** @enum {string} */
+      severity: "low" | "medium" | "high" | "critical";
+      acknowledgementRequired: boolean;
+      notificationsSent: number;
     };
     MobileTransactionalNotificationPolicyDto: {
       /** @enum {boolean} */
-      configurable: true;
-      /** @enum {boolean} */
       enabled: true;
+      /** @enum {boolean} */
+      configurable: true;
     };
     OtpRequestAcceptedDto: {
       accepted: boolean;
@@ -229,8 +245,17 @@ export interface components {
     PasswordLoginRequestDto: {
       /** Format: email */
       identifier: string;
-      installation: components["schemas"]["MobileInstallationDto"];
       password: string;
+      installation: components["schemas"]["MobileInstallationDto"];
+    };
+    RaiseMobileSosDto: {
+      /** @example Medical emergency in Block A */
+      description?: string;
+      /**
+       * @example critical
+       * @enum {string}
+       */
+      severity?: "low" | "medium" | "high" | "critical";
     };
     RefreshMobileSessionDto: {
       renewableCredential: string;
@@ -238,16 +263,16 @@ export interface components {
     RequestVisitorDto: {
       /** @example A-308 */
       flatQuery: string;
-      /** @example 4829 */
-      passcode?: string;
-      /** @example +919876543210 */
-      phone?: string;
-      /** @example guest */
-      purpose: string;
-      /** @example MH 12 AB 1234 */
-      vehicleNo?: string;
       /** @example Maya */
       visitorName: string;
+      /** @example guest */
+      purpose: string;
+      /** @example +919876543210 */
+      phone?: string;
+      /** @example MH 12 AB 1234 */
+      vehicleNo?: string;
+      /** @example 4829 */
+      passcode?: string;
     };
     UpdateMobileActiveRoleDto: {
       /** @enum {string} */
@@ -360,25 +385,6 @@ export interface operations {
       };
     };
   };
-  MobileGuardController_verifyPasscodeLookup: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["VerifyVisitorPasscodeDto"];
-      };
-    };
-    responses: {
-      200: {
-        content: {
-          "application/json": components["schemas"]["MobileGuardVisitorDto"];
-        };
-      };
-      400: {
-        content: {
-          "application/json": components["schemas"]["MobileGuardProblemDto"];
-        };
-      };
-    };
-  };
   MobileGuardController_getVisitor: {
     parameters: {
       path: {
@@ -479,6 +485,25 @@ export interface operations {
         };
       };
       409: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardProblemDto"];
+        };
+      };
+    };
+  };
+  MobileGuardController_verifyPasscodeLookup: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["VerifyVisitorPasscodeDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileGuardVisitorDto"];
+        };
+      };
+      400: {
         content: {
           "application/json": components["schemas"]["MobileGuardProblemDto"];
         };
@@ -604,6 +629,25 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["MobileSessionIssueDto"];
+        };
+      };
+    };
+  };
+  MobileSosController_raiseSos: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RaiseMobileSosDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileSosResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileSosProblemDto"];
         };
       };
     };

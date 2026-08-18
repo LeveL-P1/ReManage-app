@@ -213,5 +213,13 @@ export function createDevelopmentDemoMobileApi(): MobileApi {
         visitorName: "Demo Visitor",
       };
     },
+    async raiseSos() {
+      return {
+        incidentId: "demo-incident-1",
+        severity: "critical" as const,
+        acknowledgementRequired: true,
+        notificationsSent: 2,
+      };
+    },
   };
 }

@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function SafetyRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("sos")} />; }
+import { ResidentSosScreen } from "@/features/resident/sos/resident-sos-screen";
+export default function SafetyRoute() { return <ResidentSosScreen />; }

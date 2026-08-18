@@ -176,6 +176,12 @@ export class FakeMobileApi implements MobileApi {
     status: "rejected" as const,
     visitorName: "Maya",
   }));
+  readonly raiseSos = jest.fn(async () => ({
+    incidentId: "demo-incident-1",
+    severity: "critical" as const,
+    acknowledgementRequired: true,
+    notificationsSent: 2,
+  }));
 }
 
 export function deferred<T>(): { promise: Promise<T>; resolve(value: T): void; reject(reason?: unknown): void } {

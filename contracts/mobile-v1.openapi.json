@@ -1,746 +1,36 @@
 {
-  "components": {
-    "schemas": {
-      "LogoutMobileSessionDto": {
-        "properties": {
-          "renewableCredential": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "renewableCredential"
-        ],
-        "type": "object"
-      },
-      "LogoutMobileSessionResponseDto": {
-        "properties": {
-          "loggedOut": {
-            "enum": [
-              true
-            ],
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "loggedOut"
-        ],
-        "type": "object"
-      },
-      "MobileBootstrapDto": {
-        "properties": {
-          "activeRole": {
-            "enum": [
-              "resident",
-              "guard"
-            ],
-            "type": "string"
-          },
-          "approvedRoles": {
-            "items": {
-              "enum": [
-                "resident",
-                "guard"
-              ],
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "featureFlags": {
-            "$ref": "#/components/schemas/MobileFeatureFlagsDto"
-          },
-          "notificationPolicy": {
-            "$ref": "#/components/schemas/MobileNotificationPolicyDto"
-          },
-          "permissions": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "society": {
-            "$ref": "#/components/schemas/MobileBootstrapSocietyDto"
-          },
-          "user": {
-            "$ref": "#/components/schemas/MobileBootstrapUserDto"
-          }
-        },
-        "required": [
-          "user",
-          "society",
-          "approvedRoles",
-          "activeRole",
-          "permissions",
-          "featureFlags",
-          "notificationPolicy"
-        ],
-        "type": "object"
-      },
-      "MobileBootstrapSocietyDto": {
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "name"
-        ],
-        "type": "object"
-      },
-      "MobileBootstrapUserDto": {
-        "properties": {
-          "email": {
-            "format": "email",
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "email"
-        ],
-        "type": "object"
-      },
-      "MobileCommunityNotificationPolicyDto": {
-        "properties": {
-          "configurable": {
-            "enum": [
-              true
-            ],
-            "type": "boolean"
-          },
-          "enabled": {
-            "enum": [
-              false
-            ],
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "enabled",
-          "configurable"
-        ],
-        "type": "object"
-      },
-      "MobileCriticalNotificationPolicyDto": {
-        "properties": {
-          "configurable": {
-            "enum": [
-              false
-            ],
-            "type": "boolean"
-          },
-          "enabled": {
-            "enum": [
-              true
-            ],
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "enabled",
-          "configurable"
-        ],
-        "type": "object"
-      },
-      "MobileFeatureFlagsDto": {
-        "properties": {
-          "guardOffline": {
-            "enum": [
-              false
-            ],
-            "type": "boolean"
-          },
-          "guardShell": {
-            "enum": [
-              true
-            ],
-            "type": "boolean"
-          },
-          "nativePush": {
-            "enum": [
-              false
-            ],
-            "type": "boolean"
-          },
-          "residentShell": {
-            "enum": [
-              true
-            ],
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "residentShell",
-          "guardShell",
-          "nativePush",
-          "guardOffline"
-        ],
-        "type": "object"
-      },
-      "MobileGuardOverviewCountsDto": {
-        "properties": {
-          "expected": {
-            "type": "number"
-          },
-          "inside": {
-            "type": "number"
-          },
-          "pendingApproval": {
-            "type": "number"
-          },
-          "pendingParcels": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "inside",
-          "expected",
-          "pendingApproval",
-          "pendingParcels"
-        ],
-        "type": "object"
-      },
-      "MobileGuardOverviewDto": {
-        "properties": {
-          "counts": {
-            "$ref": "#/components/schemas/MobileGuardOverviewCountsDto"
-          },
-          "gateLabel": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "gateLabel",
-          "counts"
-        ],
-        "type": "object"
-      },
-      "MobileGuardPasscodeResultDto": {
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "passcodeVerified": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "passcodeVerified"
-        ],
-        "type": "object"
-      },
-      "MobileGuardProblemDto": {
-        "properties": {
-          "code": {
-            "enum": [
-              "flat_not_found",
-              "visitor_not_found",
-              "visitor_not_approved",
-              "visitor_not_inside",
-              "visitor_blacklisted",
-              "invalid_visitor_passcode",
-              "passcode_verification_required"
-            ],
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "requestId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ],
-        "type": "object"
-      },
-      "MobileGuardVisitorDto": {
-        "properties": {
-          "arrivedAt": {
-            "type": "string"
-          },
-          "entryTime": {
-            "nullable": true,
-            "type": "string"
-          },
-          "exitTime": {
-            "nullable": true,
-            "type": "string"
-          },
-          "flatNumber": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "passcodeRequired": {
-            "description": "Whether the visitor must verify a stored passcode before check-in.",
-            "type": "boolean"
-          },
-          "phone": {
-            "nullable": true,
-            "type": "string"
-          },
-          "purpose": {
-            "type": "string"
-          },
-          "residentResponse": {
-            "nullable": true,
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "expected",
-              "inside",
-              "exited",
-              "rejected",
-              "cancelled"
-            ],
-            "type": "string"
-          },
-          "vehicleNo": {
-            "nullable": true,
-            "type": "string"
-          },
-          "visitorName": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "flatNumber",
-          "visitorName",
-          "purpose",
-          "status",
-          "passcodeRequired",
-          "arrivedAt"
-        ],
-        "type": "object"
-      },
-      "MobileInstallationDto": {
-        "properties": {
-          "appVersion": {
-            "example": "1.0.0",
-            "type": "string"
-          },
-          "deviceName": {
-            "example": "Pixel 9",
-            "type": "string"
-          },
-          "id": {
-            "format": "uuid",
-            "type": "string"
-          },
-          "platform": {
-            "enum": [
-              "android",
-              "ios"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "platform",
-          "appVersion"
-        ],
-        "type": "object"
-      },
-      "MobileNotificationPolicyDto": {
-        "properties": {
-          "community": {
-            "$ref": "#/components/schemas/MobileCommunityNotificationPolicyDto"
-          },
-          "critical": {
-            "$ref": "#/components/schemas/MobileCriticalNotificationPolicyDto"
-          },
-          "transactional": {
-            "$ref": "#/components/schemas/MobileTransactionalNotificationPolicyDto"
-          }
-        },
-        "required": [
-          "critical",
-          "transactional",
-          "community"
-        ],
-        "type": "object"
-      },
-      "MobileResidentProblemDto": {
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "requestId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ],
-        "type": "object"
-      },
-      "MobileResidentVisitorDto": {
-        "properties": {
-          "arrivedAt": {
-            "nullable": true,
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "entryTime": {
-            "nullable": true,
-            "type": "string"
-          },
-          "exitTime": {
-            "nullable": true,
-            "type": "string"
-          },
-          "expectedAt": {
-            "nullable": true,
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "passcode": {
-            "nullable": true,
-            "type": "string"
-          },
-          "phone": {
-            "nullable": true,
-            "type": "string"
-          },
-          "purpose": {
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "pending",
-              "approved",
-              "inside",
-              "exited",
-              "rejected",
-              "cancelled"
-            ],
-            "type": "string"
-          },
-          "vehicleNo": {
-            "nullable": true,
-            "type": "string"
-          },
-          "visitorName": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "visitorName",
-          "purpose",
-          "status",
-          "createdAt"
-        ],
-        "type": "object"
-      },
-      "MobileResidentVisitorsDto": {
-        "properties": {
-          "flatNumber": {
-            "nullable": true,
-            "type": "string"
-          },
-          "visitors": {
-            "items": {
-              "$ref": "#/components/schemas/MobileResidentVisitorDto"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "visitors"
-        ],
-        "type": "object"
-      },
-      "MobileRoleSwitchDto": {
-        "properties": {
-          "accessExpiresAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "accessToken": {
-            "type": "string"
-          },
-          "bootstrap": {
-            "$ref": "#/components/schemas/MobileBootstrapDto"
-          }
-        },
-        "required": [
-          "accessToken",
-          "accessExpiresAt",
-          "bootstrap"
-        ],
-        "type": "object"
-      },
-      "MobileSessionIssueDto": {
-        "properties": {
-          "accessExpiresAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "accessToken": {
-            "type": "string"
-          },
-          "activeRole": {
-            "enum": [
-              "resident",
-              "guard"
-            ],
-            "type": "string"
-          },
-          "deviceSessionId": {
-            "type": "string"
-          },
-          "renewableCredential": {
-            "type": "string"
-          },
-          "renewableExpiresAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "accessToken",
-          "accessExpiresAt",
-          "renewableCredential",
-          "renewableExpiresAt",
-          "deviceSessionId",
-          "activeRole"
-        ],
-        "type": "object"
-      },
-      "MobileTransactionalNotificationPolicyDto": {
-        "properties": {
-          "configurable": {
-            "enum": [
-              true
-            ],
-            "type": "boolean"
-          },
-          "enabled": {
-            "enum": [
-              true
-            ],
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "enabled",
-          "configurable"
-        ],
-        "type": "object"
-      },
-      "OtpRequestAcceptedDto": {
-        "properties": {
-          "accepted": {
-            "type": "boolean"
-          },
-          "challengeId": {
-            "format": "uuid",
-            "type": "string"
-          }
-        },
-        "required": [
-          "accepted",
-          "challengeId"
-        ],
-        "type": "object"
-      },
-      "OtpRequestDto": {
-        "properties": {
-          "identifier": {
-            "format": "email",
-            "type": "string"
-          },
-          "installation": {
-            "$ref": "#/components/schemas/MobileInstallationDto"
-          }
-        },
-        "required": [
-          "identifier",
-          "installation"
-        ],
-        "type": "object"
-      },
-      "OtpVerifyDto": {
-        "properties": {
-          "challengeId": {
-            "format": "uuid",
-            "type": "string"
-          },
-          "code": {
-            "pattern": "^\\d{6}$",
-            "type": "string"
-          },
-          "installation": {
-            "$ref": "#/components/schemas/MobileInstallationDto"
-          }
-        },
-        "required": [
-          "challengeId",
-          "code",
-          "installation"
-        ],
-        "type": "object"
-      },
-      "PasswordLoginRequestDto": {
-        "properties": {
-          "identifier": {
-            "format": "email",
-            "type": "string"
-          },
-          "installation": {
-            "$ref": "#/components/schemas/MobileInstallationDto"
-          },
-          "password": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "identifier",
-          "password",
-          "installation"
-        ],
-        "type": "object"
-      },
-      "RefreshMobileSessionDto": {
-        "properties": {
-          "renewableCredential": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "renewableCredential"
-        ],
-        "type": "object"
-      },
-      "RequestVisitorDto": {
-        "properties": {
-          "flatQuery": {
-            "example": "A-308",
-            "type": "string"
-          },
-          "passcode": {
-            "example": "4829",
-            "type": "string"
-          },
-          "phone": {
-            "example": "+919876543210",
-            "type": "string"
-          },
-          "purpose": {
-            "example": "guest",
-            "type": "string"
-          },
-          "vehicleNo": {
-            "example": "MH 12 AB 1234",
-            "type": "string"
-          },
-          "visitorName": {
-            "example": "Maya",
-            "type": "string"
-          }
-        },
-        "required": [
-          "flatQuery",
-          "visitorName",
-          "purpose"
-        ],
-        "type": "object"
-      },
-      "UpdateMobileActiveRoleDto": {
-        "properties": {
-          "role": {
-            "enum": [
-              "resident",
-              "guard"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "role"
-        ],
-        "type": "object"
-      },
-      "VerifyVisitorPasscodeDto": {
-        "properties": {
-          "passcode": {
-            "example": "4829",
-            "type": "string"
-          }
-        },
-        "required": [
-          "passcode"
-        ],
-        "type": "object"
-      }
-    },
-    "securitySchemes": {
-      "bearer": {
-        "bearerFormat": "JWT",
-        "scheme": "bearer",
-        "type": "http"
-      }
-    }
-  },
-  "info": {
-    "contact": {},
-    "description": "Web, backend, and dedicated ReManage mobile contracts.",
-    "title": "Society Connect API",
-    "version": "1.0.0"
-  },
   "openapi": "3.0.0",
+  "info": {
+    "title": "Society Connect API",
+    "description": "Web, backend, and dedicated ReManage mobile contracts.",
+    "version": "1.0.0",
+    "contact": {}
+  },
   "paths": {
     "/api/mobile/v1/auth/otp/request": {
       "post": {
         "operationId": "MobileAuthController_requestOtp",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/OtpRequestDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "202": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OtpRequestAcceptedDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "tags": [
@@ -753,25 +43,25 @@
         "operationId": "MobileAuthController_verifyOtp",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/OtpVerifyDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileSessionIssueDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "tags": [
@@ -784,25 +74,25 @@
         "operationId": "MobileAuthController_password",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PasswordLoginRequestDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileSessionIssueDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "tags": [
@@ -816,14 +106,14 @@
         "parameters": [],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardOverviewDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -841,9 +131,9 @@
         "operationId": "MobileGuardController_listVisitors",
         "parameters": [
           {
-            "in": "query",
             "name": "status",
             "required": false,
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -851,17 +141,17 @@
         ],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/MobileGuardVisitorDto"
-                  },
-                  "type": "array"
+                  }
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -877,91 +167,45 @@
         "operationId": "MobileGuardController_requestVisitor",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RequestVisitorDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardVisitorDto"
                 }
-              }
-            },
-            "description": ""
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MobileGuardProblemDto"
-                }
-              }
-            },
-            "description": ""
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MobileGuardProblemDto"
-                }
-              }
-            },
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": [
-          "mobile-guard"
-        ]
-      }
-    },
-    "/api/mobile/v1/guard/visitors/passcode/verify": {
-      "post": {
-        "operationId": "MobileGuardController_verifyPasscodeLookup",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyVisitorPasscodeDto"
               }
             }
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MobileGuardVisitorDto"
-                }
-              }
-            },
-            "description": ""
-          },
-          "400": {
+          "403": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileGuardProblemDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -979,9 +223,9 @@
         "operationId": "MobileGuardController_getVisitor",
         "parameters": [
           {
-            "in": "path",
             "name": "visitorId",
             "required": true,
+            "in": "path",
             "schema": {
               "type": "string"
             }
@@ -989,24 +233,24 @@
         ],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardVisitorDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "404": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1024,9 +268,9 @@
         "operationId": "MobileGuardController_checkIn",
         "parameters": [
           {
-            "in": "path",
             "name": "visitorId",
             "required": true,
+            "in": "path",
             "schema": {
               "type": "string"
             }
@@ -1034,44 +278,44 @@
         ],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardVisitorDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "403": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "404": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "409": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1089,9 +333,9 @@
         "operationId": "MobileGuardController_checkOut",
         "parameters": [
           {
-            "in": "path",
             "name": "visitorId",
             "required": true,
+            "in": "path",
             "schema": {
               "type": "string"
             }
@@ -1099,34 +343,34 @@
         ],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardVisitorDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "404": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "409": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1144,64 +388,110 @@
         "operationId": "MobileGuardController_verifyPasscode",
         "parameters": [
           {
-            "in": "path",
             "name": "visitorId",
             "required": true,
+            "in": "path",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/VerifyVisitorPasscodeDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardPasscodeResultDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "400": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "404": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "409": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileGuardProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-guard"
+        ]
+      }
+    },
+    "/api/mobile/v1/guard/visitors/passcode/verify": {
+      "post": {
+        "operationId": "MobileGuardController_verifyPasscodeLookup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyVisitorPasscodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileGuardVisitorDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileGuardProblemDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1220,24 +510,24 @@
         "parameters": [],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentVisitorsDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "403": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1255,9 +545,9 @@
         "operationId": "MobileResidentController_approveVisitor",
         "parameters": [
           {
-            "in": "path",
             "name": "visitorId",
             "required": true,
+            "in": "path",
             "schema": {
               "type": "string"
             }
@@ -1265,44 +555,44 @@
         ],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentVisitorDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "403": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "404": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "409": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1320,9 +610,9 @@
         "operationId": "MobileResidentController_rejectVisitor",
         "parameters": [
           {
-            "in": "path",
             "name": "visitorId",
             "required": true,
+            "in": "path",
             "schema": {
               "type": "string"
             }
@@ -1330,44 +620,44 @@
         ],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentVisitorDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "403": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "404": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           },
           "409": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileResidentProblemDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1385,25 +675,25 @@
         "operationId": "MobileSessionController_activeRole",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateMobileActiveRoleDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileRoleSwitchDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1422,14 +712,14 @@
         "parameters": [],
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileBootstrapDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "security": [
@@ -1447,25 +737,25 @@
         "operationId": "MobileSessionController_logout",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LogoutMobileSessionDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LogoutMobileSessionResponseDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "tags": [
@@ -1478,33 +768,854 @@
         "operationId": "MobileSessionController_refresh",
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RefreshMobileSessionDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MobileSessionIssueDto"
                 }
               }
-            },
-            "description": ""
+            }
           }
         },
         "tags": [
           "mobile-session"
         ]
       }
+    },
+    "/api/mobile/v1/sos/raise": {
+      "post": {
+        "operationId": "MobileSosController_raiseSos",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RaiseMobileSosDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileSosResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileSosProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-sos"
+        ]
+      }
     }
   },
-  "servers": [],
-  "tags": []
+  "components": {
+    "schemas": {
+      "LogoutMobileSessionDto": {
+        "type": "object",
+        "properties": {
+          "renewableCredential": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "renewableCredential"
+        ]
+      },
+      "LogoutMobileSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "loggedOut": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "loggedOut"
+        ]
+      },
+      "MobileBootstrapDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/MobileBootstrapUserDto"
+          },
+          "society": {
+            "$ref": "#/components/schemas/MobileBootstrapSocietyDto"
+          },
+          "approvedRoles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "resident",
+                "guard"
+              ]
+            }
+          },
+          "activeRole": {
+            "type": "string",
+            "enum": [
+              "resident",
+              "guard"
+            ]
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/MobileFeatureFlagsDto"
+          },
+          "notificationPolicy": {
+            "$ref": "#/components/schemas/MobileNotificationPolicyDto"
+          }
+        },
+        "required": [
+          "user",
+          "society",
+          "approvedRoles",
+          "activeRole",
+          "permissions",
+          "featureFlags",
+          "notificationPolicy"
+        ]
+      },
+      "MobileBootstrapSocietyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "MobileBootstrapUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
+      },
+      "MobileCommunityNotificationPolicyDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "configurable": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "enabled",
+          "configurable"
+        ]
+      },
+      "MobileCriticalNotificationPolicyDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "configurable": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "required": [
+          "enabled",
+          "configurable"
+        ]
+      },
+      "MobileFeatureFlagsDto": {
+        "type": "object",
+        "properties": {
+          "residentShell": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "guardShell": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "nativePush": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "guardOffline": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "required": [
+          "residentShell",
+          "guardShell",
+          "nativePush",
+          "guardOffline"
+        ]
+      },
+      "MobileGuardOverviewCountsDto": {
+        "type": "object",
+        "properties": {
+          "inside": {
+            "type": "number"
+          },
+          "expected": {
+            "type": "number"
+          },
+          "pendingApproval": {
+            "type": "number"
+          },
+          "pendingParcels": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "inside",
+          "expected",
+          "pendingApproval",
+          "pendingParcels"
+        ]
+      },
+      "MobileGuardOverviewDto": {
+        "type": "object",
+        "properties": {
+          "gateLabel": {
+            "type": "string"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/MobileGuardOverviewCountsDto"
+          }
+        },
+        "required": [
+          "gateLabel",
+          "counts"
+        ]
+      },
+      "MobileGuardPasscodeResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "passcodeVerified": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "passcodeVerified"
+        ]
+      },
+      "MobileGuardProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "flat_not_found",
+              "visitor_not_found",
+              "visitor_not_approved",
+              "visitor_not_inside",
+              "visitor_blacklisted",
+              "invalid_visitor_passcode",
+              "passcode_verification_required"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MobileGuardVisitorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "flatNumber": {
+            "type": "string"
+          },
+          "visitorName": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "expected",
+              "inside",
+              "exited",
+              "rejected",
+              "cancelled"
+            ]
+          },
+          "passcodeRequired": {
+            "type": "boolean",
+            "description": "Whether the visitor must verify a stored passcode before check-in."
+          },
+          "residentResponse": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "vehicleNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "arrivedAt": {
+            "type": "string"
+          },
+          "entryTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "exitTime": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "flatNumber",
+          "visitorName",
+          "purpose",
+          "status",
+          "passcodeRequired",
+          "arrivedAt"
+        ]
+      },
+      "MobileInstallationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "android",
+              "ios"
+            ]
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "1.0.0"
+          },
+          "deviceName": {
+            "type": "string",
+            "example": "Pixel 9"
+          }
+        },
+        "required": [
+          "id",
+          "platform",
+          "appVersion"
+        ]
+      },
+      "MobileNotificationPolicyDto": {
+        "type": "object",
+        "properties": {
+          "critical": {
+            "$ref": "#/components/schemas/MobileCriticalNotificationPolicyDto"
+          },
+          "transactional": {
+            "$ref": "#/components/schemas/MobileTransactionalNotificationPolicyDto"
+          },
+          "community": {
+            "$ref": "#/components/schemas/MobileCommunityNotificationPolicyDto"
+          }
+        },
+        "required": [
+          "critical",
+          "transactional",
+          "community"
+        ]
+      },
+      "MobileResidentProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MobileResidentVisitorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "visitorName": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "inside",
+              "exited",
+              "rejected",
+              "cancelled"
+            ]
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "vehicleNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "passcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "arrivedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "expectedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "entryTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "exitTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "visitorName",
+          "purpose",
+          "status",
+          "createdAt"
+        ]
+      },
+      "MobileResidentVisitorsDto": {
+        "type": "object",
+        "properties": {
+          "flatNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "visitors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileResidentVisitorDto"
+            }
+          }
+        },
+        "required": [
+          "visitors"
+        ]
+      },
+      "MobileRoleSwitchDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "accessExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "bootstrap": {
+            "$ref": "#/components/schemas/MobileBootstrapDto"
+          }
+        },
+        "required": [
+          "accessToken",
+          "accessExpiresAt",
+          "bootstrap"
+        ]
+      },
+      "MobileSessionIssueDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "accessExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "renewableCredential": {
+            "type": "string"
+          },
+          "renewableExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deviceSessionId": {
+            "type": "string"
+          },
+          "activeRole": {
+            "type": "string",
+            "enum": [
+              "resident",
+              "guard"
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "accessExpiresAt",
+          "renewableCredential",
+          "renewableExpiresAt",
+          "deviceSessionId",
+          "activeRole"
+        ]
+      },
+      "MobileSosProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": []
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MobileSosResultDto": {
+        "type": "object",
+        "properties": {
+          "incidentId": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "acknowledgementRequired": {
+            "type": "boolean"
+          },
+          "notificationsSent": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "incidentId",
+          "severity",
+          "acknowledgementRequired",
+          "notificationsSent"
+        ]
+      },
+      "MobileTransactionalNotificationPolicyDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "configurable": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "enabled",
+          "configurable"
+        ]
+      },
+      "OtpRequestAcceptedDto": {
+        "type": "object",
+        "properties": {
+          "accepted": {
+            "type": "boolean"
+          },
+          "challengeId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "accepted",
+          "challengeId"
+        ]
+      },
+      "OtpRequestDto": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "format": "email"
+          },
+          "installation": {
+            "$ref": "#/components/schemas/MobileInstallationDto"
+          }
+        },
+        "required": [
+          "identifier",
+          "installation"
+        ]
+      },
+      "OtpVerifyDto": {
+        "type": "object",
+        "properties": {
+          "challengeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^\\d{6}$"
+          },
+          "installation": {
+            "$ref": "#/components/schemas/MobileInstallationDto"
+          }
+        },
+        "required": [
+          "challengeId",
+          "code",
+          "installation"
+        ]
+      },
+      "PasswordLoginRequestDto": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          },
+          "installation": {
+            "$ref": "#/components/schemas/MobileInstallationDto"
+          }
+        },
+        "required": [
+          "identifier",
+          "password",
+          "installation"
+        ]
+      },
+      "RaiseMobileSosDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "example": "Medical emergency in Block A"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ],
+            "example": "critical"
+          }
+        }
+      },
+      "RefreshMobileSessionDto": {
+        "type": "object",
+        "properties": {
+          "renewableCredential": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "renewableCredential"
+        ]
+      },
+      "RequestVisitorDto": {
+        "type": "object",
+        "properties": {
+          "flatQuery": {
+            "type": "string",
+            "example": "A-308"
+          },
+          "visitorName": {
+            "type": "string",
+            "example": "Maya"
+          },
+          "purpose": {
+            "type": "string",
+            "example": "guest"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+919876543210"
+          },
+          "vehicleNo": {
+            "type": "string",
+            "example": "MH 12 AB 1234"
+          },
+          "passcode": {
+            "type": "string",
+            "example": "4829"
+          }
+        },
+        "required": [
+          "flatQuery",
+          "visitorName",
+          "purpose"
+        ]
+      },
+      "UpdateMobileActiveRoleDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "resident",
+              "guard"
+            ]
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "VerifyVisitorPasscodeDto": {
+        "type": "object",
+        "properties": {
+          "passcode": {
+            "type": "string",
+            "example": "4829"
+          }
+        },
+        "required": [
+          "passcode"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    }
+  }
 }

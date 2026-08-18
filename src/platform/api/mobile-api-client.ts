@@ -20,6 +20,8 @@ export type MobileGuardVisitorRequest = Schemas["RequestVisitorDto"];
 export type MobileGuardPasscodeResult = Schemas["MobileGuardPasscodeResultDto"];
 export type MobileResidentVisitor = Schemas["MobileResidentVisitorDto"];
 export type MobileResidentVisitors = Schemas["MobileResidentVisitorsDto"];
+export type MobileSosResult = Schemas["MobileSosResultDto"];
+export type MobileSosRequestBody = Schemas["RaiseMobileSosDto"];
 
 export interface MobileApi {
   passwordLogin(body: PasswordLoginBody): Promise<SessionIssue>;
@@ -40,6 +42,7 @@ export interface MobileApi {
   residentVisitors(accessToken: string): Promise<MobileResidentVisitors>;
   residentApproveVisitor(accessToken: string, visitorId: string): Promise<MobileResidentVisitor>;
   residentRejectVisitor(accessToken: string, visitorId: string): Promise<MobileResidentVisitor>;
+  raiseSos(accessToken: string, body?: MobileSosRequestBody): Promise<MobileSosResult>;
 }
 
 export interface MobileApiClientOptions {
@@ -198,6 +201,11 @@ export function createMobileApi(options: MobileApiClientOptions = {}): MobileApi
       unwrap(client.POST("/api/mobile/v1/resident/visitors/{visitorId}/reject", {
         headers: bearer(accessToken),
         params: { path: { visitorId } },
+      })),
+    raiseSos: (accessToken, body = {}) =>
+      unwrap(client.POST("/api/mobile/v1/sos/raise", {
+        body,
+        headers: bearer(accessToken),
       })),
   };
 }
