@@ -325,5 +325,32 @@ export function createDevelopmentDemoMobileApi(): MobileApi {
     async getBillPayments() {
       return { payments: [] };
     },
+    async listEvents() {
+      return { events: [] };
+    },
+    async rsvpEvent() {
+      return { rsvp: true, replayed: false, eventId: "demo-event-1", response: "attending" };
+    },
+    async listPolls() {
+      return { polls: [] };
+    },
+    async votePoll() {
+      return { voted: true, replayed: false, pollId: "demo-poll-1", optionIndex: 0 };
+    },
+    async listDocuments() {
+      return { documents: [] };
+    },
+    async listForumThreads() {
+      return { threads: [] };
+    },
+    async listForumReplies() {
+      return { replies: [] };
+    },
+    async createForumThread() {
+      return { created: true, threadId: "demo-thread-1" };
+    },
+    async replyForumThread() {
+      return { replied: true, replyId: "demo-reply-1" };
+    },
   };
 }

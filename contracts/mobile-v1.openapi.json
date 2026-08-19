@@ -246,6 +246,295 @@
         ]
       }
     },
+    "/api/mobile/v1/documents": {
+      "get": {
+        "operationId": "MobileDocumentController_listDocuments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileDocumentListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileDocumentProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-document"
+        ]
+      }
+    },
+    "/api/mobile/v1/events": {
+      "get": {
+        "operationId": "MobileEventController_listEvents",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileEventListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileEventProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-event"
+        ]
+      }
+    },
+    "/api/mobile/v1/events/rsvp": {
+      "post": {
+        "operationId": "MobileEventController_rsvp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RsvpBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileRsvpResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileEventProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-event"
+        ]
+      }
+    },
+    "/api/mobile/v1/forum/threads": {
+      "get": {
+        "operationId": "MobileForumController_listThreads",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumThreadListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-forum"
+        ]
+      },
+      "post": {
+        "operationId": "MobileForumController_createThread",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateThreadBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumCreateThreadResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-forum"
+        ]
+      }
+    },
+    "/api/mobile/v1/forum/threads/{threadId}/replies": {
+      "get": {
+        "operationId": "MobileForumController_listReplies",
+        "parameters": [
+          {
+            "name": "threadId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumReplyListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-forum"
+        ]
+      }
+    },
+    "/api/mobile/v1/forum/threads/reply": {
+      "post": {
+        "operationId": "MobileForumController_replyThread",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyThreadBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumReplyThreadResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileForumProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-forum"
+        ]
+      }
+    },
     "/api/mobile/v1/guard/gate/overview": {
       "get": {
         "operationId": "MobileGuardController_overview",
@@ -960,6 +1249,88 @@
         ]
       }
     },
+    "/api/mobile/v1/polls": {
+      "get": {
+        "operationId": "MobilePollController_listPolls",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobilePollListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobilePollProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-poll"
+        ]
+      }
+    },
+    "/api/mobile/v1/polls/vote": {
+      "post": {
+        "operationId": "MobilePollController_vote",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoteBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileVoteResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobilePollProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-poll"
+        ]
+      }
+    },
     "/api/mobile/v1/resident/visitors": {
       "get": {
         "operationId": "MobileResidentController_listVisitors",
@@ -1299,6 +1670,32 @@
   },
   "components": {
     "schemas": {
+      "CreateThreadBodyDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "general",
+              "maintenance",
+              "security",
+              "events",
+              "buy-sell",
+              "lost-found"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "content"
+        ]
+      },
       "LogoutMobileSessionDto": {
         "type": "object",
         "properties": {
@@ -1638,6 +2035,184 @@
           "configurable"
         ]
       },
+      "MobileDocumentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "fileUrl": {
+            "type": "string"
+          },
+          "fileSize": {
+            "type": "number",
+            "nullable": true
+          },
+          "uploadedBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "category",
+          "fileName",
+          "fileUrl",
+          "uploadedBy",
+          "createdAt"
+        ]
+      },
+      "MobileDocumentListDto": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileDocumentDto"
+            }
+          }
+        },
+        "required": [
+          "documents"
+        ]
+      },
+      "MobileDocumentProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": []
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MobileEventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "venue": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "general",
+              "festival",
+              "meeting",
+              "sports",
+              "cultural",
+              "maintenance"
+            ]
+          },
+          "maxAttendees": {
+            "type": "number",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "upcoming",
+              "ongoing",
+              "completed",
+              "cancelled"
+            ]
+          },
+          "rsvpCount": {
+            "type": "number"
+          },
+          "myResponse": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "startDate",
+          "category",
+          "status",
+          "rsvpCount",
+          "createdAt"
+        ]
+      },
+      "MobileEventListDto": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileEventDto"
+            }
+          }
+        },
+        "required": [
+          "events"
+        ]
+      },
+      "MobileEventProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "event_not_found",
+              "event_not_open",
+              "event_full"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
       "MobileFeatureFlagsDto": {
         "type": "object",
         "properties": {
@@ -1671,6 +2246,174 @@
           "guardShell",
           "nativePush",
           "guardOffline"
+        ]
+      },
+      "MobileForumCreateThreadResultDto": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "threadId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "created",
+          "threadId"
+        ]
+      },
+      "MobileForumProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "thread_not_found",
+              "thread_locked"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MobileForumReplyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "authorId",
+          "createdAt"
+        ]
+      },
+      "MobileForumReplyListDto": {
+        "type": "object",
+        "properties": {
+          "replies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileForumReplyDto"
+            }
+          }
+        },
+        "required": [
+          "replies"
+        ]
+      },
+      "MobileForumReplyThreadResultDto": {
+        "type": "object",
+        "properties": {
+          "replied": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "replyId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "replied",
+          "replyId"
+        ]
+      },
+      "MobileForumThreadDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "general",
+              "maintenance",
+              "security",
+              "events",
+              "buy-sell",
+              "lost-found"
+            ]
+          },
+          "isPinned": {
+            "type": "boolean"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "views": {
+            "type": "number"
+          },
+          "replyCount": {
+            "type": "number"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "lastActivityAt": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "content",
+          "category",
+          "isPinned",
+          "isLocked",
+          "views",
+          "replyCount",
+          "authorId",
+          "lastActivityAt",
+          "createdAt"
+        ]
+      },
+      "MobileForumThreadListDto": {
+        "type": "object",
+        "properties": {
+          "threads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileForumThreadDto"
+            }
+          }
+        },
+        "required": [
+          "threads"
         ]
       },
       "MobileGuardOverviewCountsDto": {
@@ -2183,6 +2926,116 @@
           "community"
         ]
       },
+      "MobilePollDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobilePollOptionDto"
+            }
+          },
+          "totalVotes": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "closed"
+            ]
+          },
+          "closesAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasVoted": {
+            "type": "boolean"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "options",
+          "totalVotes",
+          "status",
+          "hasVoted",
+          "createdBy",
+          "createdAt"
+        ]
+      },
+      "MobilePollListDto": {
+        "type": "object",
+        "properties": {
+          "polls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobilePollDto"
+            }
+          }
+        },
+        "required": [
+          "polls"
+        ]
+      },
+      "MobilePollOptionDto": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "number"
+          },
+          "option": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "index",
+          "option",
+          "count"
+        ]
+      },
+      "MobilePollProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "poll_not_found",
+              "poll_not_open",
+              "invalid_option"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
       "MobileResidentProblemDto": {
         "type": "object",
         "properties": {
@@ -2302,6 +3155,34 @@
           "bootstrap"
         ]
       },
+      "MobileRsvpResultDto": {
+        "type": "object",
+        "properties": {
+          "rsvp": {
+            "type": "boolean"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "response": {
+            "type": "string",
+            "enum": [
+              "attending",
+              "maybe",
+              "declined"
+            ]
+          }
+        },
+        "required": [
+          "rsvp",
+          "replayed",
+          "eventId",
+          "response"
+        ]
+      },
       "MobileSessionIssueDto": {
         "type": "object",
         "properties": {
@@ -2406,6 +3287,29 @@
         "required": [
           "enabled",
           "configurable"
+        ]
+      },
+      "MobileVoteResultDto": {
+        "type": "object",
+        "properties": {
+          "voted": {
+            "type": "boolean"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "pollId": {
+            "type": "string"
+          },
+          "optionIndex": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "voted",
+          "replayed",
+          "pollId",
+          "optionIndex"
         ]
       },
       "OtpRequestAcceptedDto": {
@@ -2568,6 +3472,21 @@
           "renewableCredential"
         ]
       },
+      "ReplyThreadBodyDto": {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "threadId",
+          "content"
+        ]
+      },
       "RequestVisitorDto": {
         "type": "object",
         "properties": {
@@ -2600,6 +3519,25 @@
           "flatQuery",
           "visitorName",
           "purpose"
+        ]
+      },
+      "RsvpBodyDto": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string"
+          },
+          "response": {
+            "type": "string",
+            "enum": [
+              "attending",
+              "maybe",
+              "declined"
+            ]
+          }
+        },
+        "required": [
+          "eventId"
         ]
       },
       "TransitionComplaintBodyDto": {
@@ -2647,6 +3585,22 @@
         },
         "required": [
           "passcode"
+        ]
+      },
+      "VoteBodyDto": {
+        "type": "object",
+        "properties": {
+          "pollId": {
+            "type": "string"
+          },
+          "optionIndex": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "pollId",
+          "optionIndex"
         ]
       }
     },

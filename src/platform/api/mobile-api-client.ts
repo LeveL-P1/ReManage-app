@@ -34,6 +34,18 @@ export type MobileBill = Schemas["MobileBillDto"];
 export type MobileBillList = Schemas["MobileBillListDto"];
 export type MobileBillPayment = Schemas["MobileBillPaymentDto"];
 export type MobileBillPayments = Schemas["MobileBillPaymentsDto"];
+export type MobileEvent = Schemas["MobileEventDto"];
+export type MobileEventList = Schemas["MobileEventListDto"];
+export type MobileEventRsvp = Schemas["MobileRsvpResultDto"];
+export type MobilePoll = Schemas["MobilePollDto"];
+export type MobilePollList = Schemas["MobilePollListDto"];
+export type MobileVoteResult = Schemas["MobileVoteResultDto"];
+export type MobileDocument = Schemas["MobileDocumentDto"];
+export type MobileDocumentList = Schemas["MobileDocumentListDto"];
+export type MobileForumThread = Schemas["MobileForumThreadDto"];
+export type MobileForumThreadList = Schemas["MobileForumThreadListDto"];
+export type MobileForumReply = Schemas["MobileForumReplyDto"];
+export type MobileForumReplyList = Schemas["MobileForumReplyListDto"];
 
 export interface MobileApi {
   passwordLogin(body: PasswordLoginBody): Promise<SessionIssue>;
@@ -65,6 +77,15 @@ export interface MobileApi {
   listBills(accessToken: string): Promise<MobileBillList>;
   getBill(accessToken: string, billId: string): Promise<MobileBill>;
   getBillPayments(accessToken: string, billId: string): Promise<MobileBillPayments>;
+  listEvents(accessToken: string, options?: { status?: string }): Promise<MobileEventList>;
+  rsvpEvent(accessToken: string, body: { eventId: string; response: string }): Promise<MobileEventRsvp>;
+  listPolls(accessToken: string, options?: { status?: string }): Promise<MobilePollList>;
+  votePoll(accessToken: string, pollId: string, optionIndex: number): Promise<MobileVoteResult>;
+  listDocuments(accessToken: string): Promise<MobileDocumentList>;
+  listForumThreads(accessToken: string, options?: { category?: string }): Promise<MobileForumThreadList>;
+  listForumReplies(accessToken: string, threadId: string): Promise<MobileForumReplyList>;
+  createForumThread(accessToken: string, body: { title: string; content: string; category?: string }): Promise<{ created: true; threadId: string }>;
+  replyForumThread(accessToken: string, threadId: string, content: string): Promise<{ replied: true; replyId: string }>;
 }
 
 export interface MobileApiClientOptions {
@@ -274,6 +295,48 @@ export function createMobileApi(options: MobileApiClientOptions = {}): MobileApi
       unwrap(client.GET("/api/mobile/v1/bills/{billId}/payments", {
         headers: bearer(accessToken),
         params: { path: { billId } },
+      })),
+    listEvents: (accessToken, options = {}) =>
+      unwrap(client.GET("/api/mobile/v1/events", {
+        headers: bearer(accessToken),
+        params: { query: { status: options.status as never } },
+      })),
+    rsvpEvent: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/events/rsvp", {
+        body: body as never,
+        headers: bearer(accessToken),
+      })),
+    listPolls: (accessToken, options = {}) =>
+      unwrap(client.GET("/api/mobile/v1/polls", {
+        headers: bearer(accessToken),
+        params: { query: { status: options.status as never } },
+      })),
+    votePoll: (accessToken, pollId, optionIndex) =>
+      unwrap(client.POST("/api/mobile/v1/polls/vote", {
+        body: { pollId, optionIndex },
+        headers: bearer(accessToken),
+      })),
+    listDocuments: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/documents", { headers: bearer(accessToken) })),
+    listForumThreads: (accessToken, options = {}) =>
+      unwrap(client.GET("/api/mobile/v1/forum/threads", {
+        headers: bearer(accessToken),
+        params: { query: { category: options.category as never } },
+      })),
+    listForumReplies: (accessToken, threadId) =>
+      unwrap(client.GET("/api/mobile/v1/forum/threads/{threadId}/replies", {
+        headers: bearer(accessToken),
+        params: { path: { threadId } },
+      })),
+    createForumThread: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/forum/threads", {
+        body: body as never,
+        headers: bearer(accessToken),
+      })),
+    replyForumThread: (accessToken, threadId, content) =>
+      unwrap(client.POST("/api/mobile/v1/forum/threads/reply", {
+        body: { threadId, content },
+        headers: bearer(accessToken),
       })),
   };
 }

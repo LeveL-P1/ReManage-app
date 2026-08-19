@@ -235,6 +235,15 @@ export class FakeMobileApi implements MobileApi {
     createdAt: new Date().toISOString(),
   }));
   readonly getBillPayments = jest.fn(async () => ({ payments: [] }));
+  readonly listEvents = jest.fn(async () => ({ events: [] }));
+  readonly rsvpEvent = jest.fn(async () => ({ rsvp: true, replayed: false, eventId: "event-1", response: "attending" as const }));
+  readonly listPolls = jest.fn(async () => ({ polls: [] }));
+  readonly votePoll = jest.fn(async () => ({ voted: true, replayed: false, pollId: "poll-1", optionIndex: 0 }));
+  readonly listDocuments = jest.fn(async () => ({ documents: [] }));
+  readonly listForumThreads = jest.fn(async () => ({ threads: [] }));
+  readonly listForumReplies = jest.fn(async () => ({ replies: [] }));
+  readonly createForumThread = jest.fn(async () => ({ created: true as const, threadId: "thread-1" }));
+  readonly replyForumThread = jest.fn(async () => ({ replied: true as const, replyId: "reply-1" }));
 }
 
 export function deferred<T>(): { promise: Promise<T>; resolve(value: T): void; reject(reason?: unknown): void } {

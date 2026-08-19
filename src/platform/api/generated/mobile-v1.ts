@@ -23,6 +23,25 @@ export interface paths {
   "/api/mobile/v1/bills/{billId}/payments": {
     get: operations["MobileBillController_getBillPayments"];
   };
+  "/api/mobile/v1/documents": {
+    get: operations["MobileDocumentController_listDocuments"];
+  };
+  "/api/mobile/v1/events": {
+    get: operations["MobileEventController_listEvents"];
+  };
+  "/api/mobile/v1/events/rsvp": {
+    post: operations["MobileEventController_rsvp"];
+  };
+  "/api/mobile/v1/forum/threads": {
+    get: operations["MobileForumController_listThreads"];
+    post: operations["MobileForumController_createThread"];
+  };
+  "/api/mobile/v1/forum/threads/{threadId}/replies": {
+    get: operations["MobileForumController_listReplies"];
+  };
+  "/api/mobile/v1/forum/threads/reply": {
+    post: operations["MobileForumController_replyThread"];
+  };
   "/api/mobile/v1/guard/gate/overview": {
     get: operations["MobileGuardController_overview"];
   };
@@ -66,6 +85,12 @@ export interface paths {
   "/api/mobile/v1/notices/unread-count": {
     get: operations["MobileNoticeController_unreadCount"];
   };
+  "/api/mobile/v1/polls": {
+    get: operations["MobilePollController_listPolls"];
+  };
+  "/api/mobile/v1/polls/vote": {
+    post: operations["MobilePollController_vote"];
+  };
   "/api/mobile/v1/resident/visitors": {
     get: operations["MobileResidentController_listVisitors"];
   };
@@ -96,6 +121,12 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    CreateThreadBodyDto: {
+      title: string;
+      content: string;
+      /** @enum {string} */
+      category?: "general" | "maintenance" | "security" | "events" | "buy-sell" | "lost-found";
+    };
     LogoutMobileSessionDto: {
       renewableCredential: string;
     };
@@ -181,6 +212,50 @@ export interface components {
       /** @enum {boolean} */
       configurable: false;
     };
+    MobileDocumentDto: {
+      id: string;
+      title: string;
+      category: string;
+      fileName: string;
+      fileUrl: string;
+      fileSize?: number | null;
+      uploadedBy: string;
+      createdAt: string;
+    };
+    MobileDocumentListDto: {
+      documents: components["schemas"]["MobileDocumentDto"][];
+    };
+    MobileDocumentProblemDto: {
+      /** @enum {string} */
+      code: never;
+      message: string;
+      requestId?: string;
+    };
+    MobileEventDto: {
+      id: string;
+      title: string;
+      description?: string | null;
+      startDate: string;
+      endDate?: string | null;
+      venue?: string | null;
+      /** @enum {string} */
+      category: "general" | "festival" | "meeting" | "sports" | "cultural" | "maintenance";
+      maxAttendees?: number | null;
+      /** @enum {string} */
+      status: "upcoming" | "ongoing" | "completed" | "cancelled";
+      rsvpCount: number;
+      myResponse?: string | null;
+      createdAt: string;
+    };
+    MobileEventListDto: {
+      events: components["schemas"]["MobileEventDto"][];
+    };
+    MobileEventProblemDto: {
+      /** @enum {string} */
+      code: "event_not_found" | "event_not_open" | "event_full";
+      message: string;
+      requestId?: string;
+    };
     MobileFeatureFlagsDto: {
       /** @enum {boolean} */
       residentShell: true;
@@ -190,6 +265,48 @@ export interface components {
       nativePush: false;
       /** @enum {boolean} */
       guardOffline: false;
+    };
+    MobileForumCreateThreadResultDto: {
+      /** @enum {boolean} */
+      created: true;
+      threadId: string;
+    };
+    MobileForumProblemDto: {
+      /** @enum {string} */
+      code: "thread_not_found" | "thread_locked";
+      message: string;
+      requestId?: string;
+    };
+    MobileForumReplyDto: {
+      id: string;
+      content: string;
+      authorId: string;
+      createdAt: string;
+    };
+    MobileForumReplyListDto: {
+      replies: components["schemas"]["MobileForumReplyDto"][];
+    };
+    MobileForumReplyThreadResultDto: {
+      /** @enum {boolean} */
+      replied: true;
+      replyId: string;
+    };
+    MobileForumThreadDto: {
+      id: string;
+      title: string;
+      content: string;
+      /** @enum {string} */
+      category: "general" | "maintenance" | "security" | "events" | "buy-sell" | "lost-found";
+      isPinned: boolean;
+      isLocked: boolean;
+      views: number;
+      replyCount: number;
+      authorId: string;
+      lastActivityAt: string;
+      createdAt: string;
+    };
+    MobileForumThreadListDto: {
+      threads: components["schemas"]["MobileForumThreadDto"][];
     };
     MobileGuardOverviewCountsDto: {
       inside: number;
@@ -319,6 +436,33 @@ export interface components {
       transactional: components["schemas"]["MobileTransactionalNotificationPolicyDto"];
       community: components["schemas"]["MobileCommunityNotificationPolicyDto"];
     };
+    MobilePollDto: {
+      id: string;
+      title: string;
+      description?: string | null;
+      options: components["schemas"]["MobilePollOptionDto"][];
+      totalVotes: number;
+      /** @enum {string} */
+      status: "active" | "closed";
+      closesAt?: string | null;
+      hasVoted: boolean;
+      createdBy: string;
+      createdAt: string;
+    };
+    MobilePollListDto: {
+      polls: components["schemas"]["MobilePollDto"][];
+    };
+    MobilePollOptionDto: {
+      index: number;
+      option: string;
+      count: number;
+    };
+    MobilePollProblemDto: {
+      /** @enum {string} */
+      code: "poll_not_found" | "poll_not_open" | "invalid_option";
+      message: string;
+      requestId?: string;
+    };
     MobileResidentProblemDto: {
       code: string;
       message: string;
@@ -349,6 +493,13 @@ export interface components {
       accessExpiresAt: string;
       bootstrap: components["schemas"]["MobileBootstrapDto"];
     };
+    MobileRsvpResultDto: {
+      rsvp: boolean;
+      replayed: boolean;
+      eventId: string;
+      /** @enum {string} */
+      response: "attending" | "maybe" | "declined";
+    };
     MobileSessionIssueDto: {
       accessToken: string;
       /** Format: date-time */
@@ -378,6 +529,12 @@ export interface components {
       enabled: true;
       /** @enum {boolean} */
       configurable: true;
+    };
+    MobileVoteResultDto: {
+      voted: boolean;
+      replayed: boolean;
+      pollId: string;
+      optionIndex: number;
     };
     OtpRequestAcceptedDto: {
       accepted: boolean;
@@ -426,6 +583,10 @@ export interface components {
     RefreshMobileSessionDto: {
       renewableCredential: string;
     };
+    ReplyThreadBodyDto: {
+      threadId: string;
+      content: string;
+    };
     RequestVisitorDto: {
       /** @example A-308 */
       flatQuery: string;
@@ -440,6 +601,11 @@ export interface components {
       /** @example 4829 */
       passcode?: string;
     };
+    RsvpBodyDto: {
+      eventId: string;
+      /** @enum {string} */
+      response?: "attending" | "maybe" | "declined";
+    };
     TransitionComplaintBodyDto: {
       /** @enum {string} */
       action: "start" | "resolve" | "close" | "reopen";
@@ -452,6 +618,10 @@ export interface components {
     VerifyVisitorPasscodeDto: {
       /** @example 4829 */
       passcode: string;
+    };
+    VoteBodyDto: {
+      pollId: string;
+      optionIndex: number;
     };
   };
   responses: never;
@@ -567,6 +737,124 @@ export interface operations {
       404: {
         content: {
           "application/json": components["schemas"]["MobileBillProblemDto"];
+        };
+      };
+    };
+  };
+  MobileDocumentController_listDocuments: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileDocumentListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileDocumentProblemDto"];
+        };
+      };
+    };
+  };
+  MobileEventController_listEvents: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileEventListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileEventProblemDto"];
+        };
+      };
+    };
+  };
+  MobileEventController_rsvp: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RsvpBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileRsvpResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileEventProblemDto"];
+        };
+      };
+    };
+  };
+  MobileForumController_listThreads: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileForumThreadListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileForumProblemDto"];
+        };
+      };
+    };
+  };
+  MobileForumController_createThread: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateThreadBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileForumCreateThreadResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileForumProblemDto"];
+        };
+      };
+    };
+  };
+  MobileForumController_listReplies: {
+    parameters: {
+      path: {
+        threadId: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileForumReplyListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileForumProblemDto"];
+        };
+      };
+    };
+  };
+  MobileForumController_replyThread: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ReplyThreadBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileForumReplyThreadResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileForumProblemDto"];
         };
       };
     };
@@ -867,6 +1155,39 @@ export interface operations {
       403: {
         content: {
           "application/json": components["schemas"]["MobileNoticeProblemDto"];
+        };
+      };
+    };
+  };
+  MobilePollController_listPolls: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobilePollListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobilePollProblemDto"];
+        };
+      };
+    };
+  };
+  MobilePollController_vote: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["VoteBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileVoteResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobilePollProblemDto"];
         };
       };
     };
