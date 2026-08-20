@@ -46,6 +46,21 @@ export type MobileForumThread = Schemas["MobileForumThreadDto"];
 export type MobileForumThreadList = Schemas["MobileForumThreadListDto"];
 export type MobileForumReply = Schemas["MobileForumReplyDto"];
 export type MobileForumReplyList = Schemas["MobileForumReplyListDto"];
+export type MobileAmenity = Schemas["MobileAmenityDto"];
+export type MobileAmenityList = Schemas["MobileAmenityListDto"];
+export type MobileAmenityBooking = Schemas["MobileAmenityBookingDto"];
+export type MobileAmenityBookingList = Schemas["MobileAmenityBookingListDto"];
+export type MobileAmenityBookingResult = Schemas["MobileAmenityBookingResultDto"];
+export type MobileProfile = Schemas["MobileProfileDto"];
+export type MobileProfileUpdateResult = Schemas["MobileProfileUpdateResultDto"];
+export type MobileMarketplaceListing = Schemas["MobileMarketplaceListingDto"];
+export type MobileMarketplaceList = Schemas["MobileMarketplaceListDto"];
+export type MobileMarketplaceCreateResult = Schemas["MobileMarketplaceCreateResultDto"];
+export type MobileMarketplaceInterestResult = Schemas["MobileMarketplaceInterestResultDto"];
+export type MobileNotification = Schemas["MobileNotificationDto"];
+export type MobileNotificationList = Schemas["MobileNotificationListDto"];
+export type MobileNotificationRegisterResult = Schemas["MobileNotificationRegisterResultDto"];
+export type MobileNotificationMarkReadResult = Schemas["MobileNotificationMarkReadResultDto"];
 
 export interface MobileApi {
   passwordLogin(body: PasswordLoginBody): Promise<SessionIssue>;
@@ -86,6 +101,19 @@ export interface MobileApi {
   listForumReplies(accessToken: string, threadId: string): Promise<MobileForumReplyList>;
   createForumThread(accessToken: string, body: { title: string; content: string; category?: string }): Promise<{ created: true; threadId: string }>;
   replyForumThread(accessToken: string, threadId: string, content: string): Promise<{ replied: true; replyId: string }>;
+  listAmenities(accessToken: string): Promise<MobileAmenityList>;
+  listAmenityBookings(accessToken: string): Promise<MobileAmenityBookingList>;
+  createAmenityBooking(accessToken: string, body: { amenityId: string; date: string; startTime: string; endTime: string; purpose?: string }): Promise<MobileAmenityBookingResult>;
+  cancelAmenityBooking(accessToken: string, bookingId: string): Promise<MobileAmenityBookingResult>;
+  getProfile(accessToken: string): Promise<MobileProfile>;
+  updateProfile(accessToken: string, body: { name?: string; phone?: string; emergencyContact?: string; showPhoneInDirectory?: boolean; showEmailInDirectory?: boolean }): Promise<MobileProfileUpdateResult>;
+  listMarketplaceListings(accessToken: string): Promise<MobileMarketplaceList>;
+  createMarketplaceListing(accessToken: string, body: { title: string; description?: string; price?: number; category?: string; condition?: string; contactPhone?: string }): Promise<MobileMarketplaceCreateResult>;
+  expressMarketplaceInterest(accessToken: string, listingId: string, message?: string): Promise<MobileMarketplaceInterestResult>;
+  transitionMarketplaceListing(accessToken: string, listingId: string, action: "sold" | "reserved" | "active"): Promise<MobileMarketplaceCreateResult>;
+  listNotifications(accessToken: string): Promise<MobileNotificationList>;
+  markNotificationRead(accessToken: string, notificationId: string): Promise<MobileNotificationMarkReadResult>;
+  registerPushToken(accessToken: string, body: { endpoint: string; p256dh: string; auth: string; userAgent?: string }): Promise<MobileNotificationRegisterResult>;
 }
 
 export interface MobileApiClientOptions {
@@ -336,6 +364,56 @@ export function createMobileApi(options: MobileApiClientOptions = {}): MobileApi
     replyForumThread: (accessToken, threadId, content) =>
       unwrap(client.POST("/api/mobile/v1/forum/threads/reply", {
         body: { threadId, content },
+        headers: bearer(accessToken),
+      })),
+    listAmenities: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/amenities", { headers: bearer(accessToken) })),
+    listAmenityBookings: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/amenities/bookings", { headers: bearer(accessToken) })),
+    createAmenityBooking: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/amenities/bookings", {
+        body: body as never,
+        headers: bearer(accessToken),
+      })),
+    cancelAmenityBooking: (accessToken, bookingId) =>
+      unwrap(client.POST("/api/mobile/v1/amenities/bookings/cancel", {
+        body: { bookingId },
+        headers: bearer(accessToken),
+      })),
+    getProfile: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/profile", { headers: bearer(accessToken) })),
+    updateProfile: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/profile/update", {
+        body: body as never,
+        headers: bearer(accessToken),
+      })),
+    listMarketplaceListings: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/marketplace/listings", { headers: bearer(accessToken) })),
+    createMarketplaceListing: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/marketplace/listings", {
+        body: body as never,
+        headers: bearer(accessToken),
+      })),
+    expressMarketplaceInterest: (accessToken, listingId, message) =>
+      unwrap(client.POST("/api/mobile/v1/marketplace/listings/interest", {
+        body: { listingId, message },
+        headers: bearer(accessToken),
+      })),
+    transitionMarketplaceListing: (accessToken, listingId, action) =>
+      unwrap(client.POST("/api/mobile/v1/marketplace/listings/transition", {
+        body: { listingId, action },
+        headers: bearer(accessToken),
+      })),
+    listNotifications: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/notifications", { headers: bearer(accessToken) })),
+    markNotificationRead: (accessToken, notificationId) =>
+      unwrap(client.POST("/api/mobile/v1/notifications/read", {
+        body: { notificationId },
+        headers: bearer(accessToken),
+      })),
+    registerPushToken: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/notifications/register-push", {
+        body: body as never,
         headers: bearer(accessToken),
       })),
   };

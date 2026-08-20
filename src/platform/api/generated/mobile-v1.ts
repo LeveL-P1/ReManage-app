@@ -5,6 +5,16 @@
 
 
 export interface paths {
+  "/api/mobile/v1/amenities": {
+    get: operations["MobileAmenityController_listAmenities"];
+  };
+  "/api/mobile/v1/amenities/bookings": {
+    get: operations["MobileAmenityController_listMyBookings"];
+    post: operations["MobileAmenityController_createBooking"];
+  };
+  "/api/mobile/v1/amenities/bookings/cancel": {
+    post: operations["MobileAmenityController_cancelBooking"];
+  };
   "/api/mobile/v1/auth/otp/request": {
     post: operations["MobileAuthController_requestOtp"];
   };
@@ -76,6 +86,16 @@ export interface paths {
   "/api/mobile/v1/helpdesk/raise": {
     post: operations["MobileHelpdeskController_raiseComplaint"];
   };
+  "/api/mobile/v1/marketplace/listings": {
+    get: operations["MobileMarketplaceController_listListings"];
+    post: operations["MobileMarketplaceController_createListing"];
+  };
+  "/api/mobile/v1/marketplace/listings/interest": {
+    post: operations["MobileMarketplaceController_expressInterest"];
+  };
+  "/api/mobile/v1/marketplace/listings/transition": {
+    post: operations["MobileMarketplaceController_transitionListing"];
+  };
   "/api/mobile/v1/notices": {
     get: operations["MobileNoticeController_listNotices"];
   };
@@ -85,11 +105,26 @@ export interface paths {
   "/api/mobile/v1/notices/unread-count": {
     get: operations["MobileNoticeController_unreadCount"];
   };
+  "/api/mobile/v1/notifications": {
+    get: operations["MobileNotificationController_listNotifications"];
+  };
+  "/api/mobile/v1/notifications/read": {
+    post: operations["MobileNotificationController_markRead"];
+  };
+  "/api/mobile/v1/notifications/register-push": {
+    post: operations["MobileNotificationController_registerPushToken"];
+  };
   "/api/mobile/v1/polls": {
     get: operations["MobilePollController_listPolls"];
   };
   "/api/mobile/v1/polls/vote": {
     post: operations["MobilePollController_vote"];
+  };
+  "/api/mobile/v1/profile": {
+    get: operations["MobileProfileController_getProfile"];
+  };
+  "/api/mobile/v1/profile/update": {
+    post: operations["MobileProfileController_updateProfile"];
   };
   "/api/mobile/v1/resident/visitors": {
     get: operations["MobileResidentController_listVisitors"];
@@ -121,11 +156,35 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    CancelBookingBodyDto: {
+      bookingId: string;
+    };
+    CreateBookingBodyDto: {
+      amenityId: string;
+      date: string;
+      startTime: string;
+      endTime: string;
+      purpose?: string;
+    };
+    CreateListingBodyDto: {
+      title: string;
+      description?: string;
+      price?: number;
+      /** @enum {string} */
+      category?: "furniture" | "electronics" | "appliances" | "clothing" | "books" | "vehicles" | "services" | "general";
+      /** @enum {string} */
+      condition?: "new" | "like_new" | "good" | "fair" | "poor";
+      contactPhone?: string;
+    };
     CreateThreadBodyDto: {
       title: string;
       content: string;
       /** @enum {string} */
       category?: "general" | "maintenance" | "security" | "events" | "buy-sell" | "lost-found";
+    };
+    ExpressInterestBodyDto: {
+      listingId: string;
+      message?: string;
     };
     LogoutMobileSessionDto: {
       renewableCredential: string;
@@ -136,6 +195,52 @@ export interface components {
     };
     MarkNoticeReadBodyDto: {
       noticeId: string;
+    };
+    MarkNotificationReadBodyDto: {
+      notificationId: string;
+    };
+    MobileAmenityBookingDto: {
+      id: string;
+      amenityId: string;
+      amenityName: string;
+      date: string;
+      startTime: string;
+      endTime: string;
+      purpose?: string | null;
+      /** @enum {string} */
+      status: "confirmed" | "cancelled" | "pending";
+      amount: number;
+      flatNumber: string;
+      createdAt: string;
+    };
+    MobileAmenityBookingListDto: {
+      bookings: components["schemas"]["MobileAmenityBookingDto"][];
+    };
+    MobileAmenityBookingResultDto: {
+      created: boolean;
+      bookingId: string;
+      /** @enum {string} */
+      status: "confirmed" | "cancelled" | "pending";
+      amount: number;
+    };
+    MobileAmenityDto: {
+      id: string;
+      name: string;
+      category: string;
+      description?: string | null;
+      capacity?: number | null;
+      ratePerHour: number;
+      status: string;
+      rules?: string | null;
+    };
+    MobileAmenityListDto: {
+      amenities: components["schemas"]["MobileAmenityDto"][];
+    };
+    MobileAmenityProblemDto: {
+      /** @enum {string} */
+      code: "amenity_not_found" | "booking_not_found" | "booking_already_cancelled";
+      message: string;
+      requestId?: string;
     };
     MobileBillDto: {
       id: string;
@@ -404,6 +509,40 @@ export interface components {
       /** @example Pixel 9 */
       deviceName?: string;
     };
+    MobileMarketplaceCreateResultDto: {
+      created: boolean;
+      listingId: string;
+    };
+    MobileMarketplaceInterestResultDto: {
+      interested: boolean;
+      listingId: string;
+    };
+    MobileMarketplaceListDto: {
+      listings: components["schemas"]["MobileMarketplaceListingDto"][];
+    };
+    MobileMarketplaceListingDto: {
+      id: string;
+      title: string;
+      description?: string | null;
+      price?: number | null;
+      /** @enum {string} */
+      category: "furniture" | "electronics" | "appliances" | "clothing" | "books" | "vehicles" | "services" | "general";
+      /** @enum {string} */
+      condition: "new" | "like_new" | "good" | "fair" | "poor";
+      /** @enum {string} */
+      status: "active" | "sold" | "reserved" | "expired";
+      imageUrls?: string[] | null;
+      contactPhone?: string | null;
+      flatNumber?: string | null;
+      userId: string;
+      createdAt: string;
+    };
+    MobileMarketplaceProblemDto: {
+      /** @enum {string} */
+      code: "listing_not_found" | "not_owner";
+      message: string;
+      requestId?: string;
+    };
     MobileNoticeDto: {
       id: string;
       title: string;
@@ -431,10 +570,32 @@ export interface components {
       message: string;
       requestId?: string;
     };
+    MobileNotificationDto: {
+      id: string;
+      type: string;
+      title: string;
+      message: string;
+      link?: string | null;
+      isRead: boolean;
+      createdAt: string;
+    };
+    MobileNotificationListDto: {
+      notifications: components["schemas"]["MobileNotificationDto"][];
+      unreadCount: number;
+    };
+    MobileNotificationMarkReadResultDto: {
+      acknowledged: boolean;
+      replayed: boolean;
+      notificationId: string;
+    };
     MobileNotificationPolicyDto: {
       critical: components["schemas"]["MobileCriticalNotificationPolicyDto"];
       transactional: components["schemas"]["MobileTransactionalNotificationPolicyDto"];
       community: components["schemas"]["MobileCommunityNotificationPolicyDto"];
+    };
+    MobileNotificationRegisterResultDto: {
+      registered: boolean;
+      endpoint: string;
     };
     MobilePollDto: {
       id: string;
@@ -462,6 +623,23 @@ export interface components {
       code: "poll_not_found" | "poll_not_open" | "invalid_option";
       message: string;
       requestId?: string;
+    };
+    MobileProfileDto: {
+      userId: string;
+      name: string;
+      email: string;
+      phone?: string | null;
+      role: string;
+      societyId: string;
+      societyName: string;
+      flatNumber?: string | null;
+      showPhoneInDirectory: boolean;
+      showEmailInDirectory: boolean;
+      profilePhoto?: string | null;
+      emergencyContact?: string | null;
+    };
+    MobileProfileUpdateResultDto: {
+      updated: boolean;
     };
     MobileResidentProblemDto: {
       code: string;
@@ -583,6 +761,12 @@ export interface components {
     RefreshMobileSessionDto: {
       renewableCredential: string;
     };
+    RegisterPushTokenBodyDto: {
+      endpoint: string;
+      p256dh: string;
+      auth: string;
+      userAgent?: string;
+    };
     ReplyThreadBodyDto: {
       threadId: string;
       content: string;
@@ -611,9 +795,21 @@ export interface components {
       action: "start" | "resolve" | "close" | "reopen";
       resolution?: string;
     };
+    TransitionListingBodyDto: {
+      listingId: string;
+      /** @enum {string} */
+      action: "sold" | "reserved" | "active";
+    };
     UpdateMobileActiveRoleDto: {
       /** @enum {string} */
       role: "resident" | "guard";
+    };
+    UpdateProfileBodyDto: {
+      name?: string;
+      phone?: string;
+      emergencyContact?: string;
+      showPhoneInDirectory?: boolean;
+      showEmailInDirectory?: boolean;
     };
     VerifyVisitorPasscodeDto: {
       /** @example 4829 */
@@ -637,6 +833,72 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  MobileAmenityController_listAmenities: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityProblemDto"];
+        };
+      };
+    };
+  };
+  MobileAmenityController_listMyBookings: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityBookingListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityProblemDto"];
+        };
+      };
+    };
+  };
+  MobileAmenityController_createBooking: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateBookingBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityBookingResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityProblemDto"];
+        };
+      };
+    };
+  };
+  MobileAmenityController_cancelBooking: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CancelBookingBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityBookingResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileAmenityProblemDto"];
+        };
+      };
+    };
+  };
   MobileAuthController_requestOtp: {
     requestBody: {
       content: {
@@ -1112,6 +1374,77 @@ export interface operations {
       };
     };
   };
+  MobileMarketplaceController_listListings: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceProblemDto"];
+        };
+      };
+    };
+  };
+  MobileMarketplaceController_createListing: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateListingBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceCreateResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceProblemDto"];
+        };
+      };
+    };
+  };
+  MobileMarketplaceController_expressInterest: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ExpressInterestBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceInterestResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceProblemDto"];
+        };
+      };
+    };
+  };
+  MobileMarketplaceController_transitionListing: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TransitionListingBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceCreateResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileMarketplaceProblemDto"];
+        };
+      };
+    };
+  };
   MobileNoticeController_listNotices: {
     responses: {
       200: {
@@ -1159,6 +1492,58 @@ export interface operations {
       };
     };
   };
+  MobileNotificationController_listNotifications: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileNotificationListDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileNotificationDto"];
+        };
+      };
+    };
+  };
+  MobileNotificationController_markRead: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MarkNotificationReadBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileNotificationMarkReadResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileNotificationDto"];
+        };
+      };
+    };
+  };
+  MobileNotificationController_registerPushToken: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegisterPushTokenBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileNotificationRegisterResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileNotificationDto"];
+        };
+      };
+    };
+  };
   MobilePollController_listPolls: {
     responses: {
       200: {
@@ -1188,6 +1573,39 @@ export interface operations {
       403: {
         content: {
           "application/json": components["schemas"]["MobilePollProblemDto"];
+        };
+      };
+    };
+  };
+  MobileProfileController_getProfile: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileProfileDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileProfileDto"];
+        };
+      };
+    };
+  };
+  MobileProfileController_updateProfile: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateProfileBodyDto"];
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["MobileProfileUpdateResultDto"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["MobileProfileDto"];
         };
       };
     };

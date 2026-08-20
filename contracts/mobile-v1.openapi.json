@@ -7,6 +7,168 @@
     "contact": {}
   },
   "paths": {
+    "/api/mobile/v1/amenities": {
+      "get": {
+        "operationId": "MobileAmenityController_listAmenities",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-amenity"
+        ]
+      }
+    },
+    "/api/mobile/v1/amenities/bookings": {
+      "get": {
+        "operationId": "MobileAmenityController_listMyBookings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityBookingListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-amenity"
+        ]
+      },
+      "post": {
+        "operationId": "MobileAmenityController_createBooking",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookingBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityBookingResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-amenity"
+        ]
+      }
+    },
+    "/api/mobile/v1/amenities/bookings/cancel": {
+      "post": {
+        "operationId": "MobileAmenityController_cancelBooking",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelBookingBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityBookingResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileAmenityProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-amenity"
+        ]
+      }
+    },
     "/api/mobile/v1/auth/otp/request": {
       "post": {
         "operationId": "MobileAuthController_requestOtp",
@@ -1131,6 +1293,178 @@
         ]
       }
     },
+    "/api/mobile/v1/marketplace/listings": {
+      "get": {
+        "operationId": "MobileMarketplaceController_listListings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-marketplace"
+        ]
+      },
+      "post": {
+        "operationId": "MobileMarketplaceController_createListing",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateListingBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceCreateResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-marketplace"
+        ]
+      }
+    },
+    "/api/mobile/v1/marketplace/listings/interest": {
+      "post": {
+        "operationId": "MobileMarketplaceController_expressInterest",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpressInterestBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceInterestResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-marketplace"
+        ]
+      }
+    },
+    "/api/mobile/v1/marketplace/listings/transition": {
+      "post": {
+        "operationId": "MobileMarketplaceController_transitionListing",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransitionListingBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceCreateResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileMarketplaceProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-marketplace"
+        ]
+      }
+    },
     "/api/mobile/v1/notices": {
       "get": {
         "operationId": "MobileNoticeController_listNotices",
@@ -1249,6 +1583,134 @@
         ]
       }
     },
+    "/api/mobile/v1/notifications": {
+      "get": {
+        "operationId": "MobileNotificationController_listNotifications",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNotificationListDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNotificationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-notification"
+        ]
+      }
+    },
+    "/api/mobile/v1/notifications/read": {
+      "post": {
+        "operationId": "MobileNotificationController_markRead",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkNotificationReadBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNotificationMarkReadResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNotificationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-notification"
+        ]
+      }
+    },
+    "/api/mobile/v1/notifications/register-push": {
+      "post": {
+        "operationId": "MobileNotificationController_registerPushToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterPushTokenBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNotificationRegisterResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNotificationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-notification"
+        ]
+      }
+    },
     "/api/mobile/v1/polls": {
       "get": {
         "operationId": "MobilePollController_listPolls",
@@ -1328,6 +1790,88 @@
         ],
         "tags": [
           "mobile-poll"
+        ]
+      }
+    },
+    "/api/mobile/v1/profile": {
+      "get": {
+        "operationId": "MobileProfileController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileProfileDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileProfileDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-profile"
+        ]
+      }
+    },
+    "/api/mobile/v1/profile/update": {
+      "post": {
+        "operationId": "MobileProfileController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileProfileUpdateResultDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileProfileDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "mobile-profile"
         ]
       }
     },
@@ -1670,6 +2214,86 @@
   },
   "components": {
     "schemas": {
+      "CancelBookingBodyDto": {
+        "type": "object",
+        "properties": {
+          "bookingId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "bookingId"
+        ]
+      },
+      "CreateBookingBodyDto": {
+        "type": "object",
+        "properties": {
+          "amenityId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amenityId",
+          "date",
+          "startTime",
+          "endTime"
+        ]
+      },
+      "CreateListingBodyDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "furniture",
+              "electronics",
+              "appliances",
+              "clothing",
+              "books",
+              "vehicles",
+              "services",
+              "general"
+            ]
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "new",
+              "like_new",
+              "good",
+              "fair",
+              "poor"
+            ]
+          },
+          "contactPhone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
       "CreateThreadBodyDto": {
         "type": "object",
         "properties": {
@@ -1694,6 +2318,20 @@
         "required": [
           "title",
           "content"
+        ]
+      },
+      "ExpressInterestBodyDto": {
+        "type": "object",
+        "properties": {
+          "listingId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "listingId"
         ]
       },
       "LogoutMobileSessionDto": {
@@ -1730,6 +2368,191 @@
         },
         "required": [
           "noticeId"
+        ]
+      },
+      "MarkNotificationReadBodyDto": {
+        "type": "object",
+        "properties": {
+          "notificationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "notificationId"
+        ]
+      },
+      "MobileAmenityBookingDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "amenityId": {
+            "type": "string"
+          },
+          "amenityName": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "cancelled",
+              "pending"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "flatNumber": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "amenityId",
+          "amenityName",
+          "date",
+          "startTime",
+          "endTime",
+          "status",
+          "amount",
+          "flatNumber",
+          "createdAt"
+        ]
+      },
+      "MobileAmenityBookingListDto": {
+        "type": "object",
+        "properties": {
+          "bookings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileAmenityBookingDto"
+            }
+          }
+        },
+        "required": [
+          "bookings"
+        ]
+      },
+      "MobileAmenityBookingResultDto": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "boolean"
+          },
+          "bookingId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "cancelled",
+              "pending"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "created",
+          "bookingId",
+          "status",
+          "amount"
+        ]
+      },
+      "MobileAmenityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "capacity": {
+            "type": "number",
+            "nullable": true
+          },
+          "ratePerHour": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "category",
+          "ratePerHour",
+          "status"
+        ]
+      },
+      "MobileAmenityListDto": {
+        "type": "object",
+        "properties": {
+          "amenities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileAmenityDto"
+            }
+          }
+        },
+        "required": [
+          "amenities"
+        ]
+      },
+      "MobileAmenityProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "amenity_not_found",
+              "booking_not_found",
+              "booking_already_cancelled"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
         ]
       },
       "MobileBillDto": {
@@ -2799,6 +3622,153 @@
           "appVersion"
         ]
       },
+      "MobileMarketplaceCreateResultDto": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "boolean"
+          },
+          "listingId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "created",
+          "listingId"
+        ]
+      },
+      "MobileMarketplaceInterestResultDto": {
+        "type": "object",
+        "properties": {
+          "interested": {
+            "type": "boolean"
+          },
+          "listingId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "interested",
+          "listingId"
+        ]
+      },
+      "MobileMarketplaceListDto": {
+        "type": "object",
+        "properties": {
+          "listings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileMarketplaceListingDto"
+            }
+          }
+        },
+        "required": [
+          "listings"
+        ]
+      },
+      "MobileMarketplaceListingDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "furniture",
+              "electronics",
+              "appliances",
+              "clothing",
+              "books",
+              "vehicles",
+              "services",
+              "general"
+            ]
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "new",
+              "like_new",
+              "good",
+              "fair",
+              "poor"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "sold",
+              "reserved",
+              "expired"
+            ]
+          },
+          "imageUrls": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contactPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "flatNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "category",
+          "condition",
+          "status",
+          "userId",
+          "createdAt"
+        ]
+      },
+      "MobileMarketplaceProblemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "listing_not_found",
+              "not_owner"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
       "MobileNoticeDto": {
         "type": "object",
         "properties": {
@@ -2907,6 +3877,78 @@
           "message"
         ]
       },
+      "MobileNotificationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string",
+            "nullable": true
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "title",
+          "message",
+          "isRead",
+          "createdAt"
+        ]
+      },
+      "MobileNotificationListDto": {
+        "type": "object",
+        "properties": {
+          "notifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MobileNotificationDto"
+            }
+          },
+          "unreadCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "notifications",
+          "unreadCount"
+        ]
+      },
+      "MobileNotificationMarkReadResultDto": {
+        "type": "object",
+        "properties": {
+          "acknowledged": {
+            "type": "boolean"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "notificationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "acknowledged",
+          "replayed",
+          "notificationId"
+        ]
+      },
       "MobileNotificationPolicyDto": {
         "type": "object",
         "properties": {
@@ -2924,6 +3966,21 @@
           "critical",
           "transactional",
           "community"
+        ]
+      },
+      "MobileNotificationRegisterResultDto": {
+        "type": "object",
+        "properties": {
+          "registered": {
+            "type": "boolean"
+          },
+          "endpoint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "registered",
+          "endpoint"
         ]
       },
       "MobilePollDto": {
@@ -3034,6 +4091,72 @@
         "required": [
           "code",
           "message"
+        ]
+      },
+      "MobileProfileDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string"
+          },
+          "societyId": {
+            "type": "string"
+          },
+          "societyName": {
+            "type": "string"
+          },
+          "flatNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "showPhoneInDirectory": {
+            "type": "boolean"
+          },
+          "showEmailInDirectory": {
+            "type": "boolean"
+          },
+          "profilePhoto": {
+            "type": "string",
+            "nullable": true
+          },
+          "emergencyContact": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "userId",
+          "name",
+          "email",
+          "role",
+          "societyId",
+          "societyName",
+          "showPhoneInDirectory",
+          "showEmailInDirectory"
+        ]
+      },
+      "MobileProfileUpdateResultDto": {
+        "type": "object",
+        "properties": {
+          "updated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "updated"
         ]
       },
       "MobileResidentProblemDto": {
@@ -3472,6 +4595,28 @@
           "renewableCredential"
         ]
       },
+      "RegisterPushTokenBodyDto": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "p256dh": {
+            "type": "string"
+          },
+          "auth": {
+            "type": "string"
+          },
+          "userAgent": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "endpoint",
+          "p256dh",
+          "auth"
+        ]
+      },
       "ReplyThreadBodyDto": {
         "type": "object",
         "properties": {
@@ -3560,6 +4705,26 @@
           "action"
         ]
       },
+      "TransitionListingBodyDto": {
+        "type": "object",
+        "properties": {
+          "listingId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "sold",
+              "reserved",
+              "active"
+            ]
+          }
+        },
+        "required": [
+          "listingId",
+          "action"
+        ]
+      },
       "UpdateMobileActiveRoleDto": {
         "type": "object",
         "properties": {
@@ -3574,6 +4739,26 @@
         "required": [
           "role"
         ]
+      },
+      "UpdateProfileBodyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "emergencyContact": {
+            "type": "string"
+          },
+          "showPhoneInDirectory": {
+            "type": "boolean"
+          },
+          "showEmailInDirectory": {
+            "type": "boolean"
+          }
+        }
       },
       "VerifyVisitorPasscodeDto": {
         "type": "object",

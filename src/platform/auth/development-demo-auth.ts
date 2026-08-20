@@ -352,5 +352,44 @@ export function createDevelopmentDemoMobileApi(): MobileApi {
     async replyForumThread() {
       return { replied: true, replyId: "demo-reply-1" };
     },
+    async listAmenities() {
+      return { amenities: [] };
+    },
+    async listAmenityBookings() {
+      return { bookings: [] };
+    },
+    async createAmenityBooking() {
+      return { created: true, bookingId: "demo-booking-1", status: "confirmed", amount: 0 };
+    },
+    async cancelAmenityBooking() {
+      return { created: true, bookingId: "demo-booking-1", status: "cancelled", amount: 0 };
+    },
+    async getProfile() {
+      return { userId: "demo-user-1", name: "Demo Resident", email: "demo@test.com", phone: null, role: "member", societyId: "society-1", societyName: "Green Acres", flatNumber: "A-101", showPhoneInDirectory: true, showEmailInDirectory: false, profilePhoto: null, emergencyContact: null };
+    },
+    async updateProfile() {
+      return { updated: true };
+    },
+    async listMarketplaceListings() {
+      return { listings: [] };
+    },
+    async createMarketplaceListing() {
+      return { created: true, listingId: "demo-listing-1" };
+    },
+    async expressMarketplaceInterest() {
+      return { interested: true, listingId: "demo-listing-1" };
+    },
+    async transitionMarketplaceListing() {
+      return { created: true, listingId: "demo-listing-1" };
+    },
+    async listNotifications() {
+      return { notifications: [], unreadCount: 0 };
+    },
+    async markNotificationRead() {
+      return { acknowledged: true, replayed: false, notificationId: "demo-notification-1" };
+    },
+    async registerPushToken() {
+      return { registered: true, endpoint: "ep://demo" };
+    },
   };
 }

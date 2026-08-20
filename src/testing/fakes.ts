@@ -244,6 +244,19 @@ export class FakeMobileApi implements MobileApi {
   readonly listForumReplies = jest.fn(async () => ({ replies: [] }));
   readonly createForumThread = jest.fn(async () => ({ created: true as const, threadId: "thread-1" }));
   readonly replyForumThread = jest.fn(async () => ({ replied: true as const, replyId: "reply-1" }));
+  readonly listAmenities = jest.fn(async () => ({ amenities: [] }));
+  readonly listAmenityBookings = jest.fn(async () => ({ bookings: [] }));
+  readonly createAmenityBooking = jest.fn(async () => ({ created: true as const, bookingId: "booking-1", status: "confirmed" as const, amount: 0 }));
+  readonly cancelAmenityBooking = jest.fn(async () => ({ created: true as const, bookingId: "booking-1", status: "cancelled" as const, amount: 0 }));
+  readonly getProfile = jest.fn(async () => ({ userId: "user-1", name: "Resident", email: "r@test.com", phone: null, role: "member", societyId: "society-1", societyName: "Green Acres", flatNumber: "A-101", showPhoneInDirectory: true, showEmailInDirectory: false, profilePhoto: null, emergencyContact: null }));
+  readonly updateProfile = jest.fn(async () => ({ updated: true as const }));
+  readonly listMarketplaceListings = jest.fn(async () => ({ listings: [] }));
+  readonly createMarketplaceListing = jest.fn(async () => ({ created: true as const, listingId: "listing-1" }));
+  readonly expressMarketplaceInterest = jest.fn(async () => ({ interested: true as const, listingId: "listing-1" }));
+  readonly transitionMarketplaceListing = jest.fn(async () => ({ created: true as const, listingId: "listing-1" }));
+  readonly listNotifications = jest.fn(async () => ({ notifications: [], unreadCount: 0 }));
+  readonly markNotificationRead = jest.fn(async () => ({ acknowledged: true as const, replayed: false, notificationId: "notification-1" }));
+  readonly registerPushToken = jest.fn(async () => ({ registered: true as const, endpoint: "ep://test" }));
 }
 
 export function deferred<T>(): { promise: Promise<T>; resolve(value: T): void; reject(reason?: unknown): void } {
