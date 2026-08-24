@@ -1,10 +1,11 @@
 import { Avatar, Button, Card, Chip, Dialog, Input, Label, ListGroup, Menu, PressableFeedback, Select, Separator, Spinner, Surface, Switch, Text, TextArea, TextField, Toast } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, ViewStyle, TextStyle, View as RNView, Text as RNText, Image, ScrollView, Alert, Platform } from "react-native";
+import { StyleSheet, ViewStyle, TextStyle, View as RNView, Text as RNText, Image, ScrollView, Alert } from "react-native";
 import { ReactNode } from "react";
 
 export { Avatar, Button, Card, Chip, Dialog, Input, Label, ListGroup, Menu, PressableFeedback, Select, Separator, Spinner, Surface, Switch, Text, TextArea, TextField, Toast };
-export { Ionicons, StyleSheet, RNView as View, RNText as Text, Image, ScrollView, Alert };
+export { Ionicons, StyleSheet, RNView, RNText, Image, ScrollView, Alert };
+export type { ViewStyle, TextStyle };
 
 export const colors = {
   primary: "#E86C00",
@@ -36,12 +37,10 @@ export const borderRadius = {
   full: 9999,
 };
 
-// Divider component using Separator or RN View
 export function Divider({ style }: { style?: ViewStyle }) {
   return <Separator style={style} />;
 }
 
-// Badge component using Chip
 export function Badge({ children, color = "primary", size = "md", ...props }: { children: ReactNode; color?: "primary" | "secondary" | "success" | "warning" | "danger"; size?: "sm" | "md" | "lg"; [key: string]: any }) {
   return <Chip variant={color} size={size} {...props}>{children}</Chip>;
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "./heroui-ui";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
 import { Card, Text, Divider, Button, ListGroup } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
@@ -35,7 +35,6 @@ export function DocumentsScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const result = await runAuthenticated((api, token) => api.listDocuments(token));
       setDocuments(result.documents || []);
     } catch (err: any) {

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
+import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "./heroui-ui";
-import { Card, Text, Divider, Button, ListGroup } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
+import { Card, Text, Divider, Button, ListGroup, Badge } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -21,7 +22,6 @@ export function EventsScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const result = await runAuthenticated((api, token) => api.listEvents(token));
       setEvents(result.events || []);
     } catch (err: any) {
@@ -40,7 +40,6 @@ export function EventsScreen() {
 
   const handleRsvp = async (eventId: string, response: "attending" | "maybe" | "declined") => {
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.rsvpEvent(token, { eventId, response }));
       fetchEvents();
     } catch (err: any) {

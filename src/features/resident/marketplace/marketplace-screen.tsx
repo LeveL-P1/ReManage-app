@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "./heroui-ui";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
 import { Card, Text, Divider, Button, ListGroup, Modal, TextField, TextArea, Select, Image, Badge } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
@@ -31,7 +31,6 @@ export function MarketplaceScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const result = await runAuthenticated((api, token) => api.listMarketplaceListings(token));
       setListings(result.listings || []);
     } catch (err: any) {
@@ -55,7 +54,6 @@ export function MarketplaceScreen() {
     }
     setSubmitting(true);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.createMarketplaceListing(token, {
         title: formData.title,
         description: formData.description,
@@ -81,7 +79,6 @@ export function MarketplaceScreen() {
     }
     setSubmitting(true);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.expressMarketplaceInterest(token, listingId, interestMessage));
       setShowInterestModal(null);
       setInterestMessage("");
@@ -95,7 +92,6 @@ export function MarketplaceScreen() {
 
   const handleTransition = async (listingId: string, action: "sold" | "reserved" | "active") => {
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.transitionMarketplaceListing(token, listingId, action));
       setShowTransitionModal(null);
       fetchListings();
@@ -233,7 +229,7 @@ export function MarketplaceScreen() {
               <TextField
                 placeholder="Item title"
                 value={formData.title}
-                onChange={(value) => setFormData(prev => ({ ...prev, title: value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target?.value || e }))}
               />
             </RNView>
             <RNView style={styles.field}>
@@ -241,8 +237,7 @@ export function MarketplaceScreen() {
               <TextArea
                 placeholder="Description"
                 value={formData.description}
-                onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
-                rows={4}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target?.value || e }))}
               />
             </RNView>
             <RNView style={styles.priceRow}>
@@ -251,7 +246,7 @@ export function MarketplaceScreen() {
                 <TextField
                   placeholder="0"
                   value={formData.price}
-                  onChange={(value) => setFormData(prev => ({ ...prev, price: value }))}
+                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target?.value || e }))}
                   keyboardType="numeric"
                 />
               </RNView>
@@ -277,7 +272,7 @@ export function MarketplaceScreen() {
               <TextField
                 placeholder="Your phone number"
                 value={formData.contactPhone}
-                onChange={(value) => setFormData(prev => ({ ...prev, contactPhone: value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, contactPhone: e.target?.value || e }))}
                 keyboardType="phone-pad"
               />
             </RNView>
@@ -308,8 +303,7 @@ export function MarketplaceScreen() {
                 <TextArea
                   placeholder="Hi, I'm interested in your item..."
                   value={interestMessage}
-                  onChange={setInterestMessage}
-                  rows={4}
+                  onChange={(e) => setInterestMessage(e.target?.value || e)}
                 />
               </RNView>
             </RNView>

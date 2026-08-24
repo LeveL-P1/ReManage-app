@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText } from "./heroui-ui";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText, Spinner } from "../shared/heroui-ui";
 import { Card, Text, Divider, Button, ListGroup, Modal, TextField, TextArea, Select, Badge, Avatar } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
@@ -29,7 +29,6 @@ export function ForumScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const result = await runAuthenticated((api, token) => api.listForumThreads(token));
       setThreads(result.threads || []);
     } catch (err: any) {
@@ -53,7 +52,6 @@ export function ForumScreen() {
     }
     setSubmitting(true);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.createForumThread(token, { title: formData.title, content: formData.content, category: formData.category }));
       setShowCreateModal(false);
       setFormData({ title: "", content: "", category: "general" });
@@ -72,7 +70,6 @@ export function ForumScreen() {
     }
     setSubmitting(true);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.replyForumThread(token, threadId, replyContent));
       setShowReplyModal(null);
       setReplyContent("");
@@ -89,7 +86,6 @@ export function ForumScreen() {
   const fetchReplies = async (threadId: string) => {
     setLoadingReplies(true);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const result = await runAuthenticated((api, token) => api.listForumReplies(token, threadId));
       setReplies(result.replies || []);
     } catch (err: any) {
@@ -195,7 +191,7 @@ export function ForumScreen() {
               <TextField
                 placeholder="What's on your mind?"
                 value={formData.title}
-                onChange={(value) => setFormData(prev => ({ ...prev, title: value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target?.value || e }))}
               />
             </RNView>
             <RNView style={styles.field}>
@@ -211,8 +207,7 @@ export function ForumScreen() {
               <TextArea
                 placeholder="Share your thoughts..."
                 value={formData.content}
-                onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
-                rows={6}
+                onChange={(e) => setFormData(prev => ({ ...prev, content: e.target?.value || e }))}
               />
             </RNView>
           </RNView>
@@ -260,8 +255,7 @@ export function ForumScreen() {
                 <TextArea
                   placeholder="Write a reply..."
                   value={replyContent}
-                  onChange={setReplyContent}
-                  rows={3}
+                  onChange={(e) => setReplyContent(e.target?.value || e)}
                 />
               </RNView>
             </RNView>

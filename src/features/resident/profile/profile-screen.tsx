@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText } from "./heroui-ui";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
 import { Card, Text, Divider, Button, ListGroup, Modal, TextField, TextArea, Switch, Avatar, Label } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
@@ -24,7 +24,6 @@ export function ProfileScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const result = await runAuthenticated((api, token) => api.getProfile(token));
       setProfile(result);
       setFormData({
@@ -55,7 +54,6 @@ export function ProfileScreen() {
     }
     setSubmitting(true);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.updateProfile(token, formData));
       setShowEditModal(false);
       fetchProfile();
@@ -76,7 +74,7 @@ export function ProfileScreen() {
         <SafeScrollView>
           <RNView style={styles.header}>
             <RNView style={styles.profileHeader}>
-              <Avatar src={profile.avatarUrl} fallback={profile.name?.charAt(0)?.toUpperCase() || "U"} size="lg" />
+              <Avatar fallback={profile.name?.charAt(0)?.toUpperCase() || "U"} size="lg" />
               <RNView style={styles.profileInfo}>
                 <Text style={styles.profileName}>{profile.name || "Resident"}</Text>
                 <RNView style={styles.profileMeta}>
@@ -189,7 +187,7 @@ export function ProfileScreen() {
               <TextField
                 placeholder="Your full name"
                 value={formData.name}
-                onChange={(value) => setFormData(prev => ({ ...prev, name: value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target?.value || e }))}
               />
             </RNView>
             <RNView style={styles.field}>
@@ -197,7 +195,7 @@ export function ProfileScreen() {
               <TextField
                 placeholder="Phone number"
                 value={formData.phone}
-                onChange={(value) => setFormData(prev => ({ ...prev, phone: value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target?.value || e }))}
                 keyboardType="phone-pad"
               />
             </RNView>
@@ -206,7 +204,7 @@ export function ProfileScreen() {
               <TextField
                 placeholder="Emergency contact number"
                 value={formData.emergencyContact}
-                onChange={(value) => setFormData(prev => ({ ...prev, emergencyContact: value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, emergencyContact: e.target?.value || e }))}
                 keyboardType="phone-pad"
               />
             </RNView>

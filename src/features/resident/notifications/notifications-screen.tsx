@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText } from "./heroui-ui";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
 import { Card, Text, Divider, Button, ListGroup, Switch, Badge } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
@@ -33,7 +33,6 @@ export function NotificationsScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const result = await runAuthenticated((api, token) => api.listNotifications(token));
       setNotifications(result.notifications || []);
     } catch (err: any) {
@@ -52,7 +51,6 @@ export function NotificationsScreen() {
 
   const handleMarkRead = async (notificationId: string) => {
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.markNotificationRead(token, notificationId));
       setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, read: true } : n));
     } catch (err: any) {
@@ -62,7 +60,6 @@ export function NotificationsScreen() {
 
   const handleRegisterPush = async () => {
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.registerPushToken(token, {
         endpoint: "https://example.com/push",
         p256dh: "test-key",
@@ -80,7 +77,7 @@ export function NotificationsScreen() {
     const iconColor = notification.read ? "#9CA3AF" : "#E86C00";
 
     return (
-      <PressableCard onPress={() => { if (!notification.read) handleMarkRead(notification.id); }} style={styles.notificationCard}>
+      <PressableCard onPress={() => { if (!notification.read) handleMarkRead(notification.id); }} style={[styles.notificationCard, !notification.read && styles.notificationCardUnread]}>
         <Card>
           <RNView style={styles.notificationHeader}>
             <RNView style={[styles.notificationIcon, { backgroundColor: `${iconColor}20` }]}>

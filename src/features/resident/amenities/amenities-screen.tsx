@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText } from "./heroui-ui";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText } from "../shared/heroui-ui";
 import { Card, Text, Divider, Button, ListGroup, Modal, TextField, TextArea, Select, DatePicker, TimePicker } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
@@ -27,7 +27,6 @@ export function AmenitiesScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       const [amenityResult, bookingResult] = await Promise.all([
         runAuthenticated((api, token) => api.listAmenities(token)),
         runAuthenticated((api, token) => api.listAmenityBookings(token)),
@@ -55,7 +54,6 @@ export function AmenitiesScreen() {
     }
     setSubmitting(true);
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.createAmenityBooking(token, {
         amenityId: amenity.id,
         date: bookingForm.date,
@@ -79,7 +77,6 @@ export function AmenitiesScreen() {
 
   const confirmCancel = async (bookingId: string) => {
     try {
-      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
       await runAuthenticated((api, token) => api.cancelAmenityBooking(token, bookingId));
       setShowCancelDialog(null);
       fetchData();
@@ -247,7 +244,7 @@ export function AmenitiesScreen() {
                 <Label>Date *</Label>
                 <DatePicker
                   value={bookingForm.date}
-                  onChange={(value) => setBookingForm(prev => ({ ...prev, date: value }))}
+                  onChange={(e) => setBookingForm(prev => ({ ...prev, date: e.target?.value || e }))}
                   minDate={new Date().toISOString().split("T")[0]}
                 />
               </RNView>
@@ -256,14 +253,14 @@ export function AmenitiesScreen() {
                   <Label>Start Time *</Label>
                   <TimePicker
                     value={bookingForm.startTime}
-                    onChange={(value) => setBookingForm(prev => ({ ...prev, startTime: value }))}
+                    onChange={(e) => setBookingForm(prev => ({ ...prev, startTime: e.target?.value || e }))}
                   />
                 </RNView>
                 <RNView style={styles.field}>
                   <Label>End Time *</Label>
                   <TimePicker
                     value={bookingForm.endTime}
-                    onChange={(value) => setBookingForm(prev => ({ ...prev, endTime: value }))}
+                    onChange={(e) => setBookingForm(prev => ({ ...prev, endTime: e.target?.value || e }))}
                   />
                 </RNView>
               </RNView>
@@ -272,8 +269,7 @@ export function AmenitiesScreen() {
                 <TextArea
                   placeholder="Reason for booking"
                   value={bookingForm.purpose}
-                  onChange={(value) => setBookingForm(prev => ({ ...prev, purpose: value }))}
-                  rows={3}
+                  onChange={(e) => setBookingForm(prev => ({ ...prev, purpose: e.target?.value || e }))}
                 />
               </RNView>
             </RNView>
