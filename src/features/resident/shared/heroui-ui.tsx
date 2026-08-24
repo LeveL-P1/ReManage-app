@@ -1,9 +1,10 @@
-import { Avatar, Badge, Button, Card, Divider, Icon, Image, Input, Label, ListGroup, Menu, Modal, PressableFeedback, Select, Spinner, Surface, Switch, Text, TextField, Toast, View } from "heroui-native";
+import { Avatar, Button, Card, Chip, Dialog, Input, Label, ListGroup, Menu, PressableFeedback, Select, Separator, Spinner, Surface, Switch, Text, TextArea, TextField, Toast } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, ViewStyle, TextStyle } from "react-native";
-import { ReactNode, forwardRef } from "react";
+import { StyleSheet, ViewStyle, TextStyle, View as RNView, Text as RNText, Image, ScrollView, Alert, Platform } from "react-native";
+import { ReactNode } from "react";
 
-export { Avatar, Badge, Button, Card, Divider, Icon, Image, Input, Label, ListGroup, Menu, Modal, PressableFeedback, Select, Spinner, Surface, Switch, Text, TextField, Toast, View };
+export { Avatar, Button, Card, Chip, Dialog, Input, Label, ListGroup, Menu, PressableFeedback, Select, Separator, Spinner, Surface, Switch, Text, TextArea, TextField, Toast };
+export { Ionicons, StyleSheet, RNView as View, RNText as Text, Image, ScrollView, Alert };
 
 export const colors = {
   primary: "#E86C00",
@@ -35,37 +36,47 @@ export const borderRadius = {
   full: 9999,
 };
 
+// Divider component using Separator or RN View
+export function Divider({ style }: { style?: ViewStyle }) {
+  return <Separator style={style} />;
+}
+
+// Badge component using Chip
+export function Badge({ children, color = "primary", size = "md", ...props }: { children: ReactNode; color?: "primary" | "secondary" | "success" | "warning" | "danger"; size?: "sm" | "md" | "lg"; [key: string]: any }) {
+  return <Chip variant={color} size={size} {...props}>{children}</Chip>;
+}
+
 export function ScreenContainer({ children, style }: { children: ReactNode; style?: ViewStyle }) {
-  return <View style={[{ flex: 1, backgroundColor: colors.background }, style]}>{children}</View>;
+  return <RNView style={[{ flex: 1, backgroundColor: colors.background }, style]}>{children}</RNView>;
 }
 
 export function SafeScrollView({ children, style, contentContainerStyle }: { children: ReactNode; style?: ViewStyle; contentContainerStyle?: ViewStyle }) {
   return (
-    <View style={[{ flex: 1 }, style]}>
-      <View contentContainerStyle={[{ paddingBottom: 100 }, contentContainerStyle]}>
+    <RNView style={[{ flex: 1 }, style]}>
+      <ScrollView contentContainerStyle={[{ paddingBottom: 100 }, contentContainerStyle]}>
         {children}
-      </View>
-    </View>
+      </ScrollView>
+    </RNView>
   );
 }
 
 export function SectionHeader({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
   return (
-    <View style={styles.sectionHeader}>
+    <RNView style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>{title}</Text>
       {action && onAction && (
         <Button variant="ghost" size="sm" onPress={onAction}>
           {action}
         </Button>
       )}
-    </View>
+    </RNView>
   );
 }
 
 export function EmptyState({ icon, title, description, action, onAction }: { icon: string; title: string; description: string; action?: string; onAction?: () => void }) {
   return (
-    <View style={styles.emptyState}>
-      <Icon name={icon} size={64} color={colors.textLight} />
+    <RNView style={styles.emptyState}>
+      <Ionicons name={icon} size={64} color={colors.textLight} />
       <Text style={styles.emptyTitle}>{title}</Text>
       <Text style={styles.emptyDescription}>{description}</Text>
       {action && onAction && (
@@ -73,23 +84,23 @@ export function EmptyState({ icon, title, description, action, onAction }: { ico
           {action}
         </Button>
       )}
-    </View>
+    </RNView>
   );
 }
 
 export function LoadingState({ message }: { message?: string }) {
   return (
-    <View style={styles.loadingState}>
+    <RNView style={styles.loadingState}>
       <Spinner size="lg" color={colors.primary} />
       <Text style={styles.loadingText}>{message || "Loading..."}</Text>
-    </View>
+    </RNView>
   );
 }
 
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <View style={styles.errorState}>
-      <Icon name="alert-circle-outline" size={64} color={colors.danger} />
+    <RNView style={styles.errorState}>
+      <Ionicons name="alert-circle-outline" size={64} color={colors.danger} />
       <Text style={styles.errorTitle}>Something went wrong</Text>
       <Text style={styles.errorMessage}>{message}</Text>
       {onRetry && (
@@ -97,36 +108,36 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
           Try Again
         </Button>
       )}
-    </View>
+    </RNView>
   );
 }
 
 export function ActionCard({ title, description, icon, onPress, variant = "default", showArrow = true }: { title: string; description?: string; icon?: string; onPress?: () => void; variant?: "default" | "outline" | "primary"; showArrow?: boolean }) {
   return (
-    <PressableFeedback onPress={onPress} style={styles.actionCard} className={variant === "primary" ? "bg-primary/10 border-primary/20" : variant === "outline" ? "border-border" : undefined}>
-      <View style={styles.actionCardContent}>
+    <PressableFeedback onPress={onPress} style={styles.actionCard}>
+      <RNView style={styles.actionCardContent}>
         {icon && (
-          <View style={styles.actionIcon}>
-            <Icon name={icon} size={24} color={colors.primary} />
-          </View>
+          <RNView style={styles.actionIcon}>
+            <Ionicons name={icon} size={24} color={colors.primary} />
+          </RNView>
         )}
-        <View style={styles.actionCardText}>
+        <RNView style={styles.actionCardText}>
           <Text style={styles.actionTitle}>{title}</Text>
           {description && <Text style={styles.actionDescription}>{description}</Text>}
-        </View>
-        {showArrow && <Icon name="chevron-forward" size={20} color={colors.textLight} />}
-      </View>
+        </RNView>
+        {showArrow && <Ionicons name="chevron-forward" size={20} color={colors.textLight} />}
+      </RNView>
     </PressableFeedback>
   );
 }
 
 export function InfoRow({ label, value, icon, style }: { label: string; value: string; icon?: string; style?: ViewStyle }) {
   return (
-    <View style={[{ flexDirection: "row", alignItems: "center", gap: spacing.sm }, style]}>
-      {icon && <Icon name={icon} size={20} color={colors.textMuted} />}
+    <RNView style={[{ flexDirection: "row", alignItems: "center", gap: spacing.sm }, style]}>
+      {icon && <Ionicons name={icon} size={20} color={colors.textMuted} />}
       <Text style={styles.infoLabel}>{label}</Text>
       <Text style={styles.infoValue}>{value}</Text>
-    </View>
+    </RNView>
   );
 }
 
@@ -139,46 +150,37 @@ export function StatusBadge({ status, label }: { status: "active" | "pending" | 
     draft: { color: "secondary", text: label || "Draft" },
   };
   const config = statusConfig[status];
-  return <Badge color={config.color as any}>{config.text}</Badge>;
-}
-
-export function Dialog({ isOpen, onClose, title, children, footer }: { isOpen: boolean; onClose: () => void; title?: string; children: ReactNode; footer?: ReactNode }) {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md">
-      {title && (
-        <View style={styles.dialogHeader}>
-          <Text style={styles.dialogTitle}>{title}</Text>
-          <PressableFeedback onPress={onClose}>
-            <Icon name="close" size={24} color={colors.textMuted} />
-          </PressableFeedback>
-        </View>
-      )}
-      <View style={styles.dialogContent}>{children}</View>
-      {footer && <View style={styles.dialogFooter}>{footer}</View>}
-    </Modal>
-  );
+  return <Chip variant={config.color as any} size="sm">{config.text}</Chip>;
 }
 
 export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, confirmText = "Confirm", cancelText = "Cancel", variant = "danger" }: { isOpen: boolean; onClose: () => void; onConfirm: () => void; title: string; message: string; confirmText?: string; cancelText?: string; variant?: "primary" | "danger" }) {
   return (
     <Dialog isOpen={isOpen} onClose={onClose} title={title}>
       <Text style={styles.dialogMessage}>{message}</Text>
-      <View style={styles.dialogFooter}>
+      <RNView style={styles.dialogFooter}>
         <Button variant="ghost" onPress={onClose}>{cancelText}</Button>
         <Button variant={variant} onPress={() => { onConfirm(); onClose(); }}>{confirmText}</Button>
-      </View>
+      </RNView>
     </Dialog>
   );
 }
 
 export function PullToRefresh({ onRefresh, refreshing, children }: { onRefresh: () => void; refreshing: boolean; children: ReactNode }) {
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.pullToRefresh}>
+    <RNView style={{ flex: 1 }}>
+      <RNView style={styles.pullToRefresh}>
         {refreshing && <Spinner size="sm" color={colors.primary} />}
-      </View>
+      </RNView>
       {children}
-    </View>
+    </RNView>
+  );
+}
+
+export function PressableCard({ children, onPress, style, ...props }: { children: ReactNode; onPress?: () => void; style?: ViewStyle; [key: string]: any }) {
+  return (
+    <PressableFeedback onPress={onPress} style={[styles.pressableCard, style]}>
+      {children}
+    </PressableFeedback>
   );
 }
 
@@ -201,10 +203,8 @@ const styles = StyleSheet.create({
   actionDescription: { fontSize: 13, color: colors.textMuted, marginTop: 2 },
   infoLabel: { fontSize: 14, color: colors.textMuted, flex: 1 },
   infoValue: { fontSize: 14, fontWeight: "500", color: colors.text },
-  dialogHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingBottom: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.border, marginBottom: spacing.md },
-  dialogTitle: { fontSize: 18, fontWeight: "600", color: colors.text },
-  dialogContent: { marginBottom: spacing.md },
   dialogMessage: { fontSize: 14, color: colors.textMuted, marginBottom: spacing.md },
   dialogFooter: { flexDirection: "row", justifyContent: "flex-end", gap: spacing.sm, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.border },
   pullToRefresh: { height: 60, alignItems: "center", justifyContent: "center" },
+  pressableCard: { borderRadius: borderRadius.md, overflow: "hidden" },
 });

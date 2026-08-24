@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { useAuthenticatedApi } from "@/platform/auth/use-authenticated-api";
+import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh } from "./heroui-ui";
-import { Card, Text, View, Icon, Divider, Button, ListGroup, Surface, Avatar } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "./heroui-ui";
+import { Card, Text, Divider, Button, ListGroup } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -11,6 +11,7 @@ import { formatDistanceToNow } from "date-fns";
 export function EventsScreen() {
   const router = useRouter();
   const runAuthenticated = useAuthenticatedApi();
+  const { state } = useSession();
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -20,8 +21,8 @@ export function EventsScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
-      const result = await runAuthenticated((api) => api.listEvents(accessToken));
+      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
+      const result = await runAuthenticated((api, token) => api.listEvents(token));
       setEvents(result.events || []);
     } catch (err: any) {
       setError(err.message || "Failed to load events");
@@ -39,8 +40,8 @@ export function EventsScreen() {
 
   const handleRsvp = async (eventId: string, response: "attending" | "maybe" | "declined") => {
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
-      await runAuthenticated((api) => api.rsvpEvent(accessToken, { eventId, response }));
+      const accessToken = state.status === "authenticated" ? state.tokens?.accessToken : "";
+      await runAuthenticated((api, token) => api.rsvpEvent(token, { eventId, response }));
       fetchEvents();
     } catch (err: any) {
       Alert.alert("Error", err.message || "Failed to RSVP");
@@ -53,47 +54,49 @@ export function EventsScreen() {
     const rsvpStatus = event.userRsvp;
 
     return (
-      <Card style={styles.eventCard}>
-        <View style={styles.eventHeader}>
-          <View style={styles.eventDate}>
-            <Text style={styles.eventDay}>{new Date(event.startDate).getDate()}</Text>
-            <Text style={styles.eventMonth}>{new Date(event.startDate).toLocaleDateString("en-US", { month: "short" })}</Text>
-          </View>
-          <View style={styles.eventTitleContent}>
-            <Text style={styles.eventTitle}>{event.title}</Text>
-            <View style={styles.eventMeta}>
-              <View style={styles.metaItem}>
-                <Icon name="time-outline" size={14} color="#9CA3AF" />
-                <Text style={styles.metaText}>{new Date(event.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - {event.endDate ? new Date(event.endDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}</Text>
-              </View>
-              {event.location && (
-                <View style={styles.metaItem}>
-                  <Icon name="location-outline" size={14} color="#9CA3AF" />
-                  <Text style={styles.metaText}>{event.location}</Text>
-                </View>
-              )}
-            </View>
-            <View style={styles.eventStatus}>
-              {hasRsvp && <StatusBadge status={rsvpStatus === "attending" ? "completed" : rsvpStatus === "maybe" ? "pending" : "cancelled"} />}
-              {!hasRsvp && isUpcoming && <StatusBadge status="active" />}
-              {!isUpcoming && !hasRsvp && <StatusBadge status="cancelled" />}
-            </View>
-          </View>
-        </View>
-        {event.description && (
-          <>
-            <Divider style={styles.divider} />
-            <Text style={styles.eventDescription} numberOfLines={2}>{event.description}</Text>
-          </>
-        )}
-        {isUpcoming && !hasRsvp && (
-          <View style={styles.eventActions}>
-            <Button variant="outline" size="sm" onPress={() => handleRsvp(event.id, "declined")}>Can't Go</Button>
-            <Button variant="outline" size="sm" onPress={() => handleRsvp(event.id, "maybe")}>Maybe</Button>
-            <Button variant="primary" size="sm" onPress={() => handleRsvp(event.id, "attending")}>Attending</Button>
-          </View>
-        )}
-      </Card>
+      <PressableCard style={styles.eventCard}>
+        <Card>
+          <RNView style={styles.eventHeader}>
+            <RNView style={styles.eventDate}>
+              <Text style={styles.eventDay}>{new Date(event.startDate).getDate()}</Text>
+              <Text style={styles.eventMonth}>{new Date(event.startDate).toLocaleDateString("en-US", { month: "short" })}</Text>
+            </RNView>
+            <RNView style={styles.eventTitleContent}>
+              <Text style={styles.eventTitle}>{event.title}</Text>
+              <RNView style={styles.eventMeta}>
+                <RNView style={styles.metaItem}>
+                  <Ionicons name="time-outline" size={14} color="#9CA3AF" />
+                  <Text style={styles.metaText}>{new Date(event.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - {event.endDate ? new Date(event.endDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}</Text>
+                </RNView>
+                {event.location && (
+                  <RNView style={styles.metaItem}>
+                    <Ionicons name="location-outline" size={14} color="#9CA3AF" />
+                    <Text style={styles.metaText}>{event.location}</Text>
+                  </RNView>
+                )}
+              </RNView>
+              <RNView style={styles.eventStatus}>
+                {hasRsvp && <StatusBadge status={rsvpStatus === "attending" ? "completed" : rsvpStatus === "maybe" ? "pending" : "cancelled"} />}
+                {!hasRsvp && isUpcoming && <StatusBadge status="active" />}
+                {!isUpcoming && !hasRsvp && <StatusBadge status="cancelled" />}
+              </RNView>
+            </RNView>
+          </RNView>
+          {event.description && (
+            <>
+              <Divider style={styles.divider} />
+              <Text style={styles.eventDescription} numberOfLines={2}>{event.description}</Text>
+            </>
+          )}
+          {isUpcoming && !hasRsvp && (
+            <RNView style={styles.eventActions}>
+              <Button variant="outline" size="sm" onPress={() => handleRsvp(event.id, "declined")}>Can't Go</Button>
+              <Button variant="outline" size="sm" onPress={() => handleRsvp(event.id, "maybe")}>Maybe</Button>
+              <Button variant="primary" size="sm" onPress={() => handleRsvp(event.id, "attending")}>Attending</Button>
+            </RNView>
+          )}
+        </Card>
+      </PressableCard>
     );
   };
 
@@ -107,11 +110,11 @@ export function EventsScreen() {
     <ScreenContainer>
       <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
         <SafeScrollView>
-          <View style={styles.header}>
-            <View style={styles.headerContent}>
+          <RNView style={styles.header}>
+            <RNView style={styles.headerContent}>
               <Text style={styles.pageTitle}>Events</Text>
-            </View>
-          </View>
+            </RNView>
+          </RNView>
           {events.length === 0 ? (
             <EmptyState
               icon="calendar-outline"
@@ -121,7 +124,7 @@ export function EventsScreen() {
           ) : (
             <>
               {upcomingEvents.length > 0 && (
-                <View style={styles.section}>
+                <RNView style={styles.section}>
                   <SectionHeader title="Upcoming" />
                   <ListGroup style={styles.list}>
                     {upcomingEvents.map((event) => (
@@ -130,10 +133,10 @@ export function EventsScreen() {
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
-                </View>
+                </RNView>
               )}
               {pastEvents.length > 0 && (
-                <View style={styles.section}>
+                <RNView style={styles.section}>
                   <SectionHeader title="Past Events" />
                   <ListGroup style={styles.list}>
                     {pastEvents.map((event) => (
@@ -142,7 +145,7 @@ export function EventsScreen() {
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
-                </View>
+                </RNView>
               )}
             </>
           )}

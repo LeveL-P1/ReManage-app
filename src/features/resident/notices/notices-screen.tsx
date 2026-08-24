@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { useAuthenticatedApi } from "@/platform/auth/use-authenticated-api";
+import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, ActionCard, StatusBadge, PullToRefresh } from "./heroui-ui";
-import { Card, Text, View, Icon, Divider, Button, ListGroup, Surface, Avatar } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
+import { Card, Text, Divider, Badge, ListGroup } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -11,6 +11,7 @@ import { formatDistanceToNow } from "date-fns";
 export function NoticesScreen() {
   const router = useRouter();
   const runAuthenticated = useAuthenticatedApi();
+  const { state } = useSession();
   const [notices, setNotices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -21,10 +22,9 @@ export function NoticesScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
       const [noticeResult, unreadResult] = await Promise.all([
-        runAuthenticated((api) => api.listNotices(accessToken, { activeOnly: true })),
-        runAuthenticated((api) => api.unreadNoticeCount(accessToken)),
+        runAuthenticated((api, token) => api.listNotices(token, { activeOnly: true })),
+        runAuthenticated((api, token) => api.unreadNoticeCount(token)),
       ]);
       setNotices(noticeResult.notices || []);
       setUnreadCount(unreadResult.unreadCount || 0);
@@ -44,7 +44,7 @@ export function NoticesScreen() {
 
   const handleMarkRead = async (noticeId: string) => {
     try {
-      await runAuthenticated((api) => api.markNoticeRead(accessToken, noticeId));
+      await runAuthenticated((api, token) => api.markNoticeRead(token, noticeId));
       setNotices(prev => prev.map(n => n.id === noticeId ? { ...n, read: true } : n));
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (err: any) {
@@ -53,21 +53,23 @@ export function NoticesScreen() {
   };
 
   const renderNotice = (notice: any) => (
-    <Card style={styles.noticeCard} onPress={() => { if (!notice.read) handleMarkRead(notice.id); router.push(`/notice/${notice.id}`); }}>
-      <View style={styles.noticeHeader}>
-        <View style={styles.noticeTitleRow}>
-          <Text style={styles.noticeTitle}>{notice.title}</Text>
-          {!notice.read && <View style={styles.unreadDot} />}
-        </View>
-        <Text style={styles.noticeTime}>{formatDistanceToNow(new Date(notice.createdAt), { addSuffix: true })}</Text>
-      </View>
-      <Divider style={styles.divider} />
-      <Text style={styles.noticeBody} numberOfLines={2}>{notice.body}</Text>
-      <View style={styles.noticeFooter}>
-        <StatusBadge status={notice.category === "urgent" ? "active" : notice.category === "maintenance" ? "pending" : "completed"} />
-        <Text style={styles.noticeCategory}>{notice.category}</Text>
-      </View>
-    </Card>
+    <PressableCard onPress={() => { if (!notice.read) handleMarkRead(notice.id); router.push(`/notice/${notice.id}`); }} style={styles.noticeCard}>
+      <Card>
+        <RNView style={styles.noticeHeader}>
+          <RNView style={styles.noticeTitleRow}>
+            <Text style={styles.noticeTitle}>{notice.title}</Text>
+            {!notice.read && <RNView style={styles.unreadDot} />}
+          </RNView>
+          <Text style={styles.noticeTime}>{formatDistanceToNow(new Date(notice.createdAt), { addSuffix: true })}</Text>
+        </RNView>
+        <Divider style={styles.divider} />
+        <Text style={styles.noticeBody} numberOfLines={2}>{notice.body}</Text>
+        <RNView style={styles.noticeFooter}>
+          <StatusBadge status={notice.category === "urgent" ? "active" : notice.category === "maintenance" ? "pending" : "completed"} />
+          <Text style={styles.noticeCategory}>{notice.category}</Text>
+        </RNView>
+      </Card>
+    </PressableCard>
   );
 
   if (loading) return <ScreenContainer><LoadingState /></ScreenContainer>;
@@ -77,12 +79,12 @@ export function NoticesScreen() {
     <ScreenContainer>
       <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
         <SafeScrollView>
-          <View style={styles.header}>
-            <View style={styles.headerContent}>
+          <RNView style={styles.header}>
+            <RNView style={styles.headerContent}>
               <Text style={styles.pageTitle}>Announcements</Text>
               {unreadCount > 0 && <Badge color="danger">{unreadCount} unread</Badge>}
-            </View>
-          </View>
+            </RNView>
+          </RNView>
           {notices.length === 0 ? (
             <EmptyState
               icon="megaphone-outline"

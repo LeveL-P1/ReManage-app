@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { useAuthenticatedApi } from "@/platform/auth/use-authenticated-api";
+import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh } from "./heroui-ui";
-import { Card, Text, View, Icon, Divider, Button, ListGroup, Surface, Avatar } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
+import { Card, Text, Divider, Button, ListGroup, Badge } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -11,6 +11,7 @@ import { formatDistanceToNow } from "date-fns";
 export function BillsScreen() {
   const router = useRouter();
   const runAuthenticated = useAuthenticatedApi();
+  const { state } = useSession();
   const [bills, setBills] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -20,8 +21,7 @@ export function BillsScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
-      const result = await runAuthenticated((api) => api.listBills(accessToken));
+      const result = await runAuthenticated((api, token) => api.listBills(token));
       setBills(result.bills || []);
     } catch (err: any) {
       setError(err.message || "Failed to load bills");
@@ -53,47 +53,49 @@ export function BillsScreen() {
     const config = statusConfig[bill.status as keyof typeof statusConfig] || { color: "secondary", label: bill.status };
 
     return (
-      <Card style={styles.billCard} onPress={() => router.push(`/bills/${bill.id}`)}>
-        <View style={styles.billHeader}>
-          <View style={styles.billTitleRow}>
-            <View style={styles.billIcon}>
-              <Icon name="receipt-outline" size={24} color={isPaid ? "#10B981" : isOverdue ? "#EF4444" : "#F59E0B"} />
-            </View>
-            <View style={styles.billTitleContent}>
-              <Text style={styles.billTitle}>{bill.title || `Bill #${bill.id.slice(0, 8)}`}</Text>
-              <Text style={styles.billPeriod}>{bill.period || bill.billingPeriod}</Text>
-            </View>
-          </View>
-          <View style={styles.billAmountRow}>
-            <Text style={styles.billAmount}>{formatCurrency(bill.amount)}</Text>
-            <StatusBadge status={bill.status as any} />
-          </View>
-        </View>
-        <Divider style={styles.divider} />
-        <View style={styles.billDetails}>
-          <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Due Date</Text>
-            <Text style={styles.detailValue}>{bill.dueDate ? new Date(bill.dueDate).toLocaleDateString() : "-"}</Text>
-          </View>
-          <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Status</Text>
-            <StatusBadge status={bill.status as any} />
-          </View>
-          {bill.paidAmount && bill.paidAmount > 0 && (
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Paid</Text>
-              <Text style={styles.detailValue}>{formatCurrency(bill.paidAmount)}</Text>
-            </View>
+      <PressableCard onPress={() => router.push(`/bills/${bill.id}`)} style={styles.billCard}>
+        <Card>
+          <RNView style={styles.billHeader}>
+            <RNView style={styles.billTitleRow}>
+              <RNView style={styles.billIcon}>
+                <Ionicons name="receipt-outline" size={24} color={isPaid ? "#10B981" : isOverdue ? "#EF4444" : "#F59E0B"} />
+              </RNView>
+              <RNView style={styles.billTitleContent}>
+                <Text style={styles.billTitle}>{bill.title || `Bill #${bill.id.slice(0, 8)}`}</Text>
+                <Text style={styles.billPeriod}>{bill.period || bill.billingPeriod}</Text>
+              </RNView>
+            </RNView>
+            <RNView style={styles.billAmountRow}>
+              <Text style={styles.billAmount}>{formatCurrency(bill.amount)}</Text>
+              <StatusBadge status={bill.status as any} />
+            </RNView>
+          </RNView>
+          <Divider style={styles.divider} />
+          <RNView style={styles.billDetails}>
+            <RNView style={styles.detailItem}>
+              <Text style={styles.detailLabel}>Due Date</Text>
+              <Text style={styles.detailValue}>{bill.dueDate ? new Date(bill.dueDate).toLocaleDateString() : "-"}</Text>
+            </RNView>
+            <RNView style={styles.detailItem}>
+              <Text style={styles.detailLabel}>Status</Text>
+              <StatusBadge status={bill.status as any} />
+            </RNView>
+            {bill.paidAmount && bill.paidAmount > 0 && (
+              <RNView style={styles.detailItem}>
+                <Text style={styles.detailLabel}>Paid</Text>
+                <Text style={styles.detailValue}>{formatCurrency(bill.paidAmount)}</Text>
+              </RNView>
+            )}
+          </RNView>
+          {!isPaid && (
+            <RNView style={styles.billAction}>
+              <Button variant="primary" size="sm" onPress={() => router.push(`/bills/${bill.id}/pay`)}>
+                {isOverdue ? "Pay Now (Overdue)" : "Pay Now"}
+              </Button>
+            </RNView>
           )}
-        </View>
-        {!isPaid && (
-          <View style={styles.billAction}>
-            <Button variant="primary" size="sm" onPress={() => router.push(`/bills/${bill.id}/pay`)}>
-              {isOverdue ? "Pay Now (Overdue)" : "Pay Now"}
-            </Button>
-          </View>
-        )}
-      </Card>
+        </Card>
+      </PressableCard>
     );
   };
 
@@ -107,11 +109,11 @@ export function BillsScreen() {
     <ScreenContainer>
       <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
         <SafeScrollView>
-          <View style={styles.header}>
-            <View style={styles.headerContent}>
+          <RNView style={styles.header}>
+            <RNView style={styles.headerContent}>
               <Text style={styles.pageTitle}>Bills</Text>
-            </View>
-          </View>
+            </RNView>
+          </RNView>
           {bills.length === 0 ? (
             <EmptyState
               icon="card-outline"
@@ -121,7 +123,7 @@ export function BillsScreen() {
           ) : (
             <>
               {pendingBills.length > 0 && (
-                <View style={styles.section}>
+                <RNView style={styles.section}>
                   <SectionHeader title="Pending" />
                   <ListGroup style={styles.list}>
                     {pendingBills.map((bill) => (
@@ -130,10 +132,10 @@ export function BillsScreen() {
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
-                </View>
+                </RNView>
               )}
               {paidBills.length > 0 && (
-                <View style={styles.section}>
+                <RNView style={styles.section}>
                   <SectionHeader title="Paid" />
                   <ListGroup style={styles.list}>
                     {paidBills.map((bill) => (
@@ -142,7 +144,7 @@ export function BillsScreen() {
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
-                </View>
+                </RNView>
               )}
             </>
           )}

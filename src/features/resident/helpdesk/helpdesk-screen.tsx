@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { useAuthenticatedApi } from "@/platform/auth/use-authenticated-api";
+import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog } from "./heroui-ui";
-import { Card, Text, View, Icon, Divider, Button, ListGroup, Input, TextField, Modal, Surface, Avatar } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText } from "../shared/heroui-ui";
+import { Card, Text, Divider, Button, ListGroup, TextField, TextArea, Select, Modal, Label } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -15,6 +15,7 @@ const PRIORITIES = ["low", "medium", "high", "urgent"];
 export function HelpdeskScreen() {
   const router = useRouter();
   const runAuthenticated = useAuthenticatedApi();
+  const { state } = useSession();
   const [complaints, setComplaints] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -28,8 +29,7 @@ export function HelpdeskScreen() {
     if (!isRefresh) setLoading(true);
     setError(null);
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
-      const result = await runAuthenticated((api) => api.listHelpdesk(accessToken));
+      const result = await runAuthenticated((api, token) => api.listHelpdesk(token));
       setComplaints(result.complaints || []);
     } catch (err: any) {
       setError(err.message || "Failed to load complaints");
@@ -52,8 +52,7 @@ export function HelpdeskScreen() {
     }
     setSubmitting(true);
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
-      await runAuthenticated((api) => api.raiseComplaint(accessToken, formData));
+      await runAuthenticated((api, token) => api.raiseComplaint(token, formData));
       setShowCreateModal(false);
       setFormData({ title: "", description: "", category: "Maintenance", priority: "medium", mediaUrls: [] });
       fetchComplaints();
@@ -66,8 +65,7 @@ export function HelpdeskScreen() {
 
   const handleTransition = async (complaintId: string, action: string, resolution?: string) => {
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
-      await runAuthenticated((api) => api.transitionComplaint(accessToken, complaintId, { action, resolution }));
+      await runAuthenticated((api, token) => api.transitionComplaint(token, complaintId, { action, resolution }));
       fetchComplaints();
     } catch (err: any) {
       Alert.alert("Error", err.message || "Failed to update complaint");
@@ -76,8 +74,7 @@ export function HelpdeskScreen() {
 
   const handleRate = async (complaintId: string, rating: number, comment: string) => {
     try {
-      const accessToken = await runAuthenticated(() => Promise.resolve(""));
-      await runAuthenticated((api) => api.rateComplaint(accessToken, complaintId, { rating, comment }));
+      await runAuthenticated((api, token) => api.rateComplaint(token, complaintId, { rating, comment }));
       setShowRateModal(null);
       fetchComplaints();
     } catch (err: any) {
@@ -97,34 +94,36 @@ export function HelpdeskScreen() {
     const canRate = complaint.status === "resolved" && !complaint.rating;
 
     return (
-      <Card style={styles.complaintCard}>
-        <View style={styles.complaintHeader}>
-          <View style={styles.complaintTitleRow}>
-            <Text style={styles.complaintTitle}>{complaint.title}</Text>
-            <StatusBadge status={complaint.status as any} />
-          </View>
-          <Text style={styles.complaintTime}>{formatDistanceToNow(new Date(complaint.createdAt), { addSuffix: true })}</Text>
-        </View>
-        <Divider style={styles.divider} />
-        <Text style={styles.complaintBody} numberOfLines={3}>{complaint.description}</Text>
-        <View style={styles.complaintMeta}>
-          <View style={styles.metaItem}>
-            <Icon name="tag-outline" size={16} color="#9CA3AF" />
-            <Text style={styles.metaText}>{complaint.category}</Text>
-          </View>
-          <View style={styles.metaItem}>
-            <Icon name="alert-circle-outline" size={16} color="#9CA3AF" />
-            <Text style={styles.metaText}>{complaint.priority}</Text>
-          </View>
-        </View>
-        {canRate && (
-          <View style={styles.rateButton}>
-            <Button variant="outline" size="sm" onPress={() => setShowRateModal({ complaintId: complaint.id, complaint })}>
-              Rate Resolution
-            </Button>
-          </View>
-        )}
-      </Card>
+      <PressableCard style={styles.complaintCard}>
+        <Card>
+          <RNView style={styles.complaintHeader}>
+            <RNView style={styles.complaintTitleRow}>
+              <Text style={styles.complaintTitle}>{complaint.title}</Text>
+              <StatusBadge status={complaint.status as any} />
+            </RNView>
+            <Text style={styles.complaintTime}>{formatDistanceToNow(new Date(complaint.createdAt), { addSuffix: true })}</Text>
+          </RNView>
+          <Divider style={styles.divider} />
+          <Text style={styles.complaintBody} numberOfLines={3}>{complaint.description}</Text>
+          <RNView style={styles.complaintMeta}>
+            <RNView style={styles.metaItem}>
+              <Ionicons name="bag-outline" size={16} color="#9CA3AF" />
+              <Text style={styles.metaText}>{complaint.category}</Text>
+            </RNView>
+            <RNView style={styles.metaItem}>
+              <Ionicons name="alert-circle-outline" size={16} color="#9CA3AF" />
+              <Text style={styles.metaText}>{complaint.priority}</Text>
+            </RNView>
+          </RNView>
+          {canRate && (
+            <RNView style={styles.rateButton}>
+              <Button variant="outline" size="sm" onPress={() => setShowRateModal({ complaintId: complaint.id, complaint })}>
+                Rate Resolution
+              </Button>
+            </RNView>
+          )}
+        </Card>
+      </PressableCard>
     );
   };
 
@@ -135,14 +134,14 @@ export function HelpdeskScreen() {
     <ScreenContainer>
       <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
         <SafeScrollView>
-          <View style={styles.header}>
-            <View style={styles.headerContent}>
+          <RNView style={styles.header}>
+            <RNView style={styles.headerContent}>
               <Text style={styles.pageTitle}>Helpdesk</Text>
               <Button onPress={() => setShowCreateModal(true)}>
-                <Icon name="add" size={20} />
+                <Ionicons name="add" size={20} />
               </Button>
-            </View>
-          </View>
+            </RNView>
+          </RNView>
           {complaints.length === 0 ? (
             <EmptyState
               icon="headset-outline"
@@ -164,70 +163,68 @@ export function HelpdeskScreen() {
       </PullToRefresh>
 
       <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} size="lg">
-        <View style={styles.modalContent}>
-          <View style={styles.modalHeader}>
+        <RNView style={styles.modalContent}>
+          <RNView style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Raise Complaint</Text>
             <Button variant="ghost" size="sm" onPress={() => setShowCreateModal(false)}>
-              <Icon name="close" size={24} />
+              <Ionicons name="close" size={24} />
             </Button>
-          </View>
-          <View style={styles.modalBody}>
-            <View style={styles.field}>
+          </RNView>
+          <RNView style={styles.modalBody}>
+            <RNView style={styles.field}>
               <Label>Title *</Label>
               <TextField
                 placeholder="Brief summary of the issue"
                 value={formData.title}
-                onChange={(value) => setFormData(prev => ({ ...prev, title: value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target?.value || e }))}
               />
-            </View>
-            <View style={styles.field}>
+            </RNView>
+            <RNView style={styles.field}>
               <Label>Description *</Label>
-              <TextField
+              <TextArea
                 placeholder="Detailed description"
                 value={formData.description}
-                onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
-                multiline
-                numberOfLines={4}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target?.value || e }))}
               />
-            </View>
-            <View style={styles.field}>
+            </RNView>
+            <RNView style={styles.field}>
               <Label>Category</Label>
               <Select
                 value={formData.category}
                 onChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
                 options={CATEGORIES.map(c => ({ label: c, value: c }))}
               />
-            </View>
-            <View style={styles.field}>
+            </RNView>
+            <RNView style={styles.field}>
               <Label>Priority</Label>
               <Select
                 value={formData.priority}
                 onChange={(value) => setFormData(prev => ({ ...prev, priority: value }))}
                 options={PRIORITIES.map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), value: p }))}
               />
-            </View>
-          </View>
-          <View style={styles.modalFooter}>
+            </RNView>
+          </RNView>
+          <RNView style={styles.modalFooter}>
             <Button variant="ghost" onPress={() => setShowCreateModal(false)}>Cancel</Button>
-            <Button variant="primary" onPress={handleCreate} disabled={submitting}>
+            <Button variant="primary" onPress={handleCreate} isDisabled={submitting}>
               {submitting ? "Submitting..." : "Submit Complaint"}
             </Button>
-          </View>
-        </View>
+          </RNView>
+        </RNView>
       </Modal>
 
       {showRateModal && (
         <Modal isOpen={true} onClose={() => setShowRateModal(null)} size="md">
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
+          <RNView style={styles.modalContent}>
+            <RNView style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Rate Resolution</Text>
               <Button variant="ghost" size="sm" onPress={() => setShowRateModal(null)}>
-                <Icon name="close" size={24} />
+                <Ionicons name="close" size={24} />
               </Button>
-            </View>
-            <View style={styles.modalBody}>
+            </RNView>
+            <RNView style={styles.modalBody}>
               <Text style={styles.ratePrompt}>How satisfied are you with the resolution for "{showRateModal.complaint.title}"?</Text>
-              <View style={styles.ratingContainer}>
+              <RNView style={styles.ratingContainer}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Button
                     key={star}
@@ -239,25 +236,23 @@ export function HelpdeskScreen() {
                     <Text style={{ fontSize: 24 }}>{"★"}</Text>
                   </Button>
                 ))}
-              </View>
-              <View style={styles.field}>
+              </RNView>
+              <RNView style={styles.field}>
                 <Label>Comment (optional)</Label>
-                <TextField
+                <TextArea
                   placeholder="Additional feedback"
                   value={formData.description}
-                  onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
-                  multiline
-                  numberOfLines={3}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target?.value || e }))}
                 />
-              </View>
-            </View>
-            <View style={styles.modalFooter}>
+              </RNView>
+            </RNView>
+            <RNView style={styles.modalFooter}>
               <Button variant="ghost" onPress={() => setShowRateModal(null)}>Cancel</Button>
               <Button variant="primary" onPress={() => handleRate(showRateModal.complaintId, parseInt(formData.title), formData.description)}>
                 Submit Rating
               </Button>
-            </View>
-          </View>
+            </RNView>
+          </RNView>
         </Modal>
       )}
     </ScreenContainer>
