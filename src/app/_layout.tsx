@@ -6,6 +6,7 @@ import { SessionProvider, useSession } from "@/platform/auth/session-provider";
 import { queryClient } from "@/platform/query/query-client";
 import { ReactNativeQueryLifecycle } from "@/platform/query/react-native-query-lifecycle";
 import { colors, residentTheme } from "@/platform/theme/tokens";
+import { HerouiProvider } from "@/platform/ui/heroui-provider";
 
 function SessionTransitionScreen() {
   return (
@@ -58,12 +59,14 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactNativeQueryLifecycle />
-      <SessionProvider>
-        <RootNavigator />
-      </SessionProvider>
-    </QueryClientProvider>
+    <HerouiProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactNativeQueryLifecycle />
+        <SessionProvider>
+          <RootNavigator />
+        </SessionProvider>
+      </QueryClientProvider>
+    </HerouiProvider>
   );
 }
 
