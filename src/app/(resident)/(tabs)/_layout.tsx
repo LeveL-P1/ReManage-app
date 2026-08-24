@@ -6,8 +6,10 @@ import { residentTheme } from "@/platform/theme/tokens";
 const tabs = [
   { name: "index", title: "Home", icon: "home-outline", activeIcon: "home" },
   { name: "visitors", title: "Visitors", icon: "people-outline", activeIcon: "people" },
-  { name: "community", title: "Community", icon: "chatbubbles-outline", activeIcon: "chatbubbles" },
+  { name: "notices", title: "Notices", icon: "megaphone-outline", activeIcon: "megaphone" },
+  { name: "events", title: "Events", icon: "calendar-outline", activeIcon: "calendar" },
   { name: "bills", title: "Bills", icon: "card-outline", activeIcon: "card" },
+  { name: "community", title: "Community", icon: "chatbubbles-outline", activeIcon: "chatbubbles" },
   { name: "more", title: "More", icon: "grid-outline", activeIcon: "grid" },
 ] as const;
 

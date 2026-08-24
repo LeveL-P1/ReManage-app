@@ -1,5 +1,5 @@
 import { BillsScreen } from "@/features/resident/bills/bills-screen";
 
-export default function ResidentBillsRoute() {
+export default function BillsRoute() {
   return <BillsScreen />;
 }

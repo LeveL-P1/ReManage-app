@@ -1,5 +1,5 @@
 import { ForumScreen } from "@/features/resident/forum/forum-screen";
 
-export default function ResidentCommunityRoute() {
+export default function ForumRoute() {
   return <ForumScreen />;
 }
