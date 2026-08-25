@@ -2,21 +2,21 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup, Switch, Badge } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
+import { Card, Text, ListGroup, Button } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
 
 const NOTIFICATION_ICONS: Record<string, string> = {
-  bill: "card-outline",
-  complaint: "headset-outline",
-  event: "calendar-outline",
-  poll: "bar-chart-outline",
-  visitor: "people-outline",
-  notice: "megaphone-outline",
-  payment: "cash-outline",
-  general: "notifications-outline",
+  bill: "card",
+  complaint: "headset",
+  event: "calendar",
+  poll: "bar-chart",
+  visitor: "people",
+  notice: "megaphone",
+  payment: "cash",
+  general: "notifications",
 };
 
 export function NotificationsScreen() {
@@ -73,20 +73,19 @@ export function NotificationsScreen() {
   };
 
   const renderNotification = (notification: any) => {
-    const iconName = NOTIFICATION_ICONS[notification.type] || NOTIFICATION_ICONS.general;
     const iconColor = notification.read ? "#9CA3AF" : "#E86C00";
 
     return (
-      <PressableCard onPress={() => { if (!notification.read) handleMarkRead(notification.id); }} style={[styles.notificationCard, !notification.read && styles.notificationCardUnread]}>
+      <PressableCard onPress={() => { if (!notification.read) handleMarkRead(notification.id); }} style={notification.read ? styles.notificationCard : { ...styles.notificationCard, ...styles.notificationCardUnread }}>
         <Card>
           <RNView style={styles.notificationHeader}>
             <RNView style={[styles.notificationIcon, { backgroundColor: `${iconColor}20` }]}>
-              <Ionicons name={iconName} size={20} color={iconColor} />
+              <Ionicons name="document" size={20} color={iconColor} />
             </RNView>
             <RNView style={styles.notificationTitleContent}>
               <RNView style={styles.notificationTitleRow}>
                 <Text style={[styles.notificationTitle, !notification.read && styles.notificationTitleUnread]}>{notification.title}</Text>
-                {!notification.read && <Badge color="primary" size="xs">New</Badge>}
+                {!notification.read && <Chip variant="primary" size="sm">New</Chip>}
               </RNView>
               <Text style={styles.notificationTime}>{formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}</Text>
             </RNView>
@@ -117,28 +116,21 @@ export function NotificationsScreen() {
             <RNView style={styles.headerContent}>
               <RNView style={styles.headerLeft}>
                 <Text style={styles.pageTitle}>Notifications</Text>
-                {unreadCount > 0 && <Badge color="danger">{unreadCount}</Badge>}
+                {unreadCount > 0 && <Chip variant="primary" size="sm">{unreadCount}</Chip>}
               </RNView>
               <RNView style={styles.headerRight}>
                 <RNView style={styles.pushToggle}>
                   <Text style={styles.pushLabel}>Push Notifications</Text>
-                  <Switch
-                    isSelected={pushEnabled}
-                    onValueChange={setPushEnabled}
-                  />
-                </RNView>
-                {!pushEnabled && (
-                  <Button variant="ghost" size="sm" onPress={handleRegisterPush}>
-                    <Ionicons name="bell-outline" size={16} />
-                    <Text>Enable</Text>
+                  <Button variant="ghost" size="sm" onPress={() => setPushEnabled(!pushEnabled)}>
+                    {pushEnabled ? "Enabled" : "Enable"}
                   </Button>
-                )}
+                </RNView>
               </RNView>
             </RNView>
           </RNView>
           {notifications.length === 0 ? (
             <EmptyState
-              icon="notifications-off-outline"
+              icon="notifications-off"
               title="No notifications"
               description="You're all caught up! New notifications will appear here."
             />

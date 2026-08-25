@@ -3,8 +3,8 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup, Progress } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText, Divider, Chip, ConfirmDialog } from "../shared/heroui-ui";
+import { Card, Text, ListGroup, Button } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -67,7 +67,7 @@ export function PollsScreen() {
           </RNView>
           {hasVoted && (
             <RNView style={styles.optionProgress}>
-              <Progress value={percentage} max={100} style={styles.progress} color={isUserVote ? "#E86C00" : "#E5E7EB"} />
+              <RNView style={{ ...styles.progressBar, width: `${percentage}%`, backgroundColor: isUserVote ? "#E86C00" : "#E5E7EB" }} />
               <Text style={styles.optionPercentage}>{percentage.toFixed(0)}%</Text>
             </RNView>
           )}
@@ -82,7 +82,7 @@ export function PollsScreen() {
             <RNView style={styles.pollTitleContent}>
               <RNView style={styles.pollTitleRow}>
                 <Text style={styles.pollTitle}>{poll.title}</Text>
-                <StatusBadge status={isActive ? "active" : "completed"} />
+                <Chip variant={isActive ? "primary" : "secondary"} size="sm">{isActive ? "Active" : "Closed"}</Chip>
               </RNView>
               {poll.description && <Text style={styles.pollDescription}>{poll.description}</Text>}
             </RNView>
@@ -128,7 +128,7 @@ export function PollsScreen() {
           </RNView>
           {polls.length === 0 ? (
             <EmptyState
-              icon="bar-chart-outline"
+              icon="bar-chart"
               title="No polls"
               description="There are no active polls in your society."
             />
@@ -164,38 +164,15 @@ export function PollsScreen() {
       </PullToRefresh>
 
       {votingPoll && (
-        <RNView style={styles.voteOverlay}>
-          <RNView style={styles.voteModal}>
-            <RNView style={styles.voteModalHeader}>
-              <Text style={styles.voteModalTitle}>Cast Your Vote</Text>
-              <Button variant="ghost" size="sm" onPress={() => setVotingPoll(null)}>
-                <Ionicons name="close" size={24} />
-              </Button>
-            </RNView>
-            <RNView style={styles.voteModalBody}>
-              {polls.find(p => p.id === votingPoll.pollId)?.options?.map((option: any, index: number) => (
-                <Button
-                  key={index}
-                  variant={votingPoll.selectedOption === index ? "primary" : "outline"}
-                  onPress={() => setVotingPoll(prev => prev ? { ...prev, selectedOption: index } : null)}
-                  style={styles.voteOption}
-                >
-                  <Text style={[styles.voteOptionText, votingPoll.selectedOption === index && styles.voteOptionTextSelected]}>{option.text}</Text>
-                </Button>
-              ))}
-            </RNView>
-            <RNView style={styles.voteModalFooter}>
-              <Button variant="ghost" onPress={() => setVotingPoll(null)}>Cancel</Button>
-              <Button
-                variant="primary"
-                onPress={() => votingPoll.selectedOption !== null && handleVote(votingPoll.pollId, votingPoll.selectedOption)}
-                isDisabled={votingPoll.selectedOption === null}
-              >
-                Submit Vote
-              </Button>
-            </RNView>
-          </RNView>
-        </RNView>
+        <ConfirmDialog
+          isOpen={true}
+          onClose={() => setVotingPoll(null)}
+          onConfirm={() => votingPoll.selectedOption !== null && handleVote(votingPoll.pollId, votingPoll.selectedOption)}
+          title="Cast Your Vote"
+          message="Select an option below to cast your vote."
+          confirmText="Submit Vote"
+          variant="primary"
+        />
       )}
     </ScreenContainer>
   );
@@ -220,7 +197,7 @@ const styles = StyleSheet.create({
   optionText: { fontSize: 14, color: "#111827", flex: 1 },
   optionTextSelected: { fontWeight: "600", color: "#E86C00" },
   optionProgress: { flexDirection: "row", alignItems: "center", gap: 8, marginLeft: 28 },
-  progress: { flex: 1, height: 6 },
+  progressBar: { flex: 1, height: 6, borderRadius: 3 },
   optionPercentage: { fontSize: 12, color: "#9CA3AF", width: 40 },
   pollFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 8 },
   pollStats: { flexDirection: "row", gap: 16 },
@@ -228,13 +205,4 @@ const styles = StyleSheet.create({
   section: { marginBottom: 16 },
   list: { paddingHorizontal: 16, paddingBottom: 100 },
   listItem: { borderWidth: 0, backgroundColor: "transparent" },
-  voteOverlay: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center", padding: 16 },
-  voteModal: { backgroundColor: "#FFFFFF", borderRadius: 16, width: "100%", maxWidth: 400, maxHeight: "80%" },
-  voteModalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#E5E7EB" },
-  voteModalTitle: { fontSize: 18, fontWeight: "700", color: "#111827" },
-  voteModalBody: { padding: 16, maxHeight: 400 },
-  voteOption: { width: "100%", marginBottom: 8 },
-  voteOptionText: { fontSize: 16, color: "#111827" },
-  voteOptionTextSelected: { color: "#FFFFFF" },
-  voteModalFooter: { flexDirection: "row", justifyContent: "flex-end", gap: 8, padding: 16, borderTopWidth: 1, borderTopColor: "#E5E7EB" },
 });

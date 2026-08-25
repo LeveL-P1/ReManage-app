@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Badge, ListGroup } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
+import { Card, Text, ListGroup } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -53,7 +53,7 @@ export function NoticesScreen() {
   };
 
   const renderNotice = (notice: any) => (
-    <PressableCard onPress={() => { if (!notice.read) handleMarkRead(notice.id); router.push(`/notice/${notice.id}`); }} style={styles.noticeCard}>
+    <PressableCard onPress={() => { if (!notice.read) handleMarkRead(notice.id); router.push(`/notices` as any); }} style={styles.noticeCard}>
       <Card>
         <RNView style={styles.noticeHeader}>
           <RNView style={styles.noticeTitleRow}>
@@ -82,12 +82,12 @@ export function NoticesScreen() {
           <RNView style={styles.header}>
             <RNView style={styles.headerContent}>
               <Text style={styles.pageTitle}>Announcements</Text>
-              {unreadCount > 0 && <Badge color="danger">{unreadCount} unread</Badge>}
+              {unreadCount > 0 && <Chip variant="primary">{unreadCount} unread</Chip>}
             </RNView>
           </RNView>
           {notices.length === 0 ? (
             <EmptyState
-              icon="megaphone-outline"
+              icon="megaphone"
               title="No announcements"
               description="You're all caught up! New announcements will appear here."
             />

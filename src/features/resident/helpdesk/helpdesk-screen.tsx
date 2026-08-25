@@ -3,8 +3,8 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup, TextField, TextArea, Select, Modal, Label } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
+import { Card, Text, ListGroup, TextField, TextArea, Select, Button } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -85,8 +85,8 @@ export function HelpdeskScreen() {
   const renderComplaint = (complaint: any) => {
     const statusConfig = {
       open: { color: "primary", label: "Open" },
-      in_progress: { color: "warning", label: "In Progress" },
-      resolved: { color: "success", label: "Resolved" },
+      in_progress: { color: "primary", label: "In Progress" },
+      resolved: { color: "primary", label: "Resolved" },
       closed: { color: "secondary", label: "Closed" },
     };
     const config = statusConfig[complaint.status as keyof typeof statusConfig] || { color: "secondary", label: complaint.status };
@@ -107,11 +107,11 @@ export function HelpdeskScreen() {
           <Text style={styles.complaintBody} numberOfLines={3}>{complaint.description}</Text>
           <RNView style={styles.complaintMeta}>
             <RNView style={styles.metaItem}>
-              <Ionicons name="bag-outline" size={16} color="#9CA3AF" />
+              <Ionicons name="bag" size={16} color="#9CA3AF" />
               <Text style={styles.metaText}>{complaint.category}</Text>
             </RNView>
             <RNView style={styles.metaItem}>
-              <Ionicons name="alert-circle-outline" size={16} color="#9CA3AF" />
+              <Ionicons name="alert-circle" size={16} color="#9CA3AF" />
               <Text style={styles.metaText}>{complaint.priority}</Text>
             </RNView>
           </RNView>
@@ -144,7 +144,7 @@ export function HelpdeskScreen() {
           </RNView>
           {complaints.length === 0 ? (
             <EmptyState
-              icon="headset-outline"
+              icon="headset"
               title="No complaints"
               description="Your society helpdesk is quiet. Raise a complaint if you need assistance."
               action="Raise Complaint"
@@ -162,98 +162,26 @@ export function HelpdeskScreen() {
         </SafeScrollView>
       </PullToRefresh>
 
-      <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} size="lg">
-        <RNView style={styles.modalContent}>
-          <RNView style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Raise Complaint</Text>
-            <Button variant="ghost" size="sm" onPress={() => setShowCreateModal(false)}>
-              <Ionicons name="close" size={24} />
-            </Button>
-          </RNView>
-          <RNView style={styles.modalBody}>
-            <RNView style={styles.field}>
-              <Label>Title *</Label>
-              <TextField
-                placeholder="Brief summary of the issue"
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target?.value || e }))}
-              />
-            </RNView>
-            <RNView style={styles.field}>
-              <Label>Description *</Label>
-              <TextArea
-                placeholder="Detailed description"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target?.value || e }))}
-              />
-            </RNView>
-            <RNView style={styles.field}>
-              <Label>Category</Label>
-              <Select
-                value={formData.category}
-                onChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
-                options={CATEGORIES.map(c => ({ label: c, value: c }))}
-              />
-            </RNView>
-            <RNView style={styles.field}>
-              <Label>Priority</Label>
-              <Select
-                value={formData.priority}
-                onChange={(value) => setFormData(prev => ({ ...prev, priority: value }))}
-                options={PRIORITIES.map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), value: p }))}
-              />
-            </RNView>
-          </RNView>
-          <RNView style={styles.modalFooter}>
-            <Button variant="ghost" onPress={() => setShowCreateModal(false)}>Cancel</Button>
-            <Button variant="primary" onPress={handleCreate} isDisabled={submitting}>
-              {submitting ? "Submitting..." : "Submit Complaint"}
-            </Button>
-          </RNView>
-        </RNView>
-      </Modal>
+      <ConfirmDialog
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onConfirm={handleCreate}
+        title="Raise Complaint"
+        message="Please fill in the form below to raise a complaint."
+        confirmText="Submit Complaint"
+        variant="primary"
+      />
 
       {showRateModal && (
-        <Modal isOpen={true} onClose={() => setShowRateModal(null)} size="md">
-          <RNView style={styles.modalContent}>
-            <RNView style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Rate Resolution</Text>
-              <Button variant="ghost" size="sm" onPress={() => setShowRateModal(null)}>
-                <Ionicons name="close" size={24} />
-              </Button>
-            </RNView>
-            <RNView style={styles.modalBody}>
-              <Text style={styles.ratePrompt}>How satisfied are you with the resolution for "{showRateModal.complaint.title}"?</Text>
-              <RNView style={styles.ratingContainer}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Button
-                    key={star}
-                    variant={formData.title === String(star) ? "primary" : "outline"}
-                    size="sm"
-                    onPress={() => setFormData(prev => ({ ...prev, title: String(star) }))}
-                    style={{ width: 50, height: 50 }}
-                  >
-                    <Text style={{ fontSize: 24 }}>{"★"}</Text>
-                  </Button>
-                ))}
-              </RNView>
-              <RNView style={styles.field}>
-                <Label>Comment (optional)</Label>
-                <TextArea
-                  placeholder="Additional feedback"
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target?.value || e }))}
-                />
-              </RNView>
-            </RNView>
-            <RNView style={styles.modalFooter}>
-              <Button variant="ghost" onPress={() => setShowRateModal(null)}>Cancel</Button>
-              <Button variant="primary" onPress={() => handleRate(showRateModal.complaintId, parseInt(formData.title), formData.description)}>
-                Submit Rating
-              </Button>
-            </RNView>
-          </RNView>
-        </Modal>
+        <ConfirmDialog
+          isOpen={true}
+          onClose={() => setShowRateModal(null)}
+          onConfirm={() => handleRate(showRateModal.complaintId, parseInt(formData.title), formData.description)}
+          title="Rate Resolution"
+          message={`How satisfied are you with the resolution for "${showRateModal.complaint.title}"?`}
+          confirmText="Submit Rating"
+          variant="primary"
+        />
       )}
     </ScreenContainer>
   );
@@ -276,12 +204,4 @@ const styles = StyleSheet.create({
   rateButton: { marginTop: 12, paddingTop: 8, borderTopWidth: 1, borderTopColor: "#E5E7EB" },
   list: { paddingHorizontal: 16, paddingBottom: 100 },
   listItem: { borderWidth: 0, backgroundColor: "transparent" },
-  modalContent: { padding: 16 },
-  modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
-  modalTitle: { fontSize: 20, fontWeight: "700", color: "#111827" },
-  modalBody: { marginBottom: 16 },
-  field: { marginBottom: 16 },
-  modalFooter: { flexDirection: "row", justifyContent: "flex-end", gap: 8 },
-  ratingContainer: { flexDirection: "row", gap: 8, marginVertical: 16 },
-  ratePrompt: { fontSize: 14, color: "#6B7280", marginBottom: 16, lineHeight: 20 },
 });

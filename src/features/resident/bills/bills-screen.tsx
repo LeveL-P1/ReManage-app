@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup, Badge } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
+import { Card, Text, ListGroup, Button } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -44,21 +44,14 @@ export function BillsScreen() {
   const renderBill = (bill: any) => {
     const isPaid = bill.status === "paid";
     const isOverdue = bill.status === "overdue";
-    const statusConfig = {
-      paid: { color: "success", label: "Paid" },
-      pending: { color: "warning", label: "Pending" },
-      overdue: { color: "danger", label: "Overdue" },
-      partial: { color: "primary", label: "Partial" },
-    };
-    const config = statusConfig[bill.status as keyof typeof statusConfig] || { color: "secondary", label: bill.status };
 
     return (
-      <PressableCard onPress={() => router.push(`/bills/${bill.id}`)} style={styles.billCard}>
+      <PressableCard style={styles.billCard}>
         <Card>
           <RNView style={styles.billHeader}>
             <RNView style={styles.billTitleRow}>
               <RNView style={styles.billIcon}>
-                <Ionicons name="receipt-outline" size={24} color={isPaid ? "#10B981" : isOverdue ? "#EF4444" : "#F59E0B"} />
+                <Ionicons name="receipt" size={24} color={isPaid ? "#10B981" : isOverdue ? "#EF4444" : "#F59E0B"} />
               </RNView>
               <RNView style={styles.billTitleContent}>
                 <Text style={styles.billTitle}>{bill.title || `Bill #${bill.id.slice(0, 8)}`}</Text>
@@ -67,7 +60,7 @@ export function BillsScreen() {
             </RNView>
             <RNView style={styles.billAmountRow}>
               <Text style={styles.billAmount}>{formatCurrency(bill.amount)}</Text>
-              <StatusBadge status={bill.status as any} />
+              <Chip variant="primary" size="sm">{isPaid ? "Paid" : isOverdue ? "Overdue" : "Pending"}</Chip>
             </RNView>
           </RNView>
           <Divider style={styles.divider} />
@@ -75,10 +68,6 @@ export function BillsScreen() {
             <RNView style={styles.detailItem}>
               <Text style={styles.detailLabel}>Due Date</Text>
               <Text style={styles.detailValue}>{bill.dueDate ? new Date(bill.dueDate).toLocaleDateString() : "-"}</Text>
-            </RNView>
-            <RNView style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Status</Text>
-              <StatusBadge status={bill.status as any} />
             </RNView>
             {bill.paidAmount && bill.paidAmount > 0 && (
               <RNView style={styles.detailItem}>
@@ -89,7 +78,7 @@ export function BillsScreen() {
           </RNView>
           {!isPaid && (
             <RNView style={styles.billAction}>
-              <Button variant="primary" size="sm" onPress={() => router.push(`/bills/${bill.id}/pay`)}>
+              <Button variant="primary" size="sm" onPress={() => router.push(`/bills/pay-now` as any)}>
                 {isOverdue ? "Pay Now (Overdue)" : "Pay Now"}
               </Button>
             </RNView>
@@ -116,7 +105,7 @@ export function BillsScreen() {
           </RNView>
           {bills.length === 0 ? (
             <EmptyState
-              icon="card-outline"
+              icon="card"
               title="No bills"
               description="You don't have any bills at the moment."
             />

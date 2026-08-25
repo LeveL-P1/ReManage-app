@@ -2,24 +2,24 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText, Divider } from "../shared/heroui-ui";
+import { Card, Text, ListGroup } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
 
 const DOCUMENT_ICONS: Record<string, string> = {
-  pdf: "document-text-outline",
-  doc: "document-outline",
-  docx: "document-outline",
-  xls: "table-outline",
-  xlsx: "table-outline",
-  ppt: "easel-outline",
-  pptx: "easel-outline",
-  jpg: "image-outline",
-  jpeg: "image-outline",
-  png: "image-outline",
-  default: "document-outline",
+  pdf: "document-text",
+  doc: "document",
+  docx: "document",
+  xls: "table",
+  xlsx: "table",
+  ppt: "easel",
+  pptx: "easel",
+  jpg: "image",
+  jpeg: "image",
+  png: "image",
+  default: "document",
 };
 
 export function DocumentsScreen() {
@@ -67,7 +67,7 @@ export function DocumentsScreen() {
       <Card>
         <RNView style={styles.docHeader}>
           <RNView style={styles.docIcon}>
-            <Ionicons name={getFileIcon(doc.name)} size={28} color="#E86C00" />
+            <Ionicons name="document" size={28} color="#E86C00" />
           </RNView>
           <RNView style={styles.docTitleContent}>
             <Text style={styles.docTitle}>{doc.name}</Text>
@@ -97,7 +97,7 @@ export function DocumentsScreen() {
           </RNView>
           {documents.length === 0 ? (
             <EmptyState
-              icon="folder-outline"
+              icon="folder"
               title="No documents"
               description="Your society hasn't shared any documents yet."
             />

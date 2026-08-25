@@ -3,8 +3,8 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup, Badge } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
+import { Card, Text, ListGroup, Button } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -64,20 +64,20 @@ export function EventsScreen() {
               <Text style={styles.eventTitle}>{event.title}</Text>
               <RNView style={styles.eventMeta}>
                 <RNView style={styles.metaItem}>
-                  <Ionicons name="time-outline" size={14} color="#9CA3AF" />
+                  <Ionicons name="time" size={14} color="#9CA3AF" />
                   <Text style={styles.metaText}>{new Date(event.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - {event.endDate ? new Date(event.endDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}</Text>
                 </RNView>
                 {event.location && (
                   <RNView style={styles.metaItem}>
-                    <Ionicons name="location-outline" size={14} color="#9CA3AF" />
+                    <Ionicons name="location" size={14} color="#9CA3AF" />
                     <Text style={styles.metaText}>{event.location}</Text>
                   </RNView>
                 )}
               </RNView>
               <RNView style={styles.eventStatus}>
-                {hasRsvp && <StatusBadge status={rsvpStatus === "attending" ? "completed" : rsvpStatus === "maybe" ? "pending" : "cancelled"} />}
-                {!hasRsvp && isUpcoming && <StatusBadge status="active" />}
-                {!isUpcoming && !hasRsvp && <StatusBadge status="cancelled" />}
+                {hasRsvp && <Chip variant="primary" size="sm">{rsvpStatus}</Chip>}
+                {!hasRsvp && isUpcoming && <Chip variant="primary" size="sm">Upcoming</Chip>}
+                {!isUpcoming && !hasRsvp && <Chip variant="secondary" size="sm">Ended</Chip>}
               </RNView>
             </RNView>
           </RNView>
@@ -116,7 +116,7 @@ export function EventsScreen() {
           </RNView>
           {events.length === 0 ? (
             <EmptyState
-              icon="calendar-outline"
+              icon="calendar"
               title="No events"
               description="There are no upcoming events in your society."
             />

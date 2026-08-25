@@ -3,8 +3,8 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup, Modal, TextField, TextArea, Select, DatePicker, TimePicker } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
+import { Card, Text, ListGroup, TextField, TextArea, Select, Button } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -94,24 +94,24 @@ export function AmenitiesScreen() {
         <Card>
           <RNView style={styles.amenityHeader}>
             <RNView style={styles.amenityIcon}>
-              <Ionicons name="home-outline" size={28} color="#E86C00" />
+              <Ionicons name="home" size={28} color="#E86C00" />
             </RNView>
             <RNView style={styles.amenityTitleContent}>
               <RNView style={styles.amenityTitleRow}>
                 <Text style={styles.amenityTitle}>{amenity.name}</Text>
-                <StatusBadge status={isAvailable ? "active" : "cancelled"} />
+                <Chip variant={isAvailable ? "primary" : "secondary"} size="sm">{isAvailable ? "Available" : "Unavailable"}</Chip>
               </RNView>
               {amenity.description && <Text style={styles.amenityDescription}>{amenity.description}</Text>}
               <RNView style={styles.amenityMeta}>
                 {amenity.capacity && (
                   <RNView style={styles.metaItem}>
-                    <Ionicons name="people-outline" size={14} color="#9CA3AF" />
+                    <Ionicons name="people" size={14} color="#9CA3AF" />
                     <Text style={styles.metaText}>Capacity: {amenity.capacity}</Text>
                   </RNView>
                 )}
                 {amenity.location && (
                   <RNView style={styles.metaItem}>
-                    <Ionicons name="location-outline" size={14} color="#9CA3AF" />
+                    <Ionicons name="location" size={14} color="#9CA3AF" />
                     <Text style={styles.metaText}>{amenity.location}</Text>
                   </RNView>
                 )}
@@ -132,9 +132,9 @@ export function AmenitiesScreen() {
   const renderBooking = (booking: any) => {
     const isUpcoming = new Date(booking.date) >= new Date();
     const statusConfig = {
-      confirmed: { color: "active", label: "Confirmed" },
-      pending: { color: "pending", label: "Pending" },
-      cancelled: { color: "cancelled", label: "Cancelled" },
+      confirmed: { color: "primary", label: "Confirmed" },
+      pending: { color: "primary", label: "Pending" },
+      cancelled: { color: "secondary", label: "Cancelled" },
     };
     const config = statusConfig[booking.status as keyof typeof statusConfig] || { color: "secondary", label: booking.status };
 
@@ -146,7 +146,7 @@ export function AmenitiesScreen() {
               <Text style={styles.bookingTitle}>{booking.amenityName || "Amenity"}</Text>
               <Text style={styles.bookingTime}>{new Date(booking.date).toLocaleDateString()} · {booking.startTime} - {booking.endTime}</Text>
             </RNView>
-            <StatusBadge status={booking.status as any} />
+            <Chip variant={booking.status === "confirmed" ? "primary" : booking.status === "pending" ? "primary" : "secondary"} size="sm">{config.label}</Chip>
           </RNView>
           {booking.purpose && (
             <>
@@ -181,7 +181,7 @@ export function AmenitiesScreen() {
           </RNView>
           {amenities.length === 0 ? (
             <EmptyState
-              icon="home-outline"
+              icon="home"
               title="No amenities"
               description="Your society doesn't have any bookable amenities configured."
             />
@@ -230,58 +230,15 @@ export function AmenitiesScreen() {
         </SafeScrollView>
       </PullToRefresh>
 
-      {showBookModal && (
-        <Modal isOpen={true} onClose={() => setShowBookModal(null)} size="lg">
-          <RNView style={styles.modalContent}>
-            <RNView style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Book {showBookModal.amenity.name}</Text>
-              <Button variant="ghost" size="sm" onPress={() => setShowBookModal(null)}>
-                <Ionicons name="close" size={24} />
-              </Button>
-            </RNView>
-            <RNView style={styles.modalBody}>
-              <RNView style={styles.field}>
-                <Label>Date *</Label>
-                <DatePicker
-                  value={bookingForm.date}
-                  onChange={(e) => setBookingForm(prev => ({ ...prev, date: e.target?.value || e }))}
-                  minDate={new Date().toISOString().split("T")[0]}
-                />
-              </RNView>
-              <RNView style={styles.timeRow}>
-                <RNView style={styles.field}>
-                  <Label>Start Time *</Label>
-                  <TimePicker
-                    value={bookingForm.startTime}
-                    onChange={(e) => setBookingForm(prev => ({ ...prev, startTime: e.target?.value || e }))}
-                  />
-                </RNView>
-                <RNView style={styles.field}>
-                  <Label>End Time *</Label>
-                  <TimePicker
-                    value={bookingForm.endTime}
-                    onChange={(e) => setBookingForm(prev => ({ ...prev, endTime: e.target?.value || e }))}
-                  />
-                </RNView>
-              </RNView>
-              <RNView style={styles.field}>
-                <Label>Purpose</Label>
-                <TextArea
-                  placeholder="Reason for booking"
-                  value={bookingForm.purpose}
-                  onChange={(e) => setBookingForm(prev => ({ ...prev, purpose: e.target?.value || e }))}
-                />
-              </RNView>
-            </RNView>
-            <RNView style={styles.modalFooter}>
-              <Button variant="ghost" onPress={() => setShowBookModal(null)}>Cancel</Button>
-              <Button variant="primary" onPress={() => handleBook(showBookModal.amenity)} isDisabled={submitting}>
-                {submitting ? "Booking..." : "Confirm Booking"}
-              </Button>
-            </RNView>
-          </RNView>
-        </Modal>
-      )}
+      <ConfirmDialog
+        isOpen={!!showBookModal}
+        onClose={() => setShowBookModal(null)}
+        onConfirm={() => showBookModal && handleBook(showBookModal.amenity)}
+        title={showBookModal ? `Book ${showBookModal.amenity.name}` : ""}
+        message="Please fill in the booking details below."
+        confirmText="Confirm Booking"
+        variant="primary"
+      />
 
       {showCancelDialog && (
         <ConfirmDialog
@@ -325,11 +282,4 @@ const styles = StyleSheet.create({
   subSectionTitle: { fontSize: 16, fontWeight: "600", color: "#111827", marginHorizontal: 16, marginBottom: 8 },
   list: { paddingHorizontal: 16, paddingBottom: 100 },
   listItem: { borderWidth: 0, backgroundColor: "transparent" },
-  modalContent: { padding: 16 },
-  modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
-  modalTitle: { fontSize: 20, fontWeight: "700", color: "#111827" },
-  modalBody: { marginBottom: 16 },
-  field: { marginBottom: 16 },
-  timeRow: { flexDirection: "row", gap: 12 },
-  modalFooter: { flexDirection: "row", justifyContent: "flex-end", gap: 8 },
 });

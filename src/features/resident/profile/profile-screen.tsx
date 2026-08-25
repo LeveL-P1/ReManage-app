@@ -3,8 +3,8 @@ import { useRouter } from "expo-router";
 import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
-import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText } from "../shared/heroui-ui";
-import { Card, Text, Divider, Button, ListGroup, Modal, TextField, TextArea, Switch, Avatar, Label } from "heroui-native";
+import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, PullToRefresh, PressableCard, RNView, RNText, Divider, Chip, ConfirmDialog } from "../shared/heroui-ui";
+import { Card, Text, ListGroup, Button, Avatar } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 
@@ -66,7 +66,7 @@ export function ProfileScreen() {
 
   if (loading) return <ScreenContainer><LoadingState /></ScreenContainer>;
   if (error) return <ScreenContainer><ErrorState message={error} onRetry={fetchProfile} /></ScreenContainer>;
-  if (!profile) return <ScreenContainer><EmptyState icon="person-outline" title="Profile not found" description="Unable to load your profile." /></ScreenContainer>;
+  if (!profile) return <ScreenContainer><EmptyState icon="person" title="Profile not found" description="Unable to load your profile." /></ScreenContainer>;
 
   return (
     <ScreenContainer>
@@ -74,7 +74,7 @@ export function ProfileScreen() {
         <SafeScrollView>
           <RNView style={styles.header}>
             <RNView style={styles.profileHeader}>
-              <Avatar fallback={profile.name?.charAt(0)?.toUpperCase() || "U"} size="lg" />
+              <Avatar size="lg" />
               <RNView style={styles.profileInfo}>
                 <Text style={styles.profileName}>{profile.name || "Resident"}</Text>
                 <RNView style={styles.profileMeta}>
@@ -85,7 +85,7 @@ export function ProfileScreen() {
               </RNView>
             </RNView>
             <Button variant="outline" onPress={() => setShowEditModal(true)}>
-              <Ionicons name="create-outline" size={18} />
+              <Ionicons name="create" size={18} />
               <Text>Edit</Text>
             </Button>
           </RNView>
@@ -94,7 +94,7 @@ export function ProfileScreen() {
           <ListGroup style={styles.list}>
             <ListGroup.Item style={styles.listItem}>
               <RNView style={styles.infoRow}>
-                <RNView style={styles.infoIcon}><Ionicons name="call-outline" size={20} color="#E86C00" /></RNView>
+                <RNView style={styles.infoIcon}><Ionicons name="call" size={20} color="#E86C00" /></RNView>
                 <RNView style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Phone</Text>
                   <Text style={styles.infoValue}>{profile.phone || "Not set"}</Text>
@@ -103,7 +103,7 @@ export function ProfileScreen() {
             </ListGroup.Item>
             <ListGroup.Item style={styles.listItem}>
               <RNView style={styles.infoRow}>
-                <RNView style={styles.infoIcon}><Ionicons name="mail-outline" size={20} color="#E86C00" /></RNView>
+                <RNView style={styles.infoIcon}><Ionicons name="mail" size={20} color="#E86C00" /></RNView>
                 <RNView style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Email</Text>
                   <Text style={styles.infoValue}>{profile.email || "Not set"}</Text>
@@ -112,7 +112,7 @@ export function ProfileScreen() {
             </ListGroup.Item>
             <ListGroup.Item style={styles.listItem}>
               <RNView style={styles.infoRow}>
-                <RNView style={styles.infoIcon}><Ionicons name="person-outline" size={20} color="#E86C00" /></RNView>
+                <RNView style={styles.infoIcon}><Ionicons name="person" size={20} color="#E86C00" /></RNView>
                 <RNView style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Emergency Contact</Text>
                   <Text style={styles.infoValue}>{profile.emergencyContact || "Not set"}</Text>
@@ -129,10 +129,9 @@ export function ProfileScreen() {
                   <Text style={styles.switchLabel}>Show Phone in Directory</Text>
                   <Text style={styles.switchDesc}>Allow other residents to see your phone number</Text>
                 </RNView>
-                <Switch
-                  isSelected={profile.showPhoneInDirectory}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, showPhoneInDirectory: value }))}
-                />
+                <Button variant="outline" size="sm" onPress={() => setFormData(prev => ({ ...prev, showPhoneInDirectory: !prev.showPhoneInDirectory }))}>
+                  {profile.showPhoneInDirectory ? "On" : "Off"}
+                </Button>
               </RNView>
             </ListGroup.Item>
             <ListGroup.Item style={styles.listItem}>
@@ -141,10 +140,9 @@ export function ProfileScreen() {
                   <Text style={styles.switchLabel}>Show Email in Directory</Text>
                   <Text style={styles.switchDesc}>Allow other residents to see your email address</Text>
                 </RNView>
-                <Switch
-                  isSelected={profile.showEmailInDirectory}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, showEmailInDirectory: value }))}
-                />
+                <Button variant="outline" size="sm" onPress={() => setFormData(prev => ({ ...prev, showEmailInDirectory: !prev.showEmailInDirectory }))}>
+                  {profile.showEmailInDirectory ? "On" : "Off"}
+                </Button>
               </RNView>
             </ListGroup.Item>
           </ListGroup>
@@ -153,7 +151,7 @@ export function ProfileScreen() {
           <ListGroup style={styles.list}>
             <ListGroup.Item style={styles.listItem}>
               <RNView style={styles.infoRow}>
-                <RNView style={styles.infoIcon}><Ionicons name="id-card-outline" size={20} color="#E86C00" /></RNView>
+                <RNView style={styles.infoIcon}><Ionicons name="id-card" size={20} color="#E86C00" /></RNView>
                 <RNView style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Resident ID</Text>
                   <Text style={styles.infoValue}>{profile.userId || "—"}</Text>
@@ -162,7 +160,7 @@ export function ProfileScreen() {
             </ListGroup.Item>
             <ListGroup.Item style={styles.listItem}>
               <RNView style={styles.infoRow}>
-                <RNView style={styles.infoIcon}><Ionicons name="calendar-outline" size={20} color="#E86C00" /></RNView>
+                <RNView style={styles.infoIcon}><Ionicons name="calendar" size={20} color="#E86C00" /></RNView>
                 <RNView style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Member Since</Text>
                   <Text style={styles.infoValue}>{profile.createdAt ? new Date(profile.createdAt).toLocaleDateString() : "—"}</Text>
@@ -173,64 +171,15 @@ export function ProfileScreen() {
         </SafeScrollView>
       </PullToRefresh>
 
-      <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} size="lg">
-        <RNView style={styles.modalContent}>
-          <RNView style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Edit Profile</Text>
-            <Button variant="ghost" size="sm" onPress={() => setShowEditModal(false)}>
-              <Ionicons name="close" size={24} />
-            </Button>
-          </RNView>
-          <RNView style={styles.modalBody}>
-            <RNView style={styles.field}>
-              <Label>Full Name *</Label>
-              <TextField
-                placeholder="Your full name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target?.value || e }))}
-              />
-            </RNView>
-            <RNView style={styles.field}>
-              <Label>Phone Number</Label>
-              <TextField
-                placeholder="Phone number"
-                value={formData.phone}
-                onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target?.value || e }))}
-                keyboardType="phone-pad"
-              />
-            </RNView>
-            <RNView style={styles.field}>
-              <Label>Emergency Contact</Label>
-              <TextField
-                placeholder="Emergency contact number"
-                value={formData.emergencyContact}
-                onChange={(e) => setFormData(prev => ({ ...prev, emergencyContact: e.target?.value || e }))}
-                keyboardType="phone-pad"
-              />
-            </RNView>
-            <RNView style={styles.field}>
-              <Label>Directory Preferences</Label>
-              <Switch
-                isSelected={formData.showPhoneInDirectory}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, showPhoneInDirectory: value }))}
-                label="Show Phone in Directory"
-              />
-              <Switch
-                isSelected={formData.showEmailInDirectory}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, showEmailInDirectory: value }))}
-                label="Show Email in Directory"
-                style={{ marginTop: 12 }}
-              />
-            </RNView>
-          </RNView>
-          <RNView style={styles.modalFooter}>
-            <Button variant="ghost" onPress={() => setShowEditModal(false)}>Cancel</Button>
-            <Button variant="primary" onPress={handleSave} isDisabled={submitting}>
-              {submitting ? "Saving..." : "Save Changes"}
-            </Button>
-          </RNView>
-        </RNView>
-      </Modal>
+      <ConfirmDialog
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onConfirm={handleSave}
+        title="Edit Profile"
+        message="Update your profile information below."
+        confirmText="Save Changes"
+        variant="primary"
+      />
     </ScreenContainer>
   );
 }
@@ -255,10 +204,4 @@ const styles = StyleSheet.create({
   switchContent: { flex: 1 },
   switchLabel: { fontSize: 16, fontWeight: "500", color: "#111827" },
   switchDesc: { fontSize: 12, color: "#9CA3AF", marginTop: 2 },
-  modalContent: { padding: 16 },
-  modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
-  modalTitle: { fontSize: 20, fontWeight: "700", color: "#111827" },
-  modalBody: { marginBottom: 16 },
-  field: { marginBottom: 16 },
-  modalFooter: { flexDirection: "row", justifyContent: "flex-end", gap: 8 },
 });
