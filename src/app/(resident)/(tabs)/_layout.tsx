@@ -8,8 +8,8 @@ const tabs = [
   { name: "visitors", title: "Visitors", icon: "people-outline", activeIcon: "people" },
   { name: "notices", title: "Notices", icon: "megaphone-outline", activeIcon: "megaphone" },
   { name: "events", title: "Events", icon: "calendar-outline", activeIcon: "calendar" },
-  { name: "bills", title: "Bills", icon: "card-outline", activeIcon: "card" },
   { name: "community", title: "Community", icon: "chatbubbles-outline", activeIcon: "chatbubbles" },
+  { name: "bills", title: "Bills", icon: "card-outline", activeIcon: "card" },
   { name: "more", title: "More", icon: "grid-outline", activeIcon: "grid" },
 ] as const;
 

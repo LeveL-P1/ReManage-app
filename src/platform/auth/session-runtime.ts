@@ -8,8 +8,10 @@ export function createRuntimeSessionController(
   runtime?: SessionRuntime,
   credentials: CredentialStore = createCredentialStore(),
   createRealApi: () => MobileApi = createMobileApi,
+  forceDemo: boolean = false,
 ): SessionController {
-  if (isDevelopmentWebPreview(runtime)) {
+  const shouldUseDemo = forceDemo || isDevelopmentWebPreview(runtime);
+  if (shouldUseDemo) {
     return createSessionController({
       api: createDevelopmentDemoMobileApi(),
       credentials,

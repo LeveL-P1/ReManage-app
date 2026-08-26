@@ -1,3 +1,5 @@
+import "../global.css";
+
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { ActivityIndicator, Button, StyleSheet, Text, View } from "react-native";

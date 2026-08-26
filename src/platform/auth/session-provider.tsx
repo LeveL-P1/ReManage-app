@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useSyncExternalStore, type ReactNode } from "react";
+import { Platform } from "react-native";
 
 import { type Bootstrap, type MobileApi, type MobileRole } from "@/platform/api/mobile-api-client";
 
@@ -35,7 +36,7 @@ function cancelPendingOperations(controller: SessionController): Promise<void> {
 
 export function SessionProvider({ children, controller: suppliedController }: SessionProviderProps): ReactNode {
   const controller = useMemo(
-    () => suppliedController ?? createRuntimeSessionController(),
+    () => suppliedController ?? createRuntimeSessionController(undefined, undefined, undefined, __DEV__ && Platform.OS !== "web"),
     [suppliedController],
   );
   const state = useSyncExternalStore(controller.subscribe, controller.getState, controller.getState);
