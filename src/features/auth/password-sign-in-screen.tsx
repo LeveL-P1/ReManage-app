@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   passwordInput: { flex: 1, color: residentTheme.ink, fontSize: 16, minHeight: 28, padding: 0 },
   eyeButton: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
   forgotLink: { alignSelf: "flex-start", marginTop: 4, marginBottom: 4 },
-  forgotText: { color: residentTheme.ink, fontSize: 14, fontWeight: "600", textDecorationLine: "underline" },
+  forgotText: { color: residentTheme.accent, fontSize: 14, fontWeight: "600", textDecorationLine: "underline" },
   error: { color: colors.danger, fontSize: 14, marginTop: 4 },
   primaryAction: { alignItems: "center", backgroundColor: residentTheme.accent, borderRadius: 12, justifyContent: "center", minHeight: 52, marginTop: 8, paddingHorizontal: 16 },
   primaryActionPressed: { opacity: 0.86 },
@@ -196,6 +196,6 @@ const styles = StyleSheet.create({
   separatorText: { color: residentTheme.muted, fontSize: 13, textTransform: "lowercase" },
   secondaryAction: { alignItems: "center", backgroundColor: residentTheme.surface, borderColor: residentTheme.border, borderRadius: 12, borderWidth: 1, justifyContent: "center", minHeight: 52, paddingHorizontal: 16 },
   secondaryActionPressed: { backgroundColor: "#FAFAF8" },
-  secondaryActionText: { color: residentTheme.ink, fontSize: 16, fontWeight: "700" },
+  secondaryActionText: { color: residentTheme.accent, fontSize: 16, fontWeight: "700" },
   disabled: { opacity: 0.65 },
 });

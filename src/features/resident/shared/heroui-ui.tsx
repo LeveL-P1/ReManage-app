@@ -8,17 +8,17 @@ export { Ionicons, StyleSheet, RNView, RNText, Image, ScrollView, Alert };
 export type { ViewStyle, TextStyle };
 
 export const colors = {
-  primary: "#E86C00",
-  secondary: "#6B7280",
+  primary: "#ff5400",
+  secondary: "#ffbe00",
   success: "#10B981",
-  warning: "#F59E0B",
+  warning: "#ffeee5",
   danger: "#EF4444",
-  background: "#F9FAFB",
+  background: "#fefddf",
   surface: "#FFFFFF",
-  border: "#E5E7EB",
-  text: "#111827",
-  textMuted: "#6B7280",
-  textLight: "#9CA3AF",
+  border: "#d0d0d0",
+  text: "#1a1a1a",
+  textMuted: "#666666",
+  textLight: "#999999",
 };
 
 export const spacing = {
