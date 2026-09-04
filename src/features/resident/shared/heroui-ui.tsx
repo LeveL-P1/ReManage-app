@@ -152,16 +152,17 @@ export function StatusBadge({ status, label }: { status: "active" | "pending" | 
   return <Chip variant={config.color as "primary" | "secondary"} size="sm">{config.text}</Chip>;
 }
 
-export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, confirmText = "Confirm", cancelText = "Cancel", variant = "danger" }: { isOpen: boolean; onClose: () => void; onConfirm: () => void; title: string; message: string; confirmText?: string; cancelText?: string; variant?: "primary" | "danger" }) {
+export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, confirmText = "Confirm", cancelText = "Cancel", variant = "danger", children }: { isOpen: boolean; onClose: () => void; onConfirm: () => void; title: string; message?: string; confirmText?: string; cancelText?: string; variant?: "primary" | "danger"; children?: ReactNode }) {
   if (!isOpen) return null;
   return (
     <RNView style={styles.dialogOverlay}>
       <RNView style={styles.dialogContent}>
         <Text style={styles.dialogTitle}>{title}</Text>
-        <Text style={styles.dialogMessage}>{message}</Text>
+        {message ? <Text style={styles.dialogMessage}>{message}</Text> : null}
+        {children}
         <RNView style={styles.dialogFooter}>
           <Button variant="ghost" onPress={onClose}>{cancelText}</Button>
-          <Button variant="primary" onPress={() => { onConfirm(); onClose(); }}>{confirmText}</Button>
+          <Button variant="primary" onPress={onConfirm}>{confirmText}</Button>
         </RNView>
       </RNView>
     </RNView>

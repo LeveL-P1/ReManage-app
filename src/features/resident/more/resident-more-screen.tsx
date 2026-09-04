@@ -12,6 +12,12 @@ import {
   getResidentMoreFeature,
 } from "@/features/resident/more/resident-more-feature-catalog";
 import {
+  useResidentDisplayName,
+  useResidentInitials,
+  useResidentProfile,
+  useResidentUnit,
+} from "@/features/resident/profile/use-resident-profile";
+import {
   ResidentContentCard,
   ResidentSectionHeader,
   ResidentSocietyHeader,
@@ -31,6 +37,11 @@ export function ResidentMoreScreen() {
   const router = useRouter();
   const { state } = useSession();
   const bootstrap = state.status === "authenticated" ? state.bootstrap : null;
+  const displayName = useResidentDisplayName();
+  const initials = useResidentInitials();
+  const unit = useResidentUnit();
+  const profileQuery = useResidentProfile();
+  const role = profileQuery.data?.role ?? (state.status === "authenticated" ? state.bootstrap.activeRole : "resident");
   const groups = useMemo(
     () => groupResidentModules(filterResidentModules(bootstrap?.permissions ?? [])),
     [bootstrap?.permissions],
@@ -50,7 +61,7 @@ export function ResidentMoreScreen() {
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <ResidentSocietyHeader
-          unit="A-308"
+          unit={unit}
           societyName={bootstrap?.society.name ?? "Your society"}
           onSearch={() => router.push("/(resident)/home/search")}
           onNotifications={() => router.push("/(resident)/home/notifications")}
@@ -69,10 +80,10 @@ export function ResidentMoreScreen() {
             onPress={() => router.push("/(resident)/home/profile")}
             style={({ pressed }) => [styles.profileCard, pressed && styles.pressed]}
           >
-            <View style={styles.profileMark}><Text style={styles.profileInitial}>D</Text></View>
+            <View style={styles.profileMark}><Text style={styles.profileInitial}>{initials}</Text></View>
             <View style={styles.profileCopy}>
-              <Text style={styles.profileTitle}>Alex S.</Text>
-              <Text style={styles.profileDetail}>A-308 · Resident account · Approved</Text>
+              <Text style={styles.profileTitle}>{displayName}</Text>
+              <Text style={styles.profileDetail}>{unit} · {role} · Approved</Text>
             </View>
             <Ionicons color={residentTheme.icon} name="chevron-forward" size={21} />
           </Pressable>

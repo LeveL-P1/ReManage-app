@@ -1,5 +1,5 @@
-import { ResidentProfileScreen } from "@/features/resident/home/resident-profile-screen";
+import { ProfileScreen } from "@/features/resident/profile/profile-screen";
 
 export default function ProfileRoute() {
-  return <ResidentProfileScreen />;
+  return <ProfileScreen />;
 }

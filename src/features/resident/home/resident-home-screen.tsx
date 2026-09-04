@@ -21,6 +21,7 @@ import {
   type ResidentHomeFeatureId,
 } from "./resident-home-feature-catalog";
 import { residentHomeFixture, type ResidentHomeViewModel } from "./resident-home-fixtures";
+import { useResidentUnit } from "@/features/resident/profile/use-resident-profile";
 
 function pushHomeFeature(router: ReturnType<typeof useRouter>, id: ResidentHomeFeatureId) {
   router.push(getResidentHomeFeature(id).route as never);
@@ -36,6 +37,7 @@ export function ResidentHomeScreen({
   const [commentsPostId, setCommentsPostId] = useState<string | null>(null);
   const [menuPostId, setMenuPostId] = useState<string | null>(null);
   const bootstrap = state.status === "authenticated" ? state.bootstrap : null;
+  const unit = useResidentUnit();
   const quickActions = useMemo(
     () => residentHomeQuickActionIds
       .map(getResidentHomeFeature)
@@ -47,7 +49,7 @@ export function ResidentHomeScreen({
   return (
     <View style={styles.screen}>
       <ResidentSocietyHeader
-        unit={viewModel.unit}
+        unit={unit}
         societyName={bootstrap?.society.name ?? "Your society"}
         onSearch={() => pushHomeFeature(router, "search")}
         onNotifications={() => pushHomeFeature(router, "notifications")}

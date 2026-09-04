@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function PollsVotingRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("polls")} />; }
+import { PollsScreen } from "@/features/resident/polls/polls-screen";
+export default function PollsVotingRoute() { return <PollsScreen />; }

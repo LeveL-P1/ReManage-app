@@ -1,5 +1,5 @@
-import { ResidentNotificationsScreen } from "@/features/resident/home/resident-notifications-screen";
+import { NotificationsScreen } from "@/features/resident/notifications/notifications-screen";
 
 export default function NotificationsRoute() {
-  return <ResidentNotificationsScreen />;
+  return <NotificationsScreen />;
 }

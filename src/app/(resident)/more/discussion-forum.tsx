@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function DiscussionForumRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("forum")} />; }
+import { ForumScreen } from "@/features/resident/forum/forum-screen";
+export default function DiscussionForumRoute() { return <ForumScreen />; }

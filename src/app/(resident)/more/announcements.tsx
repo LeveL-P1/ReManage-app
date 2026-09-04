@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function AnnouncementsRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("announcements")} />; }
+import { Redirect } from "expo-router";
+export default function AnnouncementsRoute() { return <Redirect href="/(resident)/(tabs)/notices" />; }

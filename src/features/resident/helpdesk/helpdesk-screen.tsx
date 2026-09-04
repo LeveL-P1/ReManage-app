@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
-import { useAuthenticatedApi, useSession } from "@/platform/auth/session-provider";
+import { useAuthenticatedApi } from "@/platform/auth/session-provider";
 import { Alert } from "react-native";
 
 import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
@@ -24,6 +23,8 @@ export function HelpdeskScreen() {
   const [showRateModal, setShowRateModal] = useState<{ complaintId: string; complaint: any } | null>(null);
   const [formData, setFormData] = useState({ title: "", description: "", category: "Maintenance", priority: "medium", mediaUrls: [] as string[] });
   const [submitting, setSubmitting] = useState(false);
+  const [ratingValue, setRatingValue] = useState(5);
+  const [ratingComment, setRatingComment] = useState("");
 
   const fetchComplaints = async (isRefresh = false) => {
     if (!isRefresh) setLoading(true);
@@ -72,10 +73,13 @@ export function HelpdeskScreen() {
     }
   };
 
-  const handleRate = async (complaintId: string, rating: number, comment: string) => {
+  const handleRate = async () => {
+    if (!showRateModal) return;
     try {
-      await runAuthenticated((api, token) => api.rateComplaint(token, complaintId, { rating, comment }));
+      await runAuthenticated((api, token) => api.rateComplaint(token, showRateModal.complaintId, { rating: ratingValue, comment: ratingComment }));
       setShowRateModal(null);
+      setRatingValue(5);
+      setRatingComment("");
       fetchComplaints();
     } catch (err: any) {
       Alert.alert("Error", err.message || "Failed to rate complaint");
@@ -164,24 +168,41 @@ export function HelpdeskScreen() {
 
       <ConfirmDialog
         isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
+        onClose={() => { setShowCreateModal(false); setFormData({ title: "", description: "", category: "Maintenance", priority: "medium", mediaUrls: [] }); }}
         onConfirm={handleCreate}
         title="Raise Complaint"
-        message="Please fill in the form below to raise a complaint."
         confirmText="Submit Complaint"
         variant="primary"
-      />
+      >
+        <TextField label="Title" value={formData.title} onChangeText={(v) => setFormData((f) => ({ ...f, title: v }))} placeholder="Brief summary" />
+        <TextArea label="Description" value={formData.description} onChangeText={(v) => setFormData((f) => ({ ...f, description: v }))} placeholder="Describe the issue" />
+        <Select label="Category" value={formData.category} onValueChange={(v) => setFormData((f) => ({ ...f, category: v }))}>
+          {CATEGORIES.map((c) => <Select.Item key={c} value={c} label={c} />)}
+        </Select>
+        <Select label="Priority" value={formData.priority} onValueChange={(v) => setFormData((f) => ({ ...f, priority: v }))}>
+          {PRIORITIES.map((p) => <Select.Item key={p} value={p} label={p} />)}
+        </Select>
+      </ConfirmDialog>
 
       {showRateModal && (
         <ConfirmDialog
           isOpen={true}
-          onClose={() => setShowRateModal(null)}
-          onConfirm={() => handleRate(showRateModal.complaintId, parseInt(formData.title), formData.description)}
+          onClose={() => { setShowRateModal(null); setRatingValue(5); setRatingComment(""); }}
+          onConfirm={handleRate}
           title="Rate Resolution"
           message={`How satisfied are you with the resolution for "${showRateModal.complaint.title}"?`}
           confirmText="Submit Rating"
           variant="primary"
-        />
+        >
+          <RNView style={styles.ratingRow}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Button key={star} variant="ghost" onPress={() => setRatingValue(star)}>
+                <Ionicons name={star <= ratingValue ? "star" : "star-outline"} size={28} color={star <= ratingValue ? "#F59E0B" : "#9CA3AF"} />
+              </Button>
+            ))}
+          </RNView>
+          <TextArea label="Comment (optional)" value={ratingComment} onChangeText={setRatingComment} placeholder="Any feedback?" />
+        </ConfirmDialog>
       )}
     </ScreenContainer>
   );
@@ -202,6 +223,7 @@ const styles = StyleSheet.create({
   metaItem: { flexDirection: "row", alignItems: "center", gap: 4 },
   metaText: { fontSize: 12, color: "#6B7280" },
   rateButton: { marginTop: 12, paddingTop: 8, borderTopWidth: 1, borderTopColor: "#E5E7EB" },
+  ratingRow: { flexDirection: "row", justifyContent: "center", gap: 4, marginVertical: 8 },
   list: { paddingHorizontal: 16, paddingBottom: 100 },
   listItem: { borderWidth: 0, backgroundColor: "transparent" },
 });
