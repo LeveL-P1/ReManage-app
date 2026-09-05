@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function ResidentDirectoryRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("directory")} />; }
+import { ComingSoonScreen } from "@/features/shared/coming-soon-screen";
+export default function ResidentDirectoryRoute() { return <ComingSoonScreen title="Resident Directory" icon="people-outline" />; }

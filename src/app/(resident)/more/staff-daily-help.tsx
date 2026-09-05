@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function StaffDailyHelpRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("staff")} />; }
+import { ComingSoonScreen } from "@/features/shared/coming-soon-screen";
+export default function StaffDailyHelpRoute() { return <ComingSoonScreen title="Daily Help" icon="person-add-outline" />; }

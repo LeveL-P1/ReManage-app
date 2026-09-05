@@ -1,2 +1,2 @@
-import { ResidentHomeFeatureScreen } from "@/features/resident/home/resident-home-feature-screen";
-export default function PreApproveRoute() { return <ResidentHomeFeatureScreen featureId="pre-approve" />; }
+import { Redirect } from "expo-router";
+export default function PreApproveRoute() { return <Redirect href="/(resident)/(tabs)/visitors" />; }

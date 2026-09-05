@@ -1,7 +1,5 @@
-import { GuardShellScreen } from "@/features/guard/guard-shell-screen";
-import { RoleSwitcher } from "@/features/session/role-switcher";
-import { SessionLogoutButton } from "@/features/session/session-logout-button";
+import { GuardMoreScreen } from "@/features/guard/more/guard-more-screen";
 
 export default function GuardMoreRoute() {
-  return <GuardShellScreen title="More"><RoleSwitcher /><SessionLogoutButton /></GuardShellScreen>;
+  return <GuardMoreScreen />;
 }

@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function ParcelDeskRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("parcels")} />; }
+import { ComingSoonScreen } from "@/features/shared/coming-soon-screen";
+export default function ParcelDeskRoute() { return <ComingSoonScreen title="Parcel Desk" icon="cube-outline" />; }

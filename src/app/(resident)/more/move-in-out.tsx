@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function MoveInOutRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("move-in-out")} />; }
+import { ComingSoonScreen } from "@/features/shared/coming-soon-screen";
+export default function MoveInOutRoute() { return <ComingSoonScreen title="Move In / Out" icon="swap-horizontal-outline" />; }

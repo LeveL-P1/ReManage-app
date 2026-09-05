@@ -22,6 +22,7 @@ import {
 } from "./resident-home-feature-catalog";
 import { residentHomeFixture, type ResidentHomeViewModel } from "./resident-home-fixtures";
 import { useResidentUnit } from "@/features/resident/profile/use-resident-profile";
+import { useHomeForumPosts } from "./use-home-forum-posts";
 
 function pushHomeFeature(router: ReturnType<typeof useRouter>, id: ResidentHomeFeatureId) {
   router.push(getResidentHomeFeature(id).route as never);
@@ -38,13 +39,15 @@ export function ResidentHomeScreen({
   const [menuPostId, setMenuPostId] = useState<string | null>(null);
   const bootstrap = state.status === "authenticated" ? state.bootstrap : null;
   const unit = useResidentUnit();
+  const forumPostsQuery = useHomeForumPosts();
+  const posts = forumPostsQuery.data ?? viewModel.posts;
   const quickActions = useMemo(
     () => residentHomeQuickActionIds
       .map(getResidentHomeFeature)
       .filter((feature) => canUseResidentHomeFeature(feature, bootstrap?.permissions ?? [])),
     [bootstrap?.permissions],
   );
-  const activePost = viewModel.posts.find((post) => post.id === commentsPostId) ?? null;
+  const activePost = posts.find((post) => post.id === commentsPostId) ?? null;
 
   return (
     <View style={styles.screen}>
@@ -117,7 +120,9 @@ export function ResidentHomeScreen({
           </View>
 
           <View style={styles.postsHeading}>
-            <Text accessibilityRole="header" style={styles.postsTitle}>Community Posts</Text>
+            <Text accessibilityRole="header" style={styles.postsTitle}>
+              Community Posts{forumPostsQuery.isLoading ? "  ···" : ""}
+            </Text>
             <Pressable
               accessibilityLabel="New Post"
               accessibilityRole="button"
@@ -129,7 +134,7 @@ export function ResidentHomeScreen({
             </Pressable>
           </View>
           <View style={styles.postList}>
-            {viewModel.posts.map((post) => (
+            {posts.map((post) => (
               <View key={post.id} style={styles.postCard}>
                 <View style={styles.postAuthorRow}>
                   <View style={styles.avatar}><Text style={styles.avatarText}>{post.initials}</Text></View>

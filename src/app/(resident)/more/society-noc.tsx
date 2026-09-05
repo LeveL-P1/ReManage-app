@@ -1,3 +1,2 @@
-import { ResidentMoreFeatureScreen } from "@/features/resident/more/resident-more-feature-screen";
-import { getResidentMoreFeatureOrThrow } from "@/features/resident/more/resident-more-feature-catalog";
-export default function SocietyNocRoute() { return <ResidentMoreFeatureScreen feature={getResidentMoreFeatureOrThrow("society-noc")} />; }
+import { ComingSoonScreen } from "@/features/shared/coming-soon-screen";
+export default function SocietyNocRoute() { return <ComingSoonScreen title="Society NOC" icon="document-text-outline" />; }
