@@ -25,7 +25,9 @@ export function GuardMoreScreen() {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.profileCard}>
-          <Avatar size="xl" fallback={initials} style={styles.avatar} />
+          <Avatar size="lg" style={styles.avatar}>
+            <Avatar.Fallback>{initials}</Avatar.Fallback>
+          </Avatar>
           <Text style={styles.name}>{name}</Text>
           <View style={styles.badge}>
             <Text style={styles.badgeText}>Security Guard</Text>

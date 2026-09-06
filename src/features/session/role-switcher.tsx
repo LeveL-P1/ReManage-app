@@ -49,7 +49,7 @@ export function RoleSwitcher() {
 
 const styles = StyleSheet.create({
   container: { gap: 8 },
-  button: { alignItems: "center", backgroundColor: colors.orange, borderRadius: 8, minHeight: 48, justifyContent: "center", paddingHorizontal: 16 },
+  button: { alignItems: "center", backgroundColor: colors.primary, borderRadius: 8, minHeight: 48, justifyContent: "center", paddingHorizontal: 16 },
   buttonPressed: { opacity: 0.65 },
   buttonText: { color: colors.white, fontSize: 16, fontWeight: "700" },
   error: { color: colors.danger, fontSize: 14 },
