@@ -1,12 +1,20 @@
 import React from "react";
-import { fireEvent, render } from "@testing-library/react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { cleanup, fireEvent, render } from "@testing-library/react-native";
 
 import { SessionContext, type SessionContextValue } from "@/platform/auth/session-provider";
-import { fakeBootstrap } from "@/testing/fakes";
+import { FakeMobileApi, fakeBootstrap } from "@/testing/fakes";
 import { ResidentMoreScreen } from "./resident-more-screen";
 
 const mockPush = jest.fn();
 const mockReplace = jest.fn();
+const queryClients: QueryClient[] = [];
+
+afterEach(() => {
+  for (const client of queryClients) client.clear();
+  queryClients.length = 0;
+  cleanup();
+});
 
 jest.mock("expo-router", () => ({
   useRouter: () => ({ push: mockPush, replace: mockReplace }),
@@ -20,15 +28,20 @@ function createSession(permissions = fakeBootstrap("resident").permissions): Ses
     requestOtp: jest.fn(async () => ({ challengeId: "challenge-1" })),
     verifyOtp: jest.fn(async () => undefined),
     switchRole: jest.fn(async () => fakeBootstrap("guard")),
+    runAuthenticated: (operation) => operation(new FakeMobileApi(), "resident-token"),
     logout: jest.fn(async () => undefined),
   };
 }
 
 function shell(permissions?: string[]) {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { gcTime: Infinity, retry: false }, mutations: { gcTime: Infinity, retry: false } } });
+  queryClients.push(queryClient);
   return (
-    <SessionContext.Provider value={createSession(permissions)}>
-      <ResidentMoreScreen />
-    </SessionContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <SessionContext.Provider value={createSession(permissions)}>
+        <ResidentMoreScreen />
+      </SessionContext.Provider>
+    </QueryClientProvider>
   );
 }
 
@@ -42,7 +55,8 @@ describe("ResidentMoreScreen", () => {
     const screen = await render(shell());
 
     expect(screen.getByRole("header", { name: "More" })).toBeTruthy();
-    expect(screen.getByText("Alex S.")).toBeTruthy();
+    expect(await screen.findByText("A-101")).toBeTruthy();
+    expect(screen.getByText("Resident")).toBeTruthy();
     expect(screen.getByText("Account & access")).toBeTruthy();
     expect(screen.getByText("Daily priorities")).toBeTruthy();
     expect(screen.getByText("Community & shared life")).toBeTruthy();

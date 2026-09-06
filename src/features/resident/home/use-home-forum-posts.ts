@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { useSession } from "@/platform/auth/session-provider";
 import type { MobileForumThread } from "@/platform/api/mobile-api-client";
+import type { ResidentComment } from "@/features/resident/shared/resident-comments-sheet";
 
 const CATEGORY_LABEL: Record<string, string> = {
   general: "General",
@@ -24,7 +25,7 @@ function threadToPost(thread: MobileForumThread) {
     body: thread.title,
     views: thread.views.toString(),
     reactions: thread.replyCount.toString(),
-    comments: [] as { id: string; author: string; initials: string; when: string; body: string; likes: string; replies?: { id: string; author: string; initials: string; when: string; body: string; likes: string }[] }[],
+    comments: [] as readonly ResidentComment[],
   };
 }
 

@@ -13,7 +13,7 @@ import { HerouiProvider } from "@/platform/ui/heroui-provider";
 function SessionTransitionScreen() {
   return (
     <View style={styles.centered}>
-      <ActivityIndicator color={colors.orange} size="large" />
+      <ActivityIndicator color={colors.primary} size="large" />
       <Text style={styles.message}>Loading your secure session…</Text>
     </View>
   );
@@ -25,7 +25,7 @@ function SessionRecoveryScreen({ message }: { message: string }) {
     <View style={styles.centered}>
       <Text style={styles.title}>We could not restore your session.</Text>
       <Text style={styles.message}>{message}</Text>
-      <Button color={colors.orange} onPress={() => void retryRestore()} title="Try again" />
+      <Button color={colors.primary} onPress={() => void retryRestore()} title="Try again" />
     </View>
   );
 }
