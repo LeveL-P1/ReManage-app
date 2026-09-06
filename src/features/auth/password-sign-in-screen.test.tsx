@@ -61,7 +61,7 @@ describe("PasswordSignInScreen", () => {
     const { getByRole } = await renderScreen();
     const continueButton = getByRole("button", { name: "Continue" });
 
-    expect(StyleSheet.flatten(continueButton.props.style).backgroundColor).toBe("#FF5400");
+    expect(StyleSheet.flatten(continueButton.props.style).backgroundColor).toBe("#ff5400");
   });
 
   it("shows the supplied ReManage brand mark", async () => {

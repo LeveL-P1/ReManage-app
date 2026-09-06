@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuthenticatedApi } from "@/platform/auth/session-provider";
-import { Alert } from "react-native";
+import { Alert, TextInput } from "react-native";
 
 import { ScreenContainer, SafeScrollView, SectionHeader, EmptyState, LoadingState, ErrorState, StatusBadge, PullToRefresh, ConfirmDialog, PressableCard, RNView, RNText, Divider, Chip } from "../shared/heroui-ui";
-import { Card, Text, ListGroup, TextField, TextArea, Select, Button } from "heroui-native";
+import { Card, Text, ListGroup, Button } from "heroui-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { formatDistanceToNow } from "date-fns";
@@ -12,9 +12,7 @@ const CATEGORIES = ["Maintenance", "Cleaning", "Security", "Noise", "Parking", "
 const PRIORITIES = ["low", "medium", "high", "urgent"];
 
 export function HelpdeskScreen() {
-  const router = useRouter();
   const runAuthenticated = useAuthenticatedApi();
-  const { state } = useSession();
   const [complaints, setComplaints] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -174,14 +172,38 @@ export function HelpdeskScreen() {
         confirmText="Submit Complaint"
         variant="primary"
       >
-        <TextField label="Title" value={formData.title} onChangeText={(v) => setFormData((f) => ({ ...f, title: v }))} placeholder="Brief summary" />
-        <TextArea label="Description" value={formData.description} onChangeText={(v) => setFormData((f) => ({ ...f, description: v }))} placeholder="Describe the issue" />
-        <Select label="Category" value={formData.category} onValueChange={(v) => setFormData((f) => ({ ...f, category: v }))}>
-          {CATEGORIES.map((c) => <Select.Item key={c} value={c} label={c} />)}
-        </Select>
-        <Select label="Priority" value={formData.priority} onValueChange={(v) => setFormData((f) => ({ ...f, priority: v }))}>
-          {PRIORITIES.map((p) => <Select.Item key={p} value={p} label={p} />)}
-        </Select>
+        <RNText style={styles.formLabel}>Title</RNText>
+        <TextInput
+          style={styles.formInput}
+          onChangeText={(v) => setFormData((f) => ({ ...f, title: v }))}
+          placeholder="Brief summary"
+          value={formData.title}
+        />
+        <RNText style={styles.formLabel}>Description</RNText>
+        <TextInput
+          multiline
+          numberOfLines={4}
+          style={[styles.formInput, styles.formTextArea]}
+          onChangeText={(v) => setFormData((f) => ({ ...f, description: v }))}
+          placeholder="Describe the issue"
+          value={formData.description}
+        />
+        <RNText style={styles.formLabel}>Category</RNText>
+        <RNView style={styles.chipRow}>
+          {CATEGORIES.map((c) => (
+            <Chip key={c} variant={formData.category === c ? "primary" : "secondary"} size="sm" onPress={() => setFormData((f) => ({ ...f, category: c }))}>
+              {c}
+            </Chip>
+          ))}
+        </RNView>
+        <RNText style={styles.formLabel}>Priority</RNText>
+        <RNView style={styles.chipRow}>
+          {PRIORITIES.map((p) => (
+            <Chip key={p} variant={formData.priority === p ? "primary" : "secondary"} size="sm" onPress={() => setFormData((f) => ({ ...f, priority: p }))}>
+              {p}
+            </Chip>
+          ))}
+        </RNView>
       </ConfirmDialog>
 
       {showRateModal && (
@@ -201,7 +223,15 @@ export function HelpdeskScreen() {
               </Button>
             ))}
           </RNView>
-          <TextArea label="Comment (optional)" value={ratingComment} onChangeText={setRatingComment} placeholder="Any feedback?" />
+          <RNText style={styles.formLabel}>Comment (optional)</RNText>
+          <TextInput
+            multiline
+            numberOfLines={3}
+            style={[styles.formInput, styles.formTextArea]}
+            onChangeText={setRatingComment}
+            placeholder="Any feedback?"
+            value={ratingComment}
+          />
         </ConfirmDialog>
       )}
     </ScreenContainer>
@@ -224,6 +254,10 @@ const styles = StyleSheet.create({
   metaText: { fontSize: 12, color: "#6B7280" },
   rateButton: { marginTop: 12, paddingTop: 8, borderTopWidth: 1, borderTopColor: "#E5E7EB" },
   ratingRow: { flexDirection: "row", justifyContent: "center", gap: 4, marginVertical: 8 },
+  formLabel: { fontSize: 13, fontWeight: "600", color: "#374151", marginTop: 12, marginBottom: 6 },
+  formInput: { borderWidth: 1, borderColor: "#E5E7EB", borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, color: "#111827" },
+  formTextArea: { minHeight: 80, textAlignVertical: "top" },
+  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   list: { paddingHorizontal: 16, paddingBottom: 100 },
   listItem: { borderWidth: 0, backgroundColor: "transparent" },
 });
