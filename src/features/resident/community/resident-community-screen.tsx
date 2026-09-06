@@ -21,6 +21,8 @@ import {
 import { useSession } from "@/platform/auth/session-provider";
 import { residentTheme } from "@/platform/theme/tokens";
 import { residentCommunityFixture, type ResidentCommunityViewModel } from "./resident-community-fixtures";
+import { useResidentUnit } from "@/features/resident/profile/use-resident-profile";
+import { useUpcomingCommunityEvent, useCommunityDuesSummary } from "./use-community-live-data";
 
 const communityActionIds: readonly ResidentModuleId[] = [
   "helpdesk",
@@ -58,6 +60,13 @@ export function ResidentCommunityScreen({
   const { state } = useSession();
   const [tribePreview, setTribePreview] = useState<string | null>(null);
   const bootstrap = state.status === "authenticated" ? state.bootstrap : null;
+  const unit = useResidentUnit();
+  const upcomingEventQuery = useUpcomingCommunityEvent();
+  const duesSummaryQuery = useCommunityDuesSummary();
+  const event = upcomingEventQuery.data !== undefined
+    ? upcomingEventQuery.data ?? { title: "No upcoming events", detail: "Check back soon for society programs" }
+    : viewModel.event;
+  const dues = duesSummaryQuery.data ?? viewModel.dues;
   const visibleModules = useMemo(
     () => filterResidentModules(bootstrap?.permissions ?? []),
     [bootstrap?.permissions],
@@ -79,7 +88,7 @@ export function ResidentCommunityScreen({
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <ResidentSocietyHeader
-          unit={viewModel.unit}
+          unit={unit}
           societyName={bootstrap?.society.name ?? "Your society"}
           onNotifications={() => pushHomePopOut(router, "/(resident)/home/notifications")}
           onProfile={() => pushHomePopOut(router, "/(resident)/home/profile")}
@@ -193,13 +202,13 @@ export function ResidentCommunityScreen({
           <View style={styles.cardList}>
             <ResidentContentCard
               accent={residentTheme.highlight}
-              description={viewModel.event.detail}
+              description={event.detail}
               icon="event"
               onPress={() => {
                 const events = actions.find(({ id }) => id === "events");
                 if (events) openModule(router, events);
               }}
-              title={viewModel.event.title}
+              title={event.title}
             />
             <ResidentContentCard
               accent={residentTheme.accent}
@@ -246,10 +255,10 @@ export function ResidentCommunityScreen({
             ))}
             <ResidentContentCard
               accent={residentTheme.accent}
-              description={viewModel.dues.detail}
+              description={dues.detail}
               icon="bill"
               onPress={() => router.push("/(resident)/(tabs)/bills")}
-              title={viewModel.dues.amount}
+              title={dues.amount}
             />
           </View>
 
