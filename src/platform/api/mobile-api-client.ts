@@ -61,6 +61,9 @@ export type MobileNotification = Schemas["MobileNotificationDto"];
 export type MobileNotificationList = Schemas["MobileNotificationListDto"];
 export type MobileNotificationRegisterResult = Schemas["MobileNotificationRegisterResultDto"];
 export type MobileNotificationMarkReadResult = Schemas["MobileNotificationMarkReadResultDto"];
+export type MobileGuardPackage = Schemas["MobileGuardPackageDto"];
+export type MobileResidentPackage = Schemas["MobileResidentPackageDto"];
+export type MobileResidentPackages = Schemas["MobileResidentPackagesDto"];
 
 export interface MobileApi {
   passwordLogin(body: PasswordLoginBody): Promise<SessionIssue>;
@@ -78,9 +81,15 @@ export interface MobileApi {
   guardVerifyPasscode(accessToken: string, visitorId: string, passcode: string): Promise<MobileGuardPasscodeResult>;
   guardCheckIn(accessToken: string, visitorId: string): Promise<MobileGuardVisitor>;
   guardCheckOut(accessToken: string, visitorId: string): Promise<MobileGuardVisitor>;
+  guardListPackages(accessToken: string, status?: string): Promise<MobileGuardPackage[]>;
+  guardIntakePackage(accessToken: string, body: { flatQuery: string; courierName?: string; description?: string; photoUrl?: string }): Promise<MobileGuardPackage>;
+  guardNotifyPackage(accessToken: string, packageId: string): Promise<MobileGuardPackage>;
+  guardCollectPackage(accessToken: string, packageId: string, body: { providedOtp: string; collectedBy?: string }): Promise<MobileGuardPackage>;
+  guardTransitionPackage(accessToken: string, packageId: string, action: "return" | "mark_lost"): Promise<MobileGuardPackage>;
   residentVisitors(accessToken: string): Promise<MobileResidentVisitors>;
   residentApproveVisitor(accessToken: string, visitorId: string): Promise<MobileResidentVisitor>;
   residentRejectVisitor(accessToken: string, visitorId: string): Promise<MobileResidentVisitor>;
+  residentPackages(accessToken: string): Promise<MobileResidentPackages>;
   raiseSos(accessToken: string, body?: MobileSosRequestBody): Promise<MobileSosResult>;
   listNotices(accessToken: string, options?: { category?: string; activeOnly?: boolean }): Promise<MobileNoticeList>;
   unreadNoticeCount(accessToken: string): Promise<{ unreadCount: number }>;
@@ -261,6 +270,33 @@ export function createMobileApi(options: MobileApiClientOptions = {}): MobileApi
         headers: bearer(accessToken),
         params: { path: { visitorId } },
       })),
+    guardListPackages: (accessToken, status) =>
+      unwrap(client.GET("/api/mobile/v1/guard/packages", {
+        headers: bearer(accessToken),
+        params: { query: status ? { status } : undefined },
+      })),
+    guardIntakePackage: (accessToken, body) =>
+      unwrap(client.POST("/api/mobile/v1/guard/packages", {
+        body,
+        headers: bearer(accessToken),
+      })),
+    guardNotifyPackage: (accessToken, packageId) =>
+      unwrap(client.POST("/api/mobile/v1/guard/packages/{packageId}/notify", {
+        headers: bearer(accessToken),
+        params: { path: { packageId } },
+      })),
+    guardCollectPackage: (accessToken, packageId, body) =>
+      unwrap(client.POST("/api/mobile/v1/guard/packages/{packageId}/collect", {
+        body,
+        headers: bearer(accessToken),
+        params: { path: { packageId } },
+      })),
+    guardTransitionPackage: (accessToken, packageId, action) =>
+      unwrap(client.POST("/api/mobile/v1/guard/packages/{packageId}/transition", {
+        body: { action },
+        headers: bearer(accessToken),
+        params: { path: { packageId } },
+      })),
     residentVisitors: (accessToken) =>
       unwrap(client.GET("/api/mobile/v1/resident/visitors", { headers: bearer(accessToken) })),
     residentApproveVisitor: (accessToken, visitorId) =>
@@ -273,6 +309,8 @@ export function createMobileApi(options: MobileApiClientOptions = {}): MobileApi
         headers: bearer(accessToken),
         params: { path: { visitorId } },
       })),
+    residentPackages: (accessToken) =>
+      unwrap(client.GET("/api/mobile/v1/resident/packages", { headers: bearer(accessToken) })),
     raiseSos: (accessToken, body = {}) =>
       unwrap(client.POST("/api/mobile/v1/sos/raise", {
         body,
