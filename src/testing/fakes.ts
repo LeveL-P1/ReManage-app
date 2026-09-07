@@ -156,9 +156,66 @@ export class FakeMobileApi implements MobileApi {
     status: "exited" as const,
     visitorName: "Maya",
   }));
+  readonly guardListPackages = jest.fn(async () => []);
+  readonly guardIntakePackage = jest.fn(async (_accessToken, body) => ({
+    id: "package-1",
+    flatNumber: body.flatQuery,
+    courierName: body.courierName ?? null,
+    description: body.description ?? null,
+    photoUrl: body.photoUrl ?? null,
+    status: "received" as const,
+    pickupOtp: "482913",
+    receivedAt: new Date(0).toISOString(),
+    notifiedAt: null,
+    collectedAt: null,
+    collectedBy: null,
+  }));
+  readonly guardNotifyPackage = jest.fn(async (_accessToken, packageId) => ({
+    id: packageId,
+    flatNumber: "A-308",
+    courierName: null,
+    description: null,
+    photoUrl: null,
+    status: "notified" as const,
+    pickupOtp: "482913",
+    receivedAt: new Date(0).toISOString(),
+    notifiedAt: new Date(0).toISOString(),
+    collectedAt: null,
+    collectedBy: null,
+  }));
+  readonly guardCollectPackage = jest.fn(async (_accessToken, packageId, body) => ({
+    id: packageId,
+    flatNumber: "A-308",
+    courierName: null,
+    description: null,
+    photoUrl: null,
+    status: "collected" as const,
+    pickupOtp: "482913",
+    receivedAt: new Date(0).toISOString(),
+    notifiedAt: new Date(0).toISOString(),
+    collectedAt: new Date(0).toISOString(),
+    collectedBy: body.collectedBy ?? null,
+  }));
+  readonly guardTransitionPackage = jest.fn(async (_accessToken, packageId, action) => ({
+    id: packageId,
+    flatNumber: "A-308",
+    courierName: null,
+    description: null,
+    photoUrl: null,
+    status: action === "return" ? "returned" as const : "lost" as const,
+    pickupOtp: "482913",
+    receivedAt: new Date(0).toISOString(),
+    notifiedAt: null,
+    collectedAt: null,
+    collectedBy: null,
+  }));
   readonly residentVisitors = jest.fn(async () => ({
     flatNumber: "A-308",
     visitors: [],
+  }));
+  readonly residentPackages = jest.fn(async () => ({
+    flatNumber: "A-308",
+    packages: [],
   }));
   readonly residentApproveVisitor = jest.fn(async (_accessToken, visitorId) => ({
     arrivedAt: new Date(0).toISOString(),

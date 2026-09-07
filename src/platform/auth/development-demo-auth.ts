@@ -178,6 +178,83 @@ export function createDevelopmentDemoMobileApi(): MobileApi {
         visitorName: "Demo Visitor",
       };
     },
+    async guardListPackages() {
+      return [
+        {
+          id: "demo-package-1",
+          flatNumber: "A-308",
+          courierName: "Amazon",
+          description: "Large box",
+          photoUrl: null,
+          status: "received" as const,
+          pickupOtp: "482913",
+          receivedAt: new Date(0).toISOString(),
+          notifiedAt: null,
+          collectedAt: null,
+          collectedBy: null,
+        },
+      ];
+    },
+    async guardIntakePackage(_accessToken: string, body) {
+      return {
+        id: "demo-package-1",
+        flatNumber: body.flatQuery,
+        courierName: body.courierName ?? null,
+        description: body.description ?? null,
+        photoUrl: body.photoUrl ?? null,
+        status: "received" as const,
+        pickupOtp: "482913",
+        receivedAt: new Date(0).toISOString(),
+        notifiedAt: null,
+        collectedAt: null,
+        collectedBy: null,
+      };
+    },
+    async guardNotifyPackage(_accessToken: string, packageId: string) {
+      return {
+        id: packageId,
+        flatNumber: "A-308",
+        courierName: "Amazon",
+        description: "Large box",
+        photoUrl: null,
+        status: "notified" as const,
+        pickupOtp: "482913",
+        receivedAt: new Date(0).toISOString(),
+        notifiedAt: new Date(0).toISOString(),
+        collectedAt: null,
+        collectedBy: null,
+      };
+    },
+    async guardCollectPackage(_accessToken: string, packageId: string, body) {
+      return {
+        id: packageId,
+        flatNumber: "A-308",
+        courierName: "Amazon",
+        description: "Large box",
+        photoUrl: null,
+        status: "collected" as const,
+        pickupOtp: "482913",
+        receivedAt: new Date(0).toISOString(),
+        notifiedAt: new Date(0).toISOString(),
+        collectedAt: new Date(0).toISOString(),
+        collectedBy: body.collectedBy ?? null,
+      };
+    },
+    async guardTransitionPackage(_accessToken: string, packageId: string, action) {
+      return {
+        id: packageId,
+        flatNumber: "A-308",
+        courierName: "Amazon",
+        description: "Large box",
+        photoUrl: null,
+        status: action === "return" ? "returned" as const : "lost" as const,
+        pickupOtp: "482913",
+        receivedAt: new Date(0).toISOString(),
+        notifiedAt: null,
+        collectedAt: null,
+        collectedBy: null,
+      };
+    },
     async residentVisitors() {
       return {
         flatNumber: "A-308",
@@ -211,6 +288,24 @@ export function createDevelopmentDemoMobileApi(): MobileApi {
         purpose: "guest",
         status: "rejected" as const,
         visitorName: "Demo Visitor",
+      };
+    },
+    async residentPackages() {
+      return {
+        flatNumber: "A-308",
+        packages: [
+          {
+            id: "demo-package-1",
+            courierName: "Amazon",
+            description: "Large box",
+            photoUrl: null,
+            status: "notified" as const,
+            pickupOtp: "482913",
+            receivedAt: new Date(0).toISOString(),
+            notifiedAt: new Date(0).toISOString(),
+            collectedAt: null,
+          },
+        ],
       };
     },
     async raiseSos() {
