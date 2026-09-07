@@ -1,2 +1,2 @@
-import { ComingSoonScreen } from "@/features/shared/coming-soon-screen";
-export default function ParcelDeskRoute() { return <ComingSoonScreen title="Parcel Desk" icon="cube-outline" />; }
+import { ResidentParcelsScreen } from "@/features/resident/parcels/resident-parcels-screen";
+export default function ParcelDeskRoute() { return <ResidentParcelsScreen />; }
