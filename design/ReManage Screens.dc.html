@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#efe9dd;font-family:Figtree,system-ui,sans-serif}
+.dv-turn{padding:44px 46px 34px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:700 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1c1a17;color:#fff;border-radius:5px;text-decoration:none}
+.dv-tname{font:700 14px/1.3 Figtree,sans-serif;color:#1c1a17}
+.dv-sub{font:400 13px/1.5 Figtree,sans-serif;color:#7a756c;max-width:640px;margin:0 0 26px}
+.dv-opts{display:flex;flex-wrap:wrap;gap:38px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:12px;scroll-margin-top:16px}
+.dv-oid{font:700 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.07);color:#1c1a17;border-radius:6px;text-decoration:none}
+.dv-olabel{display:flex;align-items:center;gap:9px;font:500 12.5px/1.3 Figtree,sans-serif;color:#8a8377}
+.dv-olabel b{color:#1c1a17;font-weight:700}
+.dv-opt:target .dv-oid{background:#ff5400;color:#fff}
+.dv-next{margin:30px 0 0;font:400 12.5px/1.6 Figtree,sans-serif;color:#8a8377}
+.dv-next a{color:#1c1a17;text-decoration:none;font-weight:600;background:rgba(0,0,0,.06);padding:2px 6px;border-radius:5px}
+a{color:#ff5400}a:hover{color:#e04600}
+.ph{width:340px;background:#0f0e0d;border-radius:48px;padding:10px;box-shadow:0 30px 60px -22px rgba(50,35,10,.5)}
+.sc{position:relative;background:#faf8f2;border-radius:39px;overflow:hidden;height:726px;display:flex;flex-direction:column;font-family:Figtree,system-ui,sans-serif}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:98px;height:27px;background:#0f0e0d;border-radius:16px;z-index:9}
+.stat{height:52px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 7px;flex:none}
+.stat b{font-size:15px;font-weight:600;color:#1c1a17}
+.scroll{flex:1;overflow-y:auto}
+.scroll::-webkit-scrollbar{width:0}
+.sw{width:44px;height:26px;border-radius:13px;position:relative;cursor:pointer;flex:none;transition:background .18s}
+.knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .18s}
+button{font-family:Figtree,sans-serif;cursor:pointer}
+[data-filter],[data-markall],[data-notif]{cursor:pointer}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t5" data-screen-label="Turn 5">
+<div class="dv-thd"><a class="dv-tid" href="#t5">5</a><span class="dv-tname">Dark night-shift guard console + a working prototype</span></div>
+<p class="dv-sub">The gate console (2a) reworked for low-light night duty — dark surface, warm-orange accents kept. The full clickable prototype (working tabs, bell → inbox, pre-approve sheet, pay flow, loading skeletons, empty states) is a separate file: <b>ReManage Prototype.dc.html</b>.</p>
+<div class="dv-opts">
+
+<!-- ================= 5a DARK GUARD CONSOLE ================= -->
+<div class="dv-opt" id="5a">
+<div class="dv-olabel"><a class="dv-oid" href="#5a">5a</a><b>Gate console · night shift</b> · guard · dark theme</div>
+<div class="ph"><div class="sc" style="background:#16130f">
+<div class="island"></div>
+<div class="stat"><b style="color:#fff">9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#fff"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#fff"/><rect x="15" width="3" height="11" rx="1" fill="#fff"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#fff" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#fff"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 10px;display:flex;align-items:center;justify-content:space-between">
+<div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em">Gate 2</div><span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;background:rgba(120,138,94,.22);color:#a9be82;font-size:10.5px;font-weight:800;letter-spacing:.05em"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#a9be82" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a7 7 0 000 14 5 5 0 010-14z"/></svg>NIGHT</span></div><div style="font-size:12.5px;color:#8f877a;margin-top:2px">Suresh K · shift ends 6:00 AM</div></div>
+<div style="width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;position:relative"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#e8e2d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0112 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 004 0"/></svg><span style="position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#ff5400;border:1.5px solid #16130f"></span></div>
+</div>
+<div class="scroll" style="padding:6px 16px 24px">
+<div style="display:flex;gap:10px">
+<button style="flex:1;background:linear-gradient(150deg,#ff5400,#ff7a2e);border:none;border-radius:20px;padding:18px 14px;text-align:left;box-shadow:0 12px 26px -14px rgba(255,84,0,.7)"><div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div><div style="font-size:15px;font-weight:800;color:#fff">Add visitor</div><div style="font-size:12px;color:rgba(255,255,255,.85);margin-top:1px">Log entry</div></button>
+<button style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:18px 14px;text-align:left"><div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8e2d6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M20 14v6M17 20h3"/></svg></div><div style="font-size:15px;font-weight:800;color:#fff">Scan QR</div><div style="font-size:12px;color:#8f877a;margin-top:1px">Resident pass</div></button>
+</div>
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#6f6a5e;margin:20px 4px 10px">Awaiting resident</div>
+<div style="border-radius:20px;border:1px solid rgba(255,84,0,.28);background:rgba(255,84,0,.09);padding:15px 16px">
+<div style="display:flex;gap:12px;align-items:center">
+<div style="width:46px;height:46px;border-radius:14px;background:rgba(43,127,212,.18);display:flex;align-items:center;justify-content:center;flex:none"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6db0ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:800;color:#fff">Rahul Mehta → A-308</div><div style="font-size:12.5px;color:#8f877a;margin-top:1px">Swiggy · pinged 40s ago</div></div>
+<div style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(217,154,0,.18)"><span style="width:7px;height:7px;border-radius:50%;background:#e0a92e"></span><span style="font-size:11.5px;font-weight:800;color:#e6b84e">Waiting</span></div>
+</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin:20px 4px 10px"><span style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#6f6a5e">Inside now · 3</span><span style="font-size:12.5px;font-weight:700;color:#ff7a3d">See log</span></div>
+<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:4px 16px">
+<div style="display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06)"><div style="width:38px;height:38px;border-radius:11px;background:rgba(23,145,90,.18);display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4dc48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#f0ece3">Amazon delivery</div><div style="font-size:12px;color:#8f877a">B-104 · in 8:20 AM</div></div><span style="font-size:12px;color:#6f6a5e;font-weight:600">32 min</span></div>
+<div style="display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06)"><div style="width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c9c2b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#f0ece3">Ramesh · plumber</div><div style="font-size:12px;color:#8f877a">C-201 · in 9:05 PM</div></div><span style="font-size:12px;color:#6f6a5e;font-weight:600">16 min</span></div>
+<div style="display:flex;gap:12px;align-items:center;padding:13px 0"><div style="width:38px;height:38px;border-radius:11px;background:rgba(122,92,46,.3);display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:13px;font-weight:800;color:#d3a668">TC</span></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#f0ece3">Tata Cab</div><div style="font-size:12px;color:#8f877a">A-308 · in 9:25 PM</div></div><span style="font-size:12px;color:#6f6a5e;font-weight:600">now</span></div>
+</div>
+</div>
+<div style="flex:none;height:72px;background:#100d0a;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff7a3d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#ff7a3d;font-weight:700">Gate</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6f6a5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg><span style="font-size:10.5px;color:#6f6a5e;font-weight:600">Parcels</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6f6a5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:10.5px;color:#6f6a5e;font-weight:600">Log</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6f6a5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#6f6a5e;font-weight:600">Me</span></div>
+</div>
+</div></div>
+</div>
+
+</div>
+<p class="dv-next">Earlier turns below. The interactive prototype lives in <b>ReManage Prototype.dc.html</b> — open that file to click through.</p>
+</section>
+
+<section class="dv-turn" id="t4" data-screen-label="Turn 4">
+<div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">Community posts + notices — resident</span></div>
+<p class="dv-sub">The social + announcement surfaces. Community is a light feed with like/comment; Notices is the official board, pinned items on top. Same tokens and cards. Like buttons toggle.</p>
+<div class="dv-opts">
+
+<!-- ================= 4a COMMUNITY ================= -->
+<div class="dv-opt" id="4a">
+<div class="dv-olabel"><a class="dv-oid" href="#4a">4a</a><b>Community</b> · resident · neighbour feed</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 10px;display:flex;align-items:center;justify-content:space-between">
+<div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Community</div>
+<button style="display:flex;align-items:center;gap:6px;padding:9px 15px;border-radius:999px;background:#1c1a17;border:none;color:#fff;font-size:13px;font-weight:700"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Post</button>
+</div>
+<div class="scroll" style="padding:8px 16px 24px">
+<!-- compose prompt -->
+<div style="display:flex;gap:11px;align-items:center;background:#fff;border:1px solid #efece4;border-radius:18px;padding:12px 15px;margin-bottom:12px"><div style="width:36px;height:36px;border-radius:11px;background:#ffe0cf;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:13px;font-weight:800;color:#c0430a">You</span></div><span style="font-size:14px;color:#a89f90">Share something with A-wing…</span></div>
+<!-- post 1 -->
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:12px">
+<div style="display:flex;gap:11px;align-items:center"><div style="width:40px;height:40px;border-radius:12px;background:#e7ddc9;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:14px;font-weight:800;color:#7a5c2e">AR</span></div><div style="flex:1"><div style="font-size:14.5px;font-weight:800;color:#1c1a17">Anita Rao <span style="font-weight:600;color:#a89f90;font-size:12.5px">· B-402</span></div><div style="font-size:12px;color:#a89f90">2 hours ago</div></div><span style="padding:4px 10px;border-radius:999px;background:#eef2e6;font-size:11px;font-weight:800;color:#5a6b40">EVENTS</span></div>
+<div style="font-size:14.5px;color:#3a352e;line-height:1.5;margin-top:12px">Organising a Sunday plantation drive near the play area 🌱 Anyone free from 8 AM? Saplings and tools sorted — just bring gloves.</div>
+<div style="display:flex;gap:20px;margin-top:14px;padding-top:13px;border-top:1px solid #f2efe7">
+<div data-like style="display:flex;align-items:center;gap:7px;cursor:pointer"><svg data-heart width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9.5-8.5C.8 8.5 2 5.5 5 5.5c2 0 3 1.5 3.5 2.5C9 7 10 5.5 12 5.5c3 0 4.2 3 2.5 6C19 15.6 12 20 12 20z"/></svg><span data-likecount style="font-size:13px;font-weight:700;color:#8a8377">14</span></div>
+<div style="display:flex;align-items:center;gap:7px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:13px;font-weight:700;color:#8a8377">6</span></div>
+</div>
+</div>
+<!-- post 2 -->
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:12px">
+<div style="display:flex;gap:11px;align-items:center"><div style="width:40px;height:40px;border-radius:12px;background:#dbe6f5;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:14px;font-weight:800;color:#2b6fb8">VK</span></div><div style="flex:1"><div style="font-size:14.5px;font-weight:800;color:#1c1a17">Vikram K <span style="font-weight:600;color:#a89f90;font-size:12.5px">· A-308</span></div><div style="font-size:12px;color:#a89f90">Yesterday</div></div><span style="padding:4px 10px;border-radius:999px;background:#f4ecdf;font-size:11px;font-weight:800;color:#8a6a2e">FOR SALE</span></div>
+<div style="font-size:14.5px;color:#3a352e;line-height:1.5;margin-top:12px">Selling a barely-used study table, solid wood. ₹2,500. DM if interested.</div>
+<div style="display:flex;gap:20px;margin-top:14px;padding-top:13px;border-top:1px solid #f2efe7">
+<div data-like style="display:flex;align-items:center;gap:7px;cursor:pointer"><svg data-heart width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9.5-8.5C.8 8.5 2 5.5 5 5.5c2 0 3 1.5 3.5 2.5C9 7 10 5.5 12 5.5c3 0 4.2 3 2.5 6C19 15.6 12 20 12 20z"/></svg><span data-likecount style="font-size:13px;font-weight:700;color:#8a8377">3</span></div>
+<div style="display:flex;align-items:center;gap:7px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:13px;font-weight:700;color:#8a8377">2</span></div>
+</div>
+</div>
+</div>
+<div style="flex:none;height:72px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Home</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Bills</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:10.5px;color:#ff5400;font-weight:700">Posts</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Visitors</span></div>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 4b NOTICES ================= -->
+<div class="dv-opt" id="4b">
+<div class="dv-olabel"><a class="dv-oid" href="#4b">4b</a><b>Notices</b> · resident · official board</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 10px"><div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Notices</div></div>
+<div class="scroll" style="padding:8px 16px 24px">
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:4px 4px 10px">Pinned</div>
+<div style="border-radius:20px;border:1px solid #f6e6da;background:#fff5ef;padding:16px">
+<div style="display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;border:1px solid #f6e6da"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg></div><div style="flex:1"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">Fire safety drill — 6 PM today</div><div style="font-size:12px;color:#a89f90;margin-top:1px">Management · 3 hours ago</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="#ff5400" stroke="#ff5400" stroke-width="1.5"><path d="M9 4h6l-1 7 3 3v2H7v-2l3-3z"/></svg></div>
+<div style="font-size:14px;color:#3a352e;line-height:1.5;margin-top:11px">All residents please assemble at the podium when the alarm sounds. Do not use the lifts during the drill.</div>
+</div>
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">This week</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:11px">
+<div style="display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:12px;background:#e8eef7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4l10 4V6z"/><path d="M14 8a4 4 0 010 8"/></svg></div><div style="flex:1"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">Water supply off 10 AM–1 PM</div><div style="font-size:12px;color:#a89f90;margin-top:1px">Facilities · yesterday</div></div></div>
+<div style="font-size:14px;color:#3a352e;line-height:1.5;margin-top:11px">Tank cleaning tomorrow. Please store water in advance.</div>
+</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:11px">
+<div style="display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:12px;background:#eef2e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#7a8a5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div style="flex:1"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">AGM — Sunday 16 Mar, 11 AM</div><div style="font-size:12px;color:#a89f90;margin-top:1px">Secretary · 2 days ago</div></div></div>
+<div style="font-size:14px;color:#3a352e;line-height:1.5;margin-top:11px">Annual general meeting in the clubhouse. Agenda attached. Please attend.</div>
+</div>
+</div>
+<div style="flex:none;height:72px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#ff5400;font-weight:700">Home</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Bills</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Posts</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Visitors</span></div>
+</div>
+</div></div>
+</div>
+
+</div>
+<p class="dv-next">Earlier turns below. Try next: “make it a working multi-tab prototype” · “dark night-shift guard theme”.</p>
+</section>
+
+<section class="dv-turn" id="t3" data-screen-label="Turn 3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Amenity booking + helpdesk — resident</span></div>
+<p class="dv-sub">Two more of the modules you picked. Amenity booking is a pick-slot flow; helpdesk is a ticket list with a compose entry. Same tokens and cards. Amenity time-slot chips are selectable.</p>
+<div class="dv-opts">
+
+<!-- ================= 3a AMENITY BOOKING ================= -->
+<div class="dv-opt" id="3a">
+<div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a><b>Amenity booking</b> · resident · pick a slot</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 8px;display:flex;align-items:center;gap:12px">
+<div style="width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></div>
+<div style="font-size:20px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Clubhouse</div>
+</div>
+<div class="scroll" style="padding:8px 16px 24px">
+<div style="border-radius:22px;height:120px;background:linear-gradient(135deg,#7a8a5e,#9caf78);display:flex;align-items:flex-end;padding:16px;position:relative;overflow:hidden"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5" style="position:absolute;top:-14px;right:-10px"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg><div style="color:#fff"><div style="font-size:19px;font-weight:800">Party Hall · 2nd floor</div><div style="font-size:12.5px;color:rgba(255,255,255,.9);margin-top:2px">Up to 40 guests · ₹1,500 / slot</div></div></div>
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 12px">Choose date</div>
+<div style="display:flex;gap:8px">
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#fff;border:1px solid #efece4"><div style="font-size:11px;color:#a89f90;font-weight:700">SAT</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:2px">8</div></div>
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#1c1a17"><div style="font-size:11px;color:rgba(255,255,255,.7);font-weight:700">SUN</div><div style="font-size:17px;font-weight:800;color:#fff;margin-top:2px">9</div></div>
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#fff;border:1px solid #efece4"><div style="font-size:11px;color:#a89f90;font-weight:700">MON</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:2px">10</div></div>
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#fff;border:1px solid #efece4"><div style="font-size:11px;color:#a89f90;font-weight:700">TUE</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:2px">11</div></div>
+</div>
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 12px">Available slots</div>
+<div style="display:flex;flex-wrap:wrap;gap:9px">
+<div data-slot style="padding:11px 16px;border-radius:13px;background:#fff;border:1px solid #efece4;font-size:14px;font-weight:700;color:#1c1a17">9 – 11 AM</div>
+<div data-slot data-on="1" style="padding:11px 16px;border-radius:13px;background:#ff5400;border:1px solid #ff5400;font-size:14px;font-weight:700;color:#fff">12 – 3 PM</div>
+<div data-slot style="padding:11px 16px;border-radius:13px;background:#fff;border:1px solid #efece4;font-size:14px;font-weight:700;color:#1c1a17">4 – 7 PM</div>
+<div style="padding:11px 16px;border-radius:13px;background:#f4f1ea;border:1px solid #eee7da;font-size:14px;font-weight:700;color:#c3bcae;text-decoration:line-through">7 – 10 PM</div>
+</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:18px;padding:14px 16px;margin-top:20px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;color:#8a8377">Sun 9 Mar · 12 – 3 PM</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:1px">₹1,500 total</div></div><span style="font-size:12px;color:#17915a;font-weight:800;display:flex;align-items:center;gap:5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>Refundable deposit</span></div>
+<button style="width:100%;margin-top:12px;padding:16px;border-radius:16px;background:#ff5400;border:none;color:#fff;font-size:16px;font-weight:800">Book &amp; pay ₹1,500</button>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 3b HELPDESK ================= -->
+<div class="dv-opt" id="3b">
+<div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a><b>Helpdesk</b> · resident · complaints &amp; tickets</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 10px;display:flex;align-items:center;justify-content:space-between">
+<div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Helpdesk</div>
+<button style="display:flex;align-items:center;gap:6px;padding:9px 15px;border-radius:999px;background:#1c1a17;border:none;color:#fff;font-size:13px;font-weight:700"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>New ticket</button>
+</div>
+<div style="flex:none;display:flex;gap:8px;padding:0 16px 6px">
+<div style="padding:8px 15px;border-radius:999px;background:#1c1a17;color:#fff;font-size:13px;font-weight:700">Open 2</div>
+<div style="padding:8px 15px;border-radius:999px;background:#fff;color:#7a756c;border:1px solid #e8e4da;font-size:13px;font-weight:700;white-space:nowrap">Resolved</div>
+</div>
+<div class="scroll" style="padding:8px 16px 24px">
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:11px">
+<div style="display:flex;gap:12px;align-items:flex-start"><div style="width:44px;height:44px;border-radius:13px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 5 4-14 2 9h6"/></svg></div><div style="flex:1"><div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">Water leakage in bathroom</div></div><div style="font-size:12.5px;color:#8a8377;margin-top:2px">Plumbing · #TK-2043 · raised 2 days ago</div></div></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:13px;padding-top:13px;border-top:1px solid #f2efe7"><div style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:50%;background:#d99a00"></span><span style="font-size:12.5px;font-weight:800;color:#946b00">In progress</span></div><span style="font-size:12.5px;color:#8a8377">Plumber assigned · today 4 PM</span></div>
+</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:11px">
+<div style="display:flex;gap:12px;align-items:flex-start"><div style="width:44px;height:44px;border-radius:13px;background:#fff7e0;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d99a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10c1 1 1 2 1 3h6c0-1 0-2 1-3a6 6 0 00-4-10z"/></svg></div><div style="flex:1"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">Corridor light not working</div><div style="font-size:12.5px;color:#8a8377;margin-top:2px">Electrical · #TK-2039 · raised 4 days ago</div></div></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:13px;padding-top:13px;border-top:1px solid #f2efe7"><div style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:50%;background:#2b7fd4"></span><span style="font-size:12.5px;font-weight:800;color:#1f5f9e">Acknowledged</span></div><span style="font-size:12.5px;color:#8a8377">Awaiting technician</span></div>
+</div>
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:16px 4px 10px">Recently resolved</div>
+<div style="display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #efece4;border-radius:18px;padding:14px 16px;opacity:.75"><div style="width:38px;height:38px;border-radius:11px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">Lift maintenance noise</div><div style="font-size:12px;color:#8a8377">#TK-2011 · closed 6 Mar</div></div></div>
+</div>
+<div style="flex:none;height:72px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Home</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Bills</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 5 4-14 2 9h6"/></svg><span style="font-size:10.5px;color:#ff5400;font-weight:700">Help</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Visitors</span></div>
+</div>
+</div></div>
+</div>
+
+</div>
+<p class="dv-next">Earlier turns below. Try next: “make it a working multi-tab prototype” · “dark night-shift guard theme” · “community posts + notices screens”.</p>
+</section>
+
+<section class="dv-turn" id="t2" data-screen-label="Turn 2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Guard side — same style, gate-facing tasks</span></div>
+<p class="dv-sub">The other half of “both personas.” A guard spends the shift at the gate, so these are fast and glanceable: a shift console, a visitor-verify flow that pings the resident for approval, and the parcel desk. Same tokens, cards and bottom-nav as the resident screens. The verify button and switches are live.</p>
+<div class="dv-opts">
+
+<!-- ================= 2a GUARD GATE CONSOLE ================= -->
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a><b>Gate console</b> · guard home · shift + live entries</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 10px;display:flex;align-items:center;justify-content:space-between">
+<div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Gate 2</div><span style="padding:3px 9px;border-radius:999px;background:#1c1a17;color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.06em">GUARD</span></div><div style="font-size:12.5px;color:#8a8377;margin-top:2px">Suresh K · shift ends 6:00 PM</div></div>
+<div style="width:42px;height:42px;border-radius:13px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center;position:relative"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0112 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 004 0"/></svg><span style="position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#ff5400;border:1.5px solid #fff"></span></div>
+</div>
+<div class="scroll" style="padding:6px 16px 24px">
+<!-- quick actions -->
+<div style="display:flex;gap:10px">
+<button style="flex:1;background:linear-gradient(150deg,#ff5400,#ff7a2e);border:none;border-radius:20px;padding:18px 14px;text-align:left;box-shadow:0 12px 24px -12px rgba(255,84,0,.55)"><div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div><div style="font-size:15px;font-weight:800;color:#fff">Add visitor</div><div style="font-size:12px;color:rgba(255,255,255,.85);margin-top:1px">Log entry</div></button>
+<button style="flex:1;background:#fff;border:1px solid #efece4;border-radius:20px;padding:18px 14px;text-align:left"><div style="width:40px;height:40px;border-radius:12px;background:#f0eee7;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M20 14v6M17 20h3"/></svg></div><div style="font-size:15px;font-weight:800;color:#1c1a17">Scan QR</div><div style="font-size:12px;color:#8a8377;margin-top:1px">Resident pass</div></button>
+</div>
+<!-- pending approval -->
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">Awaiting resident</div>
+<div style="border-radius:20px;border:1px solid #f6e6da;background:#fff5ef;padding:15px 16px">
+<div style="display:flex;gap:12px;align-items:center">
+<div style="width:46px;height:46px;border-radius:14px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;flex:none"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:800;color:#1c1a17">Rahul Mehta → A-308</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Swiggy · pinged 40s ago</div></div>
+<div style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:#fff2c9"><span style="width:7px;height:7px;border-radius:50%;background:#d99a00"></span><span style="font-size:11.5px;font-weight:800;color:#946b00">Waiting</span></div>
+</div>
+</div>
+<!-- inside now -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin:20px 4px 10px"><span style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90">Inside now · 3</span><span style="font-size:12.5px;font-weight:700;color:#ff5400">See log</span></div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:4px 16px">
+<div style="display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #f2efe7"><div style="width:38px;height:38px;border-radius:11px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">Amazon delivery</div><div style="font-size:12px;color:#8a8377">B-104 · in 8:20 AM</div></div><span style="font-size:12px;color:#a89f90;font-weight:600">32 min</span></div>
+<div style="display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #f2efe7"><div style="width:38px;height:38px;border-radius:11px;background:#f0eee7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#6b655a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">Ramesh · plumber</div><div style="font-size:12px;color:#8a8377">C-201 · in 9:05 AM</div></div><span style="font-size:12px;color:#a89f90;font-weight:600">16 min</span></div>
+<div style="display:flex;gap:12px;align-items:center;padding:13px 0"><div style="width:38px;height:38px;border-radius:11px;background:#e7ddc9;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:13px;font-weight:800;color:#7a5c2e">TC</span></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">Tata Cab</div><div style="font-size:12px;color:#8a8377">A-308 · in 9:25 AM</div></div><span style="font-size:12px;color:#a89f90;font-weight:600">now</span></div>
+</div>
+</div>
+<div style="flex:none;height:72px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#ff5400;font-weight:700">Gate</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Parcels</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Log</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Me</span></div>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 2b GUARD VERIFY & NOTIFY ================= -->
+<div class="dv-opt" id="2b">
+<div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a><b>Verify visitor</b> · guard · notify resident for approval</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 8px;display:flex;align-items:center;gap:12px">
+<div style="width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></div>
+<div style="font-size:20px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">New visitor</div>
+</div>
+<div class="scroll" style="padding:8px 16px 24px">
+<!-- visitor photo card -->
+<div style="background:#fff;border:1px solid #efece4;border-radius:22px;padding:20px;text-align:center">
+<div style="width:88px;height:88px;border-radius:26px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;margin:0 auto"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+<div style="font-size:20px;font-weight:800;color:#1c1a17;margin-top:14px">Rahul Mehta</div>
+<div style="display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:6px 13px;border-radius:999px;background:#fff0e6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg><span style="font-size:12.5px;font-weight:800;color:#c0430a">Swiggy delivery</span></div>
+</div>
+<!-- fields -->
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:4px 16px;margin-top:14px">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #f2efe7"><span style="font-size:13.5px;color:#8a8377">Visiting</span><span style="font-size:14.5px;font-weight:700;color:#1c1a17">Flat A-308</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #f2efe7"><span style="font-size:13.5px;color:#8a8377">Phone</span><span style="font-size:14.5px;font-weight:700;color:#1c1a17">+91 98••• ••210</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0"><span style="font-size:13.5px;color:#8a8377">Vehicle</span><span style="font-size:14.5px;font-weight:700;color:#1c1a17">MH12 CX 4821</span></div>
+</div>
+<!-- notify state -->
+<button style="width:100%;margin-top:16px;padding:16px;border-radius:16px;background:#ff5400;border:none;color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0112 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 004 0"/></svg>Notify resident</button>
+<div style="display:flex;gap:10px;margin-top:10px">
+<button style="flex:1;padding:14px;border-radius:15px;background:#e8f5ee;border:none;color:#17915a;font-size:14.5px;font-weight:800">Allow in</button>
+<button style="flex:1;padding:14px;border-radius:15px;background:#fdeceb;border:none;color:#d3341f;font-size:14.5px;font-weight:800">Deny</button>
+</div>
+<div style="font-size:12px;color:#a89f90;text-align:center;margin-top:14px;line-height:1.5">Resident gets a push instantly. Allow only<br>after they approve, unless pre-approved.</div>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 2c PARCEL DESK ================= -->
+<div class="dv-opt" id="2c">
+<div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a><b>Parcel desk</b> · guard · log &amp; hold deliveries</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 10px;display:flex;align-items:center;justify-content:space-between">
+<div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Parcels</div>
+<button style="display:flex;align-items:center;gap:6px;padding:9px 15px;border-radius:999px;background:#1c1a17;border:none;color:#fff;font-size:13px;font-weight:700"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Log parcel</button>
+</div>
+<div style="flex:none;display:flex;gap:9px;padding:0 16px 6px">
+<div style="flex:1;background:#fff;border:1px solid #efece4;border-radius:16px;padding:12px 14px"><div style="font-size:24px;font-weight:800;color:#ff5400">7</div><div style="font-size:12px;color:#8a8377;font-weight:600">Held now</div></div>
+<div style="flex:1;background:#fff;border:1px solid #efece4;border-radius:16px;padding:12px 14px"><div style="font-size:24px;font-weight:800;color:#1c1a17">12</div><div style="font-size:12px;color:#8a8377;font-weight:600">Handed today</div></div>
+</div>
+<div class="scroll" style="padding:8px 16px 24px">
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:8px 4px 10px">Holding · notify to collect</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:15px 16px;margin-bottom:10px">
+<div style="display:flex;gap:12px;align-items:center">
+<div style="width:46px;height:46px;border-radius:14px;background:#fff0e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:800;color:#1c1a17">A-308 · Mehta</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Amazon · logged 8:50 AM</div></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:13px"><button style="flex:1;padding:11px;border-radius:12px;background:#ff5400;border:none;color:#fff;font-size:13.5px;font-weight:700">Notify</button><button style="flex:1;padding:11px;border-radius:12px;background:#e8f5ee;border:none;color:#17915a;font-size:13.5px;font-weight:700">Handed over</button></div>
+</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:15px 16px;margin-bottom:10px">
+<div style="display:flex;gap:12px;align-items:center">
+<div style="width:46px;height:46px;border-radius:14px;background:#fff0e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:800;color:#1c1a17">C-201 · Iyer</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Flipkart · logged 8:15 AM</div></div>
+<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:#fff2c9"><span style="font-size:11px;font-weight:800;color:#946b00">Notified</span></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:13px"><button style="flex:1;padding:11px;border-radius:12px;background:#f4f1ea;border:none;color:#6b655a;font-size:13.5px;font-weight:700">Remind</button><button style="flex:1;padding:11px;border-radius:12px;background:#e8f5ee;border:none;color:#17915a;font-size:13.5px;font-weight:700">Handed over</button></div>
+</div>
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:16px 4px 10px">Handed over</div>
+<div style="display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #efece4;border-radius:18px;padding:13px 16px;opacity:.7"><div style="width:38px;height:38px;border-radius:11px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">B-104 · Rao</div><div style="font-size:12px;color:#8a8377">Blinkit · collected 9:10 AM</div></div></div>
+</div>
+<div style="flex:none;height:72px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Gate</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg><span style="font-size:10.5px;color:#ff5400;font-weight:700">Parcels</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Log</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Me</span></div>
+</div>
+</div></div>
+</div>
+
+</div>
+<p class="dv-next">Turn 1 (resident screens) is below. Try next: “make the gate console a working prototype” · “add an amenity-booking + helpdesk screen” · “dark guard theme for night shifts”.</p>
+</section>
+
+<section class="dv-turn" id="t1" data-screen-label="Turn 1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Cleaner &amp; calmer redesign — notifications + core resident screens</span></div>
+<p class="dv-sub">Grounded in the app's real tokens (cream, orange #ff5400, amber #ffbe00) but pushed forward: more air, softer surfaces, clear category color-coding, and inline actions. Notifications is answered end-to-end — inbox, per-category settings, and how a push arrives. Tap the filter pills, “Mark all read”, and the setting switches — they work.</p>
+<div class="dv-opts">
+
+<!-- ================= 1a NOTIFICATIONS INBOX ================= -->
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a><b>Notification inbox</b> · resident · grouped + actionable</div>
+<div class="ph"><div class="sc" id="rm-inbox">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<!-- header -->
+<div style="flex:none;padding:6px 18px 14px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></div>
+<div><div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Notifications</div></div>
+</div>
+<div data-markall style="font-size:13px;font-weight:700;color:#ff5400">Mark all read</div>
+</div>
+<!-- filter pills -->
+<div style="flex:none;display:flex;gap:8px;padding:0 18px 6px">
+<div data-filter="all" style="padding:8px 15px;border-radius:999px;background:#1c1a17;color:#fff;border:1px solid #1c1a17;font-size:13px;font-weight:700">All</div>
+<div data-filter="unread" data-unreadcount style="padding:8px 15px;border-radius:999px;background:#fff;color:#7a756c;border:1px solid #e8e4da;font-size:13px;font-weight:700;white-space:nowrap">Unread 3</div>
+</div>
+<div class="scroll" style="padding:6px 16px 24px">
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:12px 4px 10px">Today</div>
+
+<!-- visitor - actionable -->
+<div data-notif data-read="0" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff5ef;border:1px solid #f6e6da;margin-bottom:10px">
+<div style="width:44px;height:44px;border-radius:14px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">Rahul Mehta</b> is at the gate</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px"></div></div>
+<div style="font-size:13px;color:#7a756c;line-height:1.45;margin-top:3px">Swiggy delivery · asking to come up to A-308</div>
+<div style="display:flex;gap:8px;margin-top:11px"><button style="padding:8px 17px;border-radius:11px;background:#ff5400;color:#fff;font-size:13px;font-weight:700;border:none">Approve</button><button style="padding:8px 17px;border-radius:11px;background:#fff;color:#1c1a17;font-size:13px;font-weight:700;border:1px solid #e2ddd2">Decline</button></div>
+<div style="font-size:11.5px;color:#a89f90;margin-top:9px">2 min ago</div>
+</div></div>
+
+<!-- bill - actionable -->
+<div data-notif data-read="0" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff5ef;border:1px solid #f6e6da;margin-bottom:10px">
+<div style="width:44px;height:44px;border-radius:14px;background:#fff0e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">March maintenance</b> is due</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px"></div></div>
+<div style="font-size:13px;color:#7a756c;line-height:1.45;margin-top:3px">₹3,450 · due in 2 days (12 Mar)</div>
+<div style="display:flex;gap:8px;margin-top:11px"><button style="padding:8px 17px;border-radius:11px;background:#ff5400;color:#fff;font-size:13px;font-weight:700;border:none">Pay ₹3,450</button><button style="padding:8px 17px;border-radius:11px;background:#fff;color:#1c1a17;font-size:13px;font-weight:700;border:1px solid #e2ddd2">View bill</button></div>
+<div style="font-size:11.5px;color:#a89f90;margin-top:9px">1 hr ago</div>
+</div></div>
+
+<!-- security -->
+<div data-notif data-read="0" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff5ef;border:1px solid #f6e6da;margin-bottom:10px">
+<div style="width:44px;height:44px;border-radius:14px;background:#fdeceb;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#d3341f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M12 9v4M12 16h.01"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">Fire safety drill</b> at 6:00 PM today</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px"></div></div>
+<div style="font-size:13px;color:#7a756c;line-height:1.45;margin-top:3px">Please gather at the podium when the alarm sounds.</div>
+<div style="font-size:11.5px;color:#a89f90;margin-top:9px">3 hr ago · Security</div>
+</div></div>
+
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:18px 4px 10px">Earlier</div>
+
+<!-- community read -->
+<div data-notif data-read="1" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff;border:1px solid #efece4;margin-bottom:10px">
+<div style="width:44px;height:44px;border-radius:14px;background:#fff7e0;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#d99a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">Anita Rao</b> posted in Community</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px;opacity:0"></div></div>
+<div style="font-size:13px;color:#7a756c;line-height:1.45;margin-top:3px">“Anyone free for the Sunday plantation drive?”</div>
+<div style="font-size:11.5px;color:#a89f90;margin-top:9px">Yesterday</div>
+</div></div>
+
+<!-- parcel read -->
+<div data-notif data-read="1" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff;border:1px solid #efece4;margin-bottom:10px">
+<div style="width:44px;height:44px;border-radius:14px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">Parcel collected</b> at the gate</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px;opacity:0"></div></div>
+<div style="font-size:13px;color:#7a756c;line-height:1.45;margin-top:3px">Amazon package handed to you by guard Suresh.</div>
+<div style="font-size:11.5px;color:#a89f90;margin-top:9px">Yesterday</div>
+</div></div>
+
+<!-- notice read -->
+<div data-notif data-read="1" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff;border:1px solid #efece4;margin-bottom:10px">
+<div style="width:44px;height:44px;border-radius:14px;background:#f0eee7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#6b655a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4l10 4V6z"/><path d="M14 8a4 4 0 010 8"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">Water supply</b> off 10 AM–1 PM</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px;opacity:0"></div></div>
+<div style="font-size:13px;color:#7a756c;line-height:1.45;margin-top:3px">Tank cleaning tomorrow. Store water in advance.</div>
+<div style="font-size:11.5px;color:#a89f90;margin-top:9px">2 days ago · Notice board</div>
+</div></div>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 1b NOTIFICATION SETTINGS ================= -->
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a><b>Notification settings</b> · per-category control</div>
+<div class="ph"><div class="sc" id="rm-settings">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 12px;display:flex;align-items:center;gap:10px">
+<div style="width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></div>
+<div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Notification settings</div>
+</div>
+<div class="scroll" style="padding:6px 16px 24px">
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:10px 4px 10px">Categories</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;overflow:hidden">
+<!-- rows -->
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;border-bottom:1px solid #f2efe7">
+<div style="width:40px;height:40px;border-radius:13px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Visitors &amp; entry</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Gate approvals, deliveries</div></div>
+<div class="sw" data-switch data-on="1" style="background:#ff5400"><div class="knob" data-knob style="transform:translateX(18px)"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;border-bottom:1px solid #f2efe7">
+<div style="width:40px;height:40px;border-radius:13px;background:#fff0e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Bills &amp; payments</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Dues, reminders, receipts</div></div>
+<div class="sw" data-switch data-on="1" style="background:#ff5400"><div class="knob" data-knob style="transform:translateX(18px)"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;border-bottom:1px solid #f2efe7">
+<div style="width:40px;height:40px;border-radius:13px;background:#fdeceb;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d3341f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M12 9v4M12 16h.01"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Security &amp; SOS</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Always on for safety alerts</div></div>
+<div class="sw" data-on="1" style="background:#e6ddc9;opacity:.6"><div class="knob" style="transform:translateX(18px)"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;border-bottom:1px solid #f2efe7">
+<div style="width:40px;height:40px;border-radius:13px;background:#fff7e0;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d99a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Community &amp; posts</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Forum replies, mentions</div></div>
+<div class="sw" data-switch data-on="0" style="background:#d8d3c8"><div class="knob" data-knob style="transform:translateX(0)"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px">
+<div style="width:40px;height:40px;border-radius:13px;background:#f0eee7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b655a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4l10 4V6z"/><path d="M14 8a4 4 0 010 8"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Notices &amp; events</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Society-wide announcements</div></div>
+<div class="sw" data-switch data-on="1" style="background:#ff5400"><div class="knob" data-knob style="transform:translateX(18px)"></div></div>
+</div>
+</div>
+
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">How you get them</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;overflow:hidden">
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;border-bottom:1px solid #f2efe7">
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Push to phone</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">Banner &amp; lock screen</div></div>
+<div class="sw" data-switch data-on="1" style="background:#ff5400"><div class="knob" data-knob style="transform:translateX(18px)"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;border-bottom:1px solid #f2efe7">
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Email digest</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">One summary each morning</div></div>
+<div class="sw" data-switch data-on="0" style="background:#d8d3c8"><div class="knob" data-knob style="transform:translateX(0)"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px">
+<div style="width:40px;height:40px;border-radius:13px;background:#f0eee7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#6b655a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Quiet hours</div><div style="font-size:12.5px;color:#8a8377;margin-top:1px">10:00 PM – 7:00 AM</div></div>
+<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c3bcae" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+</div>
+</div>
+<div style="font-size:12px;color:#a89f90;text-align:center;margin-top:18px;line-height:1.5">Safety &amp; SOS alerts always come through,<br>even during quiet hours.</div>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 1c PUSH ON LOCK SCREEN ================= -->
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a><b>Push notification</b> · how it arrives on the lock screen</div>
+<div class="ph"><div class="sc" style="background:linear-gradient(165deg,#2a2320 0%,#4a3a2c 45%,#7a5a3a 100%)">
+<div class="island"></div>
+<div class="stat"><b style="color:#fff">9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#fff"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#fff"/><rect x="15" width="3" height="11" rx="1" fill="#fff"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#fff" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#fff"/></svg></div></div>
+<div style="text-align:center;margin-top:26px;flex:none">
+<div style="font-size:16px;font-weight:600;color:rgba(255,255,255,.85)">Thursday, 12 March</div>
+<div style="font-size:76px;font-weight:700;color:#fff;letter-spacing:-.03em;line-height:1;margin-top:2px">9:41</div>
+</div>
+<div style="flex:1"></div>
+<!-- push stack -->
+<div style="padding:0 12px 16px;display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;gap:11px;padding:13px 14px;border-radius:20px;background:rgba(255,255,255,.82);backdrop-filter:blur(20px);box-shadow:0 4px 16px rgba(0,0,0,.15)">
+<div style="width:38px;height:38px;border-radius:11px;background:#ff5400;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0112 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 004 0"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between"><span style="font-size:12.5px;font-weight:700;color:#1c1a17">ReManage</span><span style="font-size:11.5px;color:#8a8377">now</span></div>
+<div style="font-size:13.5px;font-weight:700;color:#1c1a17;margin-top:2px">Rahul is at the gate</div>
+<div style="font-size:13px;color:#4a453d;line-height:1.4">Swiggy delivery for A-308. Approve or decline?</div>
+<div style="display:flex;gap:7px;margin-top:9px"><div style="flex:1;text-align:center;padding:7px;border-radius:10px;background:#ff5400;color:#fff;font-size:12.5px;font-weight:700">Approve</div><div style="flex:1;text-align:center;padding:7px;border-radius:10px;background:rgba(0,0,0,.06);color:#1c1a17;font-size:12.5px;font-weight:700">Decline</div></div>
+</div></div>
+<div style="display:flex;gap:11px;padding:13px 14px;border-radius:20px;background:rgba(255,255,255,.7);backdrop-filter:blur(20px);box-shadow:0 4px 16px rgba(0,0,0,.12)">
+<div style="width:38px;height:38px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;border:1px solid #eee"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between"><span style="font-size:12.5px;font-weight:700;color:#1c1a17">ReManage</span><span style="font-size:11.5px;color:#8a8377">1h ago</span></div>
+<div style="font-size:13.5px;font-weight:700;color:#1c1a17;margin-top:2px">March maintenance due</div>
+<div style="font-size:13px;color:#4a453d;line-height:1.4">₹3,450 due in 2 days. Tap to pay by UPI.</div>
+</div></div>
+<div style="text-align:center;font-size:12px;color:rgba(255,255,255,.75);margin-top:2px">2 more from ReManage · tap to expand</div>
+</div>
+<div style="flex:none;padding:0 0 16px;display:flex;justify-content:center"><div style="width:130px;height:5px;border-radius:3px;background:rgba(255,255,255,.85)"></div></div>
+</div></div>
+</div>
+
+<!-- ================= 1d PAY BILLS ================= -->
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a><b>Pay Bills</b> · resident · dues + UPI flow</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 8px"><div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Bills</div></div>
+<div class="scroll" style="padding:8px 16px 24px">
+<!-- balance hero -->
+<div style="border-radius:24px;padding:22px;background:linear-gradient(150deg,#ff5400 0%,#ff7a2e 100%);box-shadow:0 14px 30px -12px rgba(255,84,0,.55)">
+<div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.85)">Total due · A-308</div>
+<div style="font-size:44px;font-weight:800;color:#fff;letter-spacing:-.03em;margin-top:4px">₹3,450</div>
+<div style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span style="font-size:12.5px;font-weight:700;color:#fff">Due in 2 days · 12 Mar</span></div>
+<button style="width:100%;margin-top:18px;padding:15px;border-radius:15px;background:#fff;border:none;font-size:16px;font-weight:800;color:#ff5400;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg>Pay ₹3,450</button>
+</div>
+<!-- breakdown -->
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">This bill · March 2026</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:4px 16px">
+<div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #f2efe7"><span style="font-size:14.5px;color:#4a453d">Maintenance</span><span style="font-size:14.5px;font-weight:700;color:#1c1a17">₹3,000</span></div>
+<div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #f2efe7"><span style="font-size:14.5px;color:#4a453d">Water charges</span><span style="font-size:14.5px;font-weight:700;color:#1c1a17">₹250</span></div>
+<div style="display:flex;justify-content:space-between;padding:13px 0"><span style="font-size:14.5px;color:#d3341f">Late fee</span><span style="font-size:14.5px;font-weight:700;color:#d3341f">₹200</span></div>
+</div>
+<!-- pay method -->
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">Pay with</div>
+<div style="display:flex;align-items:center;gap:13px;background:#fff;border:2px solid #ff5400;border-radius:18px;padding:14px 16px">
+<div style="width:42px;height:42px;border-radius:12px;background:#fff0e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3M20 14v6M17 20h3"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">UPI · GPay, PhonePe</div><div style="font-size:12.5px;color:#8a8377">society@hdfcbank</div></div>
+<div style="width:22px;height:22px;border-radius:50%;background:#ff5400;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div>
+</div>
+<div style="display:flex;align-items:center;gap:13px;margin-top:10px;background:#fff;border:1px solid #efece4;border-radius:18px;padding:14px 16px">
+<div style="width:42px;height:42px;border-radius:12px;background:#f0eee7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#6b655a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg></div>
+<div style="flex:1"><div style="font-size:15px;font-weight:700;color:#1c1a17">Debit / credit card</div></div>
+<div style="width:22px;height:22px;border-radius:50%;border:2px solid #ddd6c8"></div>
+</div>
+<!-- history -->
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">Paid</div>
+<div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #efece4;border-radius:18px;padding:13px 16px">
+<div style="width:38px;height:38px;border-radius:11px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div>
+<div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">February 2026</div><div style="font-size:12.5px;color:#8a8377">Paid 8 Feb · UPI</div></div>
+<div style="font-size:14.5px;font-weight:700;color:#1c1a17">₹3,200</div>
+</div>
+</div>
+<!-- bottom nav -->
+<div style="flex:none;height:72px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Home</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg><span style="font-size:10.5px;color:#ff5400;font-weight:700">Bills</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Posts</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Visitors</span></div>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 1e VISITORS ================= -->
+<div class="dv-opt" id="1e">
+<div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a><b>Visitors &amp; pre-approval</b> · resident</div>
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 10px;display:flex;align-items:center;justify-content:space-between">
+<div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Visitors</div>
+<button style="display:flex;align-items:center;gap:6px;padding:9px 15px;border-radius:999px;background:#1c1a17;border:none;color:#fff;font-size:13px;font-weight:700"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Pre-approve</button>
+</div>
+<!-- segmented -->
+<div style="flex:none;padding:0 16px 8px"><div style="display:flex;background:#efece2;border-radius:13px;padding:4px">
+<div style="flex:1;text-align:center;padding:8px;border-radius:10px;background:#fff;font-size:13px;font-weight:700;color:#1c1a17;box-shadow:0 1px 2px rgba(0,0,0,.06)">At gate</div>
+<div style="flex:1;text-align:center;padding:8px;font-size:13px;font-weight:600;color:#8a8377">Expected</div>
+<div style="flex:1;text-align:center;padding:8px;font-size:13px;font-weight:600;color:#8a8377">History</div>
+</div></div>
+<div class="scroll" style="padding:8px 16px 24px">
+<!-- at gate live card -->
+<div style="border-radius:22px;border:1px solid #f6e6da;background:#fff5ef;overflow:hidden">
+<div style="display:flex;align-items:center;gap:8px;padding:11px 16px;background:#ffe9dc"><span style="width:8px;height:8px;border-radius:50%;background:#ff5400;box-shadow:0 0 0 4px rgba(255,84,0,.18)"></span><span style="font-size:12.5px;font-weight:800;color:#c0430a;letter-spacing:.02em">WAITING AT GATE · needs your approval</span></div>
+<div style="padding:16px">
+<div style="display:flex;gap:13px;align-items:center">
+<div style="width:54px;height:54px;border-radius:16px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;flex:none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+<div style="flex:1"><div style="font-size:18px;font-weight:800;color:#1c1a17">Rahul Mehta</div><div style="font-size:13px;color:#7a756c;margin-top:2px">Swiggy delivery · Gate 2 · 9:39 AM</div></div>
+</div>
+<div style="display:flex;gap:9px;margin-top:15px"><button style="flex:1;padding:13px;border-radius:14px;background:#ff5400;border:none;color:#fff;font-size:15px;font-weight:800">Approve entry</button><button style="width:52px;padding:13px;border-radius:14px;background:#fff;border:1px solid #e2ddd2;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d3341f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+</div>
+</div>
+<!-- expected -->
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">Expected today</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px">
+<div style="display:flex;gap:12px;align-items:center">
+<div style="width:46px;height:46px;border-radius:14px;background:#e7ddc9;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:16px;font-weight:800;color:#7a5c2e">PS</span></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:700;color:#1c1a17">Priya Sharma</div><div style="font-size:12.5px;color:#8a8377">Guest · today, 6:00 PM</div></div>
+<div style="text-align:right"><div style="font-size:11px;color:#a89f90;font-weight:600">PASSCODE</div><div style="font-size:19px;font-weight:800;color:#ff5400;letter-spacing:.08em">4821</div></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #f2efe7"><button style="flex:1;padding:10px;border-radius:12px;background:#fff0e6;border:none;color:#ff5400;font-size:13.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/><path d="M16 6l-4-4-4 4M12 2v13"/></svg>Share pass</button><button style="flex:1;padding:10px;border-radius:12px;background:#f4f1ea;border:none;color:#6b655a;font-size:13.5px;font-weight:700">Cancel</button></div>
+</div>
+<!-- recent -->
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90;margin:20px 4px 10px">Recent</div>
+<div style="display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #efece4;border-radius:18px;padding:13px 16px;margin-bottom:9px">
+<div style="width:38px;height:38px;border-radius:11px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div>
+<div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">Amazon delivery</div><div style="font-size:12.5px;color:#8a8377">Entered 8:20 AM · exited 8:25 AM</div></div>
+</div>
+<div style="display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #efece4;border-radius:18px;padding:13px 16px">
+<div style="width:38px;height:38px;border-radius:11px;background:#f0eee7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#6b655a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+<div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">Ramesh (plumber)</div><div style="font-size:12.5px;color:#8a8377">Yesterday · 4:10 PM</div></div>
+</div>
+</div>
+<div style="flex:none;height:72px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:9px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Home</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Bills</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#a89f90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:10.5px;color:#a89f90;font-weight:600">Posts</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span style="font-size:10.5px;color:#ff5400;font-weight:700">Visitors</span></div>
+</div>
+</div></div>
+</div>
+
+<!-- ================= 1f SOS ================= -->
+<div class="dv-opt" id="1f">
+<div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a><b>SOS / emergency</b> · resident trigger</div>
+<div class="ph"><div class="sc" style="background:#1c1614">
+<div class="island"></div>
+<div class="stat"><b style="color:#fff">9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#fff"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#fff"/><rect x="15" width="3" height="11" rx="1" fill="#fff"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#fff" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#fff"/></svg></div></div>
+<div style="flex:none;padding:6px 18px 4px;display:flex;align-items:center;gap:10px">
+<div style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></div>
+<div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em">Emergency</div>
+</div>
+<div class="scroll" style="padding:8px 20px 24px">
+<div style="text-align:center;color:rgba(255,255,255,.6);font-size:13.5px;line-height:1.5;margin:8px 0 4px">Hold the button for 3 seconds to<br>alert the security gate &amp; committee.</div>
+<!-- SOS button -->
+<div style="display:flex;justify-content:center;margin:26px 0 22px"><div style="width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#ff3b30,#c81e12);box-shadow:0 0 0 14px rgba(255,59,48,.12),0 0 0 28px rgba(255,59,48,.06),0 18px 40px -10px rgba(200,30,18,.6);display:flex;flex-direction:column;align-items:center;justify-content:center">
+<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M12 9v4M12 16h.01"/></svg>
+<div style="font-size:40px;font-weight:800;color:#fff;letter-spacing:.06em;margin-top:6px">SOS</div>
+<div style="font-size:12.5px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:.14em">HOLD TO ALERT</div>
+</div></div>
+<!-- location toggle -->
+<div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border-radius:16px;padding:14px 16px;margin-bottom:20px">
+<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#ffbe00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c5-5 7-8 7-11a7 7 0 10-14 0c0 3 2 6 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+<div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#fff">Share live location</div><div style="font-size:12px;color:rgba(255,255,255,.55)">Guards see exactly where you are</div></div>
+<div class="sw" data-switch data-on="1" style="background:#ff5400"><div class="knob" data-knob style="transform:translateX(18px)"></div></div>
+</div>
+<div style="font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.4);margin:4px 4px 12px">Quick call</div>
+<div style="display:flex;gap:11px">
+<div style="flex:1;background:rgba(255,255,255,.06);border-radius:18px;padding:16px 12px;text-align:center"><div style="width:46px;height:46px;border-radius:50%;background:rgba(255,59,48,.16);display:flex;align-items:center;justify-content:center;margin:0 auto 9px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff6a5f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-3 2a11 11 0 005 5l2-3 5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg></div><div style="font-size:13px;font-weight:700;color:#fff">Gate</div><div style="font-size:11px;color:rgba(255,255,255,.5)">Security</div></div>
+<div style="flex:1;background:rgba(255,255,255,.06);border-radius:18px;padding:16px 12px;text-align:center"><div style="width:46px;height:46px;border-radius:50%;background:rgba(46,153,232,.16);display:flex;align-items:center;justify-content:center;margin:0 auto 9px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5eb2f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v10M7 12h10"/></svg></div><div style="font-size:13px;font-weight:700;color:#fff">Ambulance</div><div style="font-size:11px;color:rgba(255,255,255,.5)">102</div></div>
+<div style="flex:1;background:rgba(255,255,255,.06);border-radius:18px;padding:16px 12px;text-align:center"><div style="width:46px;height:46px;border-radius:50%;background:rgba(255,190,0,.16);display:flex;align-items:center;justify-content:center;margin:0 auto 9px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 4 5 5 5 9a5 5 0 01-10 0c0-2 1-3 2-4 0 2 1 3 3 3-1-2 0-5 0-8z"/></svg></div><div style="font-size:13px;font-weight:700;color:#fff">Fire</div><div style="font-size:11px;color:rgba(255,255,255,.5)">101</div></div>
+</div>
+</div>
+</div></div>
+</div>
+
+</div>
+<p class="dv-next">Try next: “build the guard side of <a class="dv-oid" href="#1e">1e</a> in the dark theme” · “make <a class="dv-oid" href="#1a">1a</a> a full interactive prototype with tabs” · “add a helpdesk + amenity-booking screen” · “swap the palette to the Organic terracotta/sage system”</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const root = document.querySelector('.dv-turn');
+    if (!root) return;
+    // inbox filter pills
+    const inbox = document.getElementById('rm-inbox');
+    if (inbox) {
+      inbox.querySelectorAll('[data-filter]').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const mode = tab.getAttribute('data-filter');
+          inbox.querySelectorAll('[data-filter]').forEach((t) => {
+            const on = t === tab;
+            t.style.background = on ? '#1c1a17' : '#fff';
+            t.style.color = on ? '#fff' : '#7a756c';
+            t.style.borderColor = on ? '#1c1a17' : '#e8e4da';
+          });
+          inbox.querySelectorAll('[data-notif]').forEach((n) => {
+            const read = n.getAttribute('data-read') === '1';
+            n.style.display = (mode === 'unread' && read) ? 'none' : '';
+          });
+        });
+      });
+      const markBtn = inbox.querySelector('[data-markall]');
+      if (markBtn) markBtn.addEventListener('click', () => {
+        inbox.querySelectorAll('[data-notif][data-read="0"]').forEach((n) => {
+          n.setAttribute('data-read', '1');
+          n.style.background = '#fff';
+          n.style.borderColor = '#efece4';
+          const dot = n.querySelector('[data-dot]');
+          if (dot) dot.style.opacity = '0';
+        });
+        const badge = inbox.querySelector('[data-unreadcount]');
+        if (badge) badge.textContent = 'Unread 0';
+      });
+    }
+    // community like buttons
+    root.querySelectorAll('[data-like]').forEach((btn) => {
+      let liked = false;
+      btn.addEventListener('click', () => {
+        liked = !liked;
+        const heart = btn.querySelector('[data-heart]');
+        const count = btn.querySelector('[data-likecount]');
+        const base = parseInt(count.getAttribute('data-base') || count.textContent, 10);
+        if (!count.getAttribute('data-base')) count.setAttribute('data-base', String(base));
+        heart.setAttribute('fill', liked ? '#ff5400' : 'none');
+        heart.setAttribute('stroke', liked ? '#ff5400' : '#8a8377');
+        count.style.color = liked ? '#ff5400' : '#8a8377';
+        count.textContent = String(base + (liked ? 1 : 0));
+      });
+    });
+    // amenity slot chips
+    root.querySelectorAll('[data-slot]').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        root.querySelectorAll('[data-slot]').forEach((c) => {
+          c.style.background = '#fff'; c.style.borderColor = '#efece4'; c.style.color = '#1c1a17';
+        });
+        chip.style.background = '#ff5400'; chip.style.borderColor = '#ff5400'; chip.style.color = '#fff';
+      });
+    });
+    // all toggle switches
+    root.querySelectorAll('[data-switch]').forEach((sw) => {
+      sw.addEventListener('click', () => {
+        const next = sw.getAttribute('data-on') !== '1';
+        sw.setAttribute('data-on', next ? '1' : '0');
+        sw.style.background = next ? '#ff5400' : '#d8d3c8';
+        const knob = sw.querySelector('[data-knob]');
+        if (knob) knob.style.transform = next ? 'translateX(18px)' : 'translateX(0)';
+      });
+    });
+  }
+}
+</script>
+</body>
+</html>

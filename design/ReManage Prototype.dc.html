@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#efe9dd;font-family:Figtree,system-ui,sans-serif;display:flex;justify-content:center;padding:34px 0}
+*{box-sizing:border-box}
+.ph{width:376px;background:#0f0e0d;border-radius:52px;padding:11px;box-shadow:0 34px 70px -24px rgba(50,35,10,.55)}
+.sc{position:relative;background:#faf8f2;border-radius:42px;overflow:hidden;height:794px;display:flex;flex-direction:column;font-family:Figtree,sans-serif}
+.island{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:104px;height:29px;background:#0f0e0d;border-radius:16px;z-index:40}
+.stat{height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;flex:none}
+.stat b{font-size:15px;font-weight:600;color:#1c1a17}
+.screen{flex:1;display:none;flex-direction:column;min-height:0}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto}
+.scroll::-webkit-scrollbar{width:0}
+.nav{flex:none;height:78px;background:#fff;border-top:1px solid #efece4;display:flex;align-items:flex-start;justify-content:space-around;padding-top:10px;z-index:20}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;padding:2px 8px}
+.tab span{font-size:10.5px;font-weight:600;color:#a89f90}
+.tab.on span{color:#ff5400;font-weight:700}
+.tab svg{stroke:#a89f90}
+.tab.on svg{stroke:#ff5400;stroke-width:2.2}
+button{font-family:Figtree,sans-serif;cursor:pointer}
+.kick{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#a89f90}
+.sheet-wrap{position:absolute;inset:0;z-index:60;display:none}
+.sheet-wrap.open{display:block}
+.sheet-bd{position:absolute;inset:0;background:rgba(28,22,20,.42);opacity:0;transition:opacity .25s}
+.sheet-wrap.open .sheet-bd{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#faf8f2;border-radius:28px 28px 42px 42px;padding:10px 20px 26px;transform:translateY(100%);transition:transform .3s cubic-bezier(.3,.9,.3,1)}
+.sheet-wrap.open .sheet{transform:translateY(0)}
+.grip{width:42px;height:5px;border-radius:3px;background:#e0d9cb;margin:0 auto 14px}
+.sk{background:linear-gradient(100deg,#efe9dd 30%,#f6f2ea 50%,#efe9dd 70%);background-size:200% 100%;animation:sh 1.1s linear infinite;border-radius:12px}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+a{color:#ff5400}
+</style>
+</helmet>
+
+<div class="ph"><div class="sc">
+<div class="island"></div>
+<div class="stat"><b>9:41</b><div style="display:flex;align-items:center;gap:7px"><svg width="18" height="11" viewBox="0 0 18 11"><rect y="7" width="3" height="4" rx="1" fill="#1c1a17"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#1c1a17"/><rect x="10" y="2" width="3" height="9" rx="1" fill="#1c1a17"/><rect x="15" width="3" height="11" rx="1" fill="#1c1a17"/></svg><svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#1c1a17" stroke-width="1.5"><path d="M1 4a10 10 0 0114 0M3.5 6.7a6 6 0 019 0"/></svg><svg width="26" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="#1c1a17" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="1.5" fill="#1c1a17"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#1c1a17" fill-opacity=".4"/></svg></div></div>
+
+<!-- ============ HOME ============ -->
+<div class="screen active" data-screen="home">
+<div style="flex:none;padding:4px 20px 12px;display:flex;align-items:center;justify-content:space-between">
+<div><div style="font-size:13px;color:#8a8377;font-weight:600">Good morning</div><div style="font-size:23px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Aarav · A-308</div></div>
+<button data-bell style="width:44px;height:44px;border-radius:14px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center;position:relative"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0112 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 004 0"/></svg><span data-bellbadge style="position:absolute;top:8px;right:9px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#ff5400;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff">3</span></button>
+</div>
+<div class="scroll" data-body="home" style="padding:4px 16px 22px">
+<!-- at gate alert -->
+<div style="border-radius:20px;border:1px solid #f6e6da;background:#fff5ef;overflow:hidden;margin-bottom:14px">
+<div style="display:flex;align-items:center;gap:8px;padding:10px 16px;background:#ffe9dc"><span style="width:8px;height:8px;border-radius:50%;background:#ff5400;box-shadow:0 0 0 4px rgba(255,84,0,.18)"></span><span style="font-size:12px;font-weight:800;color:#c0430a;letter-spacing:.02em">AT YOUR GATE · needs approval</span></div>
+<div style="padding:14px 16px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:46px;height:46px;border-radius:14px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;flex:none"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div style="flex:1"><div style="font-size:16px;font-weight:800;color:#1c1a17">Rahul Mehta</div><div style="font-size:12.5px;color:#7a756c">Swiggy delivery · 2 min ago</div></div></div>
+<div style="display:flex;gap:9px;margin-top:13px"><button data-approve style="flex:1;padding:12px;border-radius:13px;background:#ff5400;border:none;color:#fff;font-size:14.5px;font-weight:800">Approve</button><button data-decline style="width:50px;padding:12px;border-radius:13px;background:#fff;border:1px solid #e2ddd2;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#d3341f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+</div>
+</div>
+<!-- dues -->
+<button data-go="bills" style="width:100%;text-align:left;border:none;border-radius:20px;padding:18px;background:linear-gradient(150deg,#ff5400,#ff7a2e);box-shadow:0 12px 26px -14px rgba(255,84,0,.55);margin-bottom:14px;display:flex;align-items:center;gap:14px">
+<div style="flex:1"><div style="font-size:12.5px;font-weight:600;color:rgba(255,255,255,.85)">March maintenance due</div><div style="font-size:30px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-top:2px">₹3,450</div><div style="font-size:12px;color:rgba(255,255,255,.9);margin-top:2px">Due in 2 days · tap to pay</div></div>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+</button>
+<!-- quick actions -->
+<div class="kick" style="margin:6px 4px 12px">Quick actions</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:11px">
+<button data-go="visitors" style="background:#fff;border:1px solid #efece4;border-radius:18px;padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:44px;height:44px;border-radius:13px;background:#e9f2fd;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><span style="font-size:12px;font-weight:700;color:#1c1a17">Visitors</span></button>
+<button data-go="bills" style="background:#fff;border:1px solid #efece4;border-radius:18px;padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:44px;height:44px;border-radius:13px;background:#fff0e6;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg></div><span style="font-size:12px;font-weight:700;color:#1c1a17">Bills</span></button>
+<button data-go="posts" style="background:#fff;border:1px solid #efece4;border-radius:18px;padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:44px;height:44px;border-radius:13px;background:#fff7e0;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d99a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg></div><span style="font-size:12px;font-weight:700;color:#1c1a17">Community</span></button>
+<button data-open="amenities" style="background:#fff;border:1px solid #efece4;border-radius:18px;padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:44px;height:44px;border-radius:13px;background:#eef2e6;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7a8a5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg></div><span style="font-size:12px;font-weight:700;color:#1c1a17">Amenities</span></button>
+<button data-open="notices" style="background:#fff;border:1px solid #efece4;border-radius:18px;padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:44px;height:44px;border-radius:13px;background:#e8eef7;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4l10 4V6z"/><path d="M14 8a4 4 0 010 8"/></svg></div><span style="font-size:12px;font-weight:700;color:#1c1a17">Notices</span></button>
+<button data-sos style="background:#fdeceb;border:1px solid #f8d9d5;border-radius:18px;padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:44px;height:44px;border-radius:13px;background:#f9dcd9;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d3341f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M12 9v4M12 16h.01"/></svg></div><span style="font-size:12px;font-weight:800;color:#d3341f">SOS</span></button>
+</div>
+<div class="kick" style="margin:22px 4px 12px">Notices</div>
+<button data-open="notices" style="width:100%;text-align:left;display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #efece4;border-radius:18px;padding:14px 16px"><div style="width:40px;height:40px;border-radius:12px;background:#fff5ef;display:flex;align-items:center;justify-content:center;flex:none;border:1px solid #f6e6da"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">Fire safety drill — 6 PM today</div><div style="font-size:12px;color:#8a8377">Management · 3 hr ago</div></div></button>
+</div>
+</div>
+
+<!-- ============ BILLS ============ -->
+<div class="screen" data-screen="bills">
+<div style="flex:none;padding:4px 20px 10px"><div style="font-size:23px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Bills</div></div>
+<div class="scroll" data-body="bills" style="padding:6px 16px 22px">
+<div data-billshero style="border-radius:24px;padding:22px;background:linear-gradient(150deg,#ff5400,#ff7a2e);box-shadow:0 14px 30px -12px rgba(255,84,0,.55)">
+<div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.85)">Total due · A-308</div>
+<div style="font-size:44px;font-weight:800;color:#fff;letter-spacing:-.03em;margin-top:4px">₹3,450</div>
+<div style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span style="font-size:12.5px;font-weight:700;color:#fff">Due in 2 days · 12 Mar</span></div>
+<button data-pay style="width:100%;margin-top:18px;padding:15px;border-radius:15px;background:#fff;border:none;font-size:16px;font-weight:800;color:#ff5400">Pay ₹3,450</button>
+</div>
+<div class="kick" style="margin:20px 4px 10px">This bill · March 2026</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:4px 16px">
+<div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #f2efe7"><span style="font-size:14.5px;color:#4a453d">Maintenance</span><span style="font-size:14.5px;font-weight:700;color:#1c1a17">₹3,000</span></div>
+<div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #f2efe7"><span style="font-size:14.5px;color:#4a453d">Water charges</span><span style="font-size:14.5px;font-weight:700;color:#1c1a17">₹250</span></div>
+<div style="display:flex;justify-content:space-between;padding:13px 0"><span style="font-size:14.5px;color:#d3341f">Late fee</span><span style="font-size:14.5px;font-weight:700;color:#d3341f">₹200</span></div>
+</div>
+<div class="kick" style="margin:20px 4px 10px">Paid</div>
+<div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #efece4;border-radius:18px;padding:13px 16px"><div style="width:38px;height:38px;border-radius:11px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div><div style="flex:1"><div style="font-size:14.5px;font-weight:700;color:#1c1a17">February 2026</div><div style="font-size:12.5px;color:#8a8377">Paid 8 Feb · UPI</div></div><div style="font-size:14.5px;font-weight:700;color:#1c1a17">₹3,200</div></div>
+</div>
+</div>
+
+<!-- ============ POSTS ============ -->
+<div class="screen" data-screen="posts">
+<div style="flex:none;padding:4px 20px 10px;display:flex;align-items:center;justify-content:between;justify-content:space-between"><div style="font-size:23px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Community</div><button style="display:flex;align-items:center;gap:6px;padding:9px 15px;border-radius:999px;background:#1c1a17;border:none;color:#fff;font-size:13px;font-weight:700" data-opensheet="post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Post</button></div>
+<div class="scroll" data-body="posts" style="padding:6px 16px 22px">
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:12px">
+<div style="display:flex;gap:11px;align-items:center"><div style="width:40px;height:40px;border-radius:12px;background:#e7ddc9;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:14px;font-weight:800;color:#7a5c2e">AR</span></div><div style="flex:1"><div style="font-size:14.5px;font-weight:800;color:#1c1a17">Anita Rao <span style="font-weight:600;color:#a89f90;font-size:12.5px">· B-402</span></div><div style="font-size:12px;color:#a89f90">2 hours ago</div></div><span style="padding:4px 10px;border-radius:999px;background:#eef2e6;font-size:11px;font-weight:800;color:#5a6b40">EVENTS</span></div>
+<div style="font-size:14.5px;color:#3a352e;line-height:1.5;margin-top:12px">Organising a Sunday plantation drive near the play area 🌱 Anyone free from 8 AM?</div>
+<div style="display:flex;gap:20px;margin-top:14px;padding-top:13px;border-top:1px solid #f2efe7"><div data-like style="display:flex;align-items:center;gap:7px;cursor:pointer"><svg data-heart width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9.5-8.5C.8 8.5 2 5.5 5 5.5c2 0 3 1.5 3.5 2.5C9 7 10 5.5 12 5.5c3 0 4.2 3 2.5 6C19 15.6 12 20 12 20z"/></svg><span data-likecount style="font-size:13px;font-weight:700;color:#8a8377">14</span></div><div style="display:flex;align-items:center;gap:7px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:13px;font-weight:700;color:#8a8377">6</span></div></div>
+</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px">
+<div style="display:flex;gap:11px;align-items:center"><div style="width:40px;height:40px;border-radius:12px;background:#dbe6f5;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:14px;font-weight:800;color:#2b6fb8">VK</span></div><div style="flex:1"><div style="font-size:14.5px;font-weight:800;color:#1c1a17">Vikram K <span style="font-weight:600;color:#a89f90;font-size:12.5px">· A-308</span></div><div style="font-size:12px;color:#a89f90">Yesterday</div></div><span style="padding:4px 10px;border-radius:999px;background:#f4ecdf;font-size:11px;font-weight:800;color:#8a6a2e">FOR SALE</span></div>
+<div style="font-size:14.5px;color:#3a352e;line-height:1.5;margin-top:12px">Selling a barely-used study table, solid wood. ₹2,500. DM if interested.</div>
+<div style="display:flex;gap:20px;margin-top:14px;padding-top:13px;border-top:1px solid #f2efe7"><div data-like style="display:flex;align-items:center;gap:7px;cursor:pointer"><svg data-heart width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9.5-8.5C.8 8.5 2 5.5 5 5.5c2 0 3 1.5 3.5 2.5C9 7 10 5.5 12 5.5c3 0 4.2 3 2.5 6C19 15.6 12 20 12 20z"/></svg><span data-likecount style="font-size:13px;font-weight:700;color:#8a8377">3</span></div><div style="display:flex;align-items:center;gap:7px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8377" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span style="font-size:13px;font-weight:700;color:#8a8377">2</span></div></div>
+</div>
+</div>
+</div>
+
+<!-- ============ VISITORS ============ -->
+<div class="screen" data-screen="visitors">
+<div style="flex:none;padding:4px 20px 10px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:23px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Visitors</div><button data-opensheet="preapprove" style="display:flex;align-items:center;gap:6px;padding:9px 15px;border-radius:999px;background:#1c1a17;border:none;color:#fff;font-size:13px;font-weight:700"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Pre-approve</button></div>
+<div class="scroll" data-body="visitors" style="padding:6px 16px 22px">
+<div class="kick" style="margin:2px 4px 10px">At gate</div>
+<!-- empty state -->
+<div data-emptygate style="background:#fff;border:1px solid #efece4;border-radius:22px;padding:34px 20px;text-align:center">
+<div style="width:64px;height:64px;border-radius:20px;background:#f4f1ea;display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#c3bcae" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg></div>
+<div style="font-size:16px;font-weight:800;color:#1c1a17">No one at the gate</div>
+<div style="font-size:13px;color:#8a8377;line-height:1.5;margin-top:5px">You'll get a notification the moment<br>a visitor arrives for A-308.</div>
+</div>
+<div class="kick" style="margin:20px 4px 10px">Expected today</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px">
+<div style="display:flex;gap:12px;align-items:center"><div style="width:46px;height:46px;border-radius:14px;background:#e7ddc9;display:flex;align-items:center;justify-content:center;flex:none"><span style="font-size:16px;font-weight:800;color:#7a5c2e">PS</span></div><div style="flex:1"><div style="font-size:16px;font-weight:700;color:#1c1a17">Priya Sharma</div><div style="font-size:12.5px;color:#8a8377">Guest · today, 6:00 PM</div></div><div style="text-align:right"><div style="font-size:11px;color:#a89f90;font-weight:600">PASSCODE</div><div style="font-size:19px;font-weight:800;color:#ff5400;letter-spacing:.08em">4821</div></div></div>
+</div>
+</div>
+</div>
+
+<!-- ============ NOTIFICATIONS (overlay screen) ============ -->
+<div class="screen" data-screen="notifications">
+<div style="flex:none;padding:4px 18px 12px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:10px"><button data-back style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></button><div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Notifications</div></div>
+<button data-markall style="background:none;border:none;font-size:13px;font-weight:700;color:#ff5400">Mark all read</button>
+</div>
+<div class="scroll" style="padding:2px 16px 22px">
+<div class="kick" style="margin:8px 4px 10px">Today</div>
+<div data-notif data-read="0" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff5ef;border:1px solid #f6e6da;margin-bottom:10px"><div style="width:44px;height:44px;border-radius:14px;background:#e9f2fd;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">Rahul Mehta</b> is at the gate</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px"></div></div><div style="font-size:13px;color:#7a756c;margin-top:3px">Swiggy delivery · A-308</div><div style="font-size:11.5px;color:#a89f90;margin-top:8px">2 min ago</div></div></div>
+<div data-notif data-read="0" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff5ef;border:1px solid #f6e6da;margin-bottom:10px"><div style="width:44px;height:44px;border-radius:14px;background:#fff0e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg></div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">March maintenance</b> is due</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px"></div></div><div style="font-size:13px;color:#7a756c;margin-top:3px">₹3,450 · due in 2 days</div><div style="font-size:11.5px;color:#a89f90;margin-top:8px">1 hr ago</div></div></div>
+<div data-notif data-read="0" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff5ef;border:1px solid #f6e6da;margin-bottom:10px"><div style="width:44px;height:44px;border-radius:14px;background:#fdeceb;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#d3341f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M12 9v4M12 16h.01"/></svg></div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px"><div style="font-size:14.5px;color:#1c1a17;line-height:1.35"><b style="font-weight:800">Fire safety drill</b> at 6 PM</div><div data-dot style="width:9px;height:9px;border-radius:50%;background:#ff5400;flex:none;margin-top:5px"></div></div><div style="font-size:13px;color:#7a756c;margin-top:3px">Gather at the podium when the alarm sounds.</div><div style="font-size:11.5px;color:#a89f90;margin-top:8px">3 hr ago · Security</div></div></div>
+<div class="kick" style="margin:16px 4px 10px">Earlier</div>
+<div data-notif data-read="1" style="display:flex;gap:12px;padding:14px;border-radius:19px;background:#fff;border:1px solid #efece4;margin-bottom:10px"><div style="width:44px;height:44px;border-radius:14px;background:#e8f5ee;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#17915a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v9l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v9"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:14.5px;color:#1c1a17"><b style="font-weight:800">Parcel collected</b> at the gate</div><div style="font-size:13px;color:#7a756c;margin-top:3px">Amazon package handed to you.</div><div style="font-size:11.5px;color:#a89f90;margin-top:8px">Yesterday</div></div></div>
+</div>
+</div>
+
+<!-- ============ AMENITIES ============ -->
+<div class="screen" data-screen="amenities">
+<div style="flex:none;padding:4px 18px 10px;display:flex;align-items:center;gap:12px"><button data-back style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></button><div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Clubhouse</div></div>
+<div class="scroll" style="padding:6px 16px 22px">
+<div style="border-radius:22px;height:120px;background:linear-gradient(135deg,#7a8a5e,#9caf78);display:flex;align-items:flex-end;padding:16px;position:relative;overflow:hidden"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5" style="position:absolute;top:-14px;right:-10px"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg><div style="color:#fff"><div style="font-size:19px;font-weight:800">Party Hall · 2nd floor</div><div style="font-size:12.5px;color:rgba(255,255,255,.9);margin-top:2px">Up to 40 guests · ₹1,500 / slot</div></div></div>
+<div class="kick" style="margin:20px 4px 12px">Choose date</div>
+<div style="display:flex;gap:8px">
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#fff;border:1px solid #efece4"><div style="font-size:11px;color:#a89f90;font-weight:700">SAT</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:2px">8</div></div>
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#1c1a17"><div style="font-size:11px;color:rgba(255,255,255,.7);font-weight:700">SUN</div><div style="font-size:17px;font-weight:800;color:#fff;margin-top:2px">9</div></div>
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#fff;border:1px solid #efece4"><div style="font-size:11px;color:#a89f90;font-weight:700">MON</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:2px">10</div></div>
+<div style="flex:1;text-align:center;padding:11px 0;border-radius:14px;background:#fff;border:1px solid #efece4"><div style="font-size:11px;color:#a89f90;font-weight:700">TUE</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:2px">11</div></div>
+</div>
+<div class="kick" style="margin:20px 4px 12px">Available slots</div>
+<div style="display:flex;flex-wrap:wrap;gap:9px">
+<div data-aslot style="padding:11px 16px;border-radius:13px;background:#fff;border:1px solid #efece4;font-size:14px;font-weight:700;color:#1c1a17">9 – 11 AM</div>
+<div data-aslot style="padding:11px 16px;border-radius:13px;background:#ff5400;border:1px solid #ff5400;font-size:14px;font-weight:700;color:#fff">12 – 3 PM</div>
+<div data-aslot style="padding:11px 16px;border-radius:13px;background:#fff;border:1px solid #efece4;font-size:14px;font-weight:700;color:#1c1a17">4 – 7 PM</div>
+<div style="padding:11px 16px;border-radius:13px;background:#f4f1ea;border:1px solid #eee7da;font-size:14px;font-weight:700;color:#c3bcae;text-decoration:line-through">7 – 10 PM</div>
+</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:18px;padding:14px 16px;margin-top:20px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;color:#8a8377">Sun 9 Mar · 12 – 3 PM</div><div style="font-size:17px;font-weight:800;color:#1c1a17;margin-top:1px">₹1,500 total</div></div><span style="font-size:12px;color:#17915a;font-weight:800">Refundable</span></div>
+<button data-book style="width:100%;margin-top:12px;padding:16px;border-radius:16px;background:#ff5400;border:none;color:#fff;font-size:16px;font-weight:800">Book &amp; pay ₹1,500</button>
+</div>
+</div>
+
+<!-- ============ NOTICES ============ -->
+<div class="screen" data-screen="notices">
+<div style="flex:none;padding:4px 18px 10px;display:flex;align-items:center;gap:12px"><button data-back style="width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #ece5d8;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-7 6 7 6"/></svg></button><div style="font-size:22px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Notices</div></div>
+<div class="scroll" style="padding:6px 16px 22px">
+<div class="kick" style="margin:2px 4px 10px">Pinned</div>
+<div style="border-radius:20px;border:1px solid #f6e6da;background:#fff5ef;padding:16px"><div style="display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;border:1px solid #f6e6da"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#ff5400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg></div><div style="flex:1"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">Fire safety drill — 6 PM today</div><div style="font-size:12px;color:#a89f90;margin-top:1px">Management · 3 hours ago</div></div></div><div style="font-size:14px;color:#3a352e;line-height:1.5;margin-top:11px">Assemble at the podium when the alarm sounds. Do not use the lifts during the drill.</div></div>
+<div class="kick" style="margin:20px 4px 10px">This week</div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px;margin-bottom:11px"><div style="display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:12px;background:#e8eef7;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2b7fd4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4l10 4V6z"/><path d="M14 8a4 4 0 010 8"/></svg></div><div style="flex:1"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">Water supply off 10 AM–1 PM</div><div style="font-size:12px;color:#a89f90;margin-top:1px">Facilities · yesterday</div></div></div><div style="font-size:14px;color:#3a352e;line-height:1.5;margin-top:11px">Tank cleaning tomorrow. Please store water in advance.</div></div>
+<div style="background:#fff;border:1px solid #efece4;border-radius:20px;padding:16px"><div style="display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:12px;background:#eef2e6;display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#7a8a5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div style="flex:1"><div style="font-size:15.5px;font-weight:800;color:#1c1a17">AGM — Sunday 16 Mar, 11 AM</div><div style="font-size:12px;color:#a89f90;margin-top:1px">Secretary · 2 days ago</div></div></div><div style="font-size:14px;color:#3a352e;line-height:1.5;margin-top:11px">Annual general meeting in the clubhouse. Agenda attached.</div></div>
+</div>
+</div>
+
+<!-- ============ BOTTOM NAV ============ -->
+<nav class="nav">
+<button class="tab on" data-tab="home"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span>Home</span></button>
+<button class="tab" data-tab="bills"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-1.8L13 21l-1-1-1 1-3-1.8L5 21z"/><path d="M9 8h6M9 12h6"/></svg><span>Bills</span></button>
+<button class="tab" data-tab="posts"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 3z"/></svg><span>Posts</span></button>
+<button class="tab" data-tab="visitors"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg><span>Visitors</span></button>
+</nav>
+
+<!-- ============ PRE-APPROVE SHEET ============ -->
+<div class="sheet-wrap" data-sheet="preapprove">
+<div class="sheet-bd" data-sheetclose></div>
+<div class="sheet">
+<div class="grip"></div>
+<div style="font-size:20px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">Pre-approve a visitor</div>
+<div style="font-size:13px;color:#8a8377;margin-top:3px;margin-bottom:18px">They enter with a passcode — no call needed.</div>
+<div class="kick" style="margin:0 2px 8px">Who's coming</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#ff5400;border:1px solid #ff5400;color:#fff;font-size:13.5px;font-weight:700">Guest</div>
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#fff;border:1px solid #e8e4da;color:#7a756c;font-size:13.5px;font-weight:700">Delivery</div>
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#fff;border:1px solid #e8e4da;color:#7a756c;font-size:13.5px;font-weight:700">Cab</div>
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#fff;border:1px solid #e8e4da;color:#7a756c;font-size:13.5px;font-weight:700">Help</div>
+</div>
+<div class="kick" style="margin:0 2px 8px">Name</div>
+<div style="background:#fff;border:1px solid #e8e4da;border-radius:14px;padding:14px 16px;font-size:15px;color:#1c1a17;font-weight:600;margin-bottom:14px">Priya Sharma</div>
+<div style="display:flex;gap:11px;margin-bottom:20px">
+<div style="flex:1"><div class="kick" style="margin:0 2px 8px">Date</div><div style="background:#fff;border:1px solid #e8e4da;border-radius:14px;padding:14px 16px;font-size:15px;color:#1c1a17;font-weight:600">Today</div></div>
+<div style="flex:1"><div class="kick" style="margin:0 2px 8px">Arrives</div><div style="background:#fff;border:1px solid #e8e4da;border-radius:14px;padding:14px 16px;font-size:15px;color:#1c1a17;font-weight:600">6:00 PM</div></div>
+</div>
+<button data-sheetdone data-done="Pass sent · code 4821" style="width:100%;padding:16px;border-radius:16px;background:#ff5400;border:none;color:#fff;font-size:16px;font-weight:800">Generate pass</button>
+</div>
+</div>
+
+<!-- ============ POST SHEET ============ -->
+<div class="sheet-wrap" data-sheet="post">
+<div class="sheet-bd" data-sheetclose></div>
+<div class="sheet">
+<div class="grip"></div>
+<div style="font-size:20px;font-weight:800;color:#1c1a17;letter-spacing:-.02em">New post</div>
+<div style="font-size:13px;color:#8a8377;margin-top:3px;margin-bottom:18px">Shared with everyone in A-wing.</div>
+<div class="kick" style="margin:0 2px 8px">Category</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#ff5400;border:1px solid #ff5400;color:#fff;font-size:13.5px;font-weight:700">General</div>
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#fff;border:1px solid #e8e4da;color:#7a756c;font-size:13.5px;font-weight:700">Events</div>
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#fff;border:1px solid #e8e4da;color:#7a756c;font-size:13.5px;font-weight:700">For sale</div>
+<div data-vtype style="padding:9px 15px;border-radius:999px;background:#fff;border:1px solid #e8e4da;color:#7a756c;font-size:13.5px;font-weight:700">Lost &amp; found</div>
+</div>
+<div class="kick" style="margin:0 2px 8px">Your message</div>
+<div style="background:#fff;border:1px solid #e8e4da;border-radius:14px;padding:14px 16px;font-size:14.5px;color:#a89f90;line-height:1.5;min-height:88px;margin-bottom:20px">What would you like to share with your neighbours?</div>
+<button data-sheetdone data-done="Posted to A-wing" style="width:100%;padding:16px;border-radius:16px;background:#ff5400;border:none;color:#fff;font-size:16px;font-weight:800">Post</button>
+</div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div data-toast style="position:absolute;left:50%;bottom:96px;transform:translate(-50%,20px);z-index:70;background:#1c1a17;color:#fff;font-size:13.5px;font-weight:700;padding:12px 18px;border-radius:14px;box-shadow:0 12px 28px -8px rgba(0,0,0,.4);opacity:0;transition:all .28s;pointer-events:none;display:flex;align-items:center;gap:9px;white-space:nowrap"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5fd196" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg><span data-toasttext>Done</span></div>
+
+</div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const root = document.querySelector('.sc');
+    if (!root) return;
+    const screens = root.querySelectorAll('[data-screen]');
+    const tabs = root.querySelectorAll('[data-tab]');
+    const nav = root.querySelector('.nav');
+    const loaded = { home: true };
+    let lastTab = 'home';
+
+    const show = (name, isTab) => {
+      screens.forEach((s) => s.classList.toggle('active', s.getAttribute('data-screen') === name));
+      // nav visible only on tab screens
+      nav.style.display = ['home','bills','posts','visitors'].includes(name) ? 'flex' : 'none';
+      if (isTab) {
+        lastTab = name;
+        tabs.forEach((t) => t.classList.toggle('on', t.getAttribute('data-tab') === name));
+        if (!loaded[name]) { loaded[name] = true; skeleton(name); }
+      }
+    };
+
+    const skeleton = (name) => {
+      const body = root.querySelector('[data-body="' + name + '"]');
+      if (!body) return;
+      const real = body.innerHTML;
+      body.innerHTML = '<div class="sk" style="height:150px;margin-bottom:16px"></div>'
+        + '<div class="sk" style="height:22px;width:40%;margin:0 4px 12px"></div>'
+        + '<div class="sk" style="height:70px;margin-bottom:11px"></div>'
+        + '<div class="sk" style="height:70px;margin-bottom:11px"></div>'
+        + '<div class="sk" style="height:70px"></div>';
+      setTimeout(() => { body.innerHTML = real; bindDynamic(body); }, 650);
+    };
+
+    const toast = (msg) => {
+      const t = root.querySelector('[data-toast]');
+      root.querySelector('[data-toasttext]').textContent = msg;
+      t.style.opacity = '1'; t.style.transform = 'translate(-50%,0)';
+      clearTimeout(this._tt);
+      this._tt = setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translate(-50%,20px)'; }, 1900);
+    };
+
+    tabs.forEach((t) => t.addEventListener('click', () => show(t.getAttribute('data-tab'), true)));
+    root.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => {
+      const n = b.getAttribute('data-go'); show(n, true);
+    }));
+    root.querySelector('[data-bell]').addEventListener('click', () => show('notifications', false));
+    root.querySelector('[data-back]').addEventListener('click', () => show(lastTab, false));
+    const sos = root.querySelector('[data-sos]');
+    if (sos) sos.addEventListener('click', () => toast('SOS is a hold-to-alert screen'));
+
+    // push sub-screens (amenities, notices)
+    root.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => show(b.getAttribute('data-open'), false)));
+    // generic sheets
+    root.querySelectorAll('[data-opensheet]').forEach((b) => b.addEventListener('click', () => {
+      const s = root.querySelector('[data-sheet="' + b.getAttribute('data-opensheet') + '"]'); if (s) s.classList.add('open');
+    }));
+    root.querySelectorAll('[data-sheetclose]').forEach((b) => b.addEventListener('click', () => b.closest('.sheet-wrap').classList.remove('open')));
+    root.querySelectorAll('[data-sheetdone]').forEach((b) => b.addEventListener('click', () => {
+      b.closest('.sheet-wrap').classList.remove('open'); toast(b.getAttribute('data-done') || 'Done');
+    }));
+    // chip pickers (visitor type, post category)
+    root.querySelectorAll('[data-vtype]').forEach((c) => c.addEventListener('click', () => {
+      c.parentElement.querySelectorAll('[data-vtype]').forEach((x) => { x.style.background = '#fff'; x.style.borderColor = '#e8e4da'; x.style.color = '#7a756c'; });
+      c.style.background = '#ff5400'; c.style.borderColor = '#ff5400'; c.style.color = '#fff';
+    }));
+    // amenity slots + book
+    root.querySelectorAll('[data-aslot]').forEach((chip) => chip.addEventListener('click', () => {
+      root.querySelectorAll('[data-aslot]').forEach((c) => { c.style.background = '#fff'; c.style.borderColor = '#efece4'; c.style.color = '#1c1a17'; });
+      chip.style.background = '#ff5400'; chip.style.borderColor = '#ff5400'; chip.style.color = '#fff';
+    }));
+    const book = root.querySelector('[data-book]'); if (book) book.addEventListener('click', () => toast('Clubhouse booked · Sun 12–3 PM'));
+
+    // home approve/decline
+    const gateCard = root.querySelector('[data-approve]');
+    if (gateCard) {
+      const card = gateCard.closest('[style*="border-radius:20px"]');
+      const collapse = (msg) => { card.style.transition = 'all .3s'; card.style.opacity = '0'; card.style.height = card.offsetHeight + 'px'; setTimeout(() => { card.style.height = '0'; card.style.margin = '0'; card.style.padding = '0'; card.style.overflow = 'hidden'; }, 40); toast(msg); const b = root.querySelector('[data-bellbadge]'); if (b) { const v = Math.max(0, parseInt(b.textContent, 10) - 1); b.textContent = v; if (!v) b.style.display = 'none'; } };
+      gateCard.addEventListener('click', () => collapse('Rahul approved · entry allowed'));
+      root.querySelector('[data-decline]').addEventListener('click', () => collapse('Rahul declined'));
+    }
+
+    // pay
+    const pay = root.querySelector('[data-pay]');
+    if (pay) pay.addEventListener('click', () => {
+      const hero = root.querySelector('[data-billshero]');
+      hero.style.background = 'linear-gradient(150deg,#17915a,#2bbd7e)';
+      hero.innerHTML = '<div style="text-align:center;padding:14px 0"><div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></div><div style="font-size:22px;font-weight:800;color:#fff">Paid ₹3,450</div><div style="font-size:13px;color:rgba(255,255,255,.9);margin-top:4px">Receipt sent to your email</div></div>';
+      toast('Payment successful');
+    });
+
+    const bindDynamic = (scope) => {
+      (scope || root).querySelectorAll('[data-like]').forEach((btn) => {
+        if (btn._b) return; btn._b = 1;
+        let liked = false;
+        btn.addEventListener('click', () => {
+          liked = !liked;
+          const heart = btn.querySelector('[data-heart]');
+          const count = btn.querySelector('[data-likecount]');
+          if (!count.getAttribute('data-base')) count.setAttribute('data-base', count.textContent);
+          const base = parseInt(count.getAttribute('data-base'), 10);
+          heart.setAttribute('fill', liked ? '#ff5400' : 'none');
+          heart.setAttribute('stroke', liked ? '#ff5400' : '#8a8377');
+          count.style.color = liked ? '#ff5400' : '#8a8377';
+          count.textContent = base + (liked ? 1 : 0);
+        });
+      });
+    };
+    bindDynamic(root);
+
+    root.querySelector('[data-markall]').addEventListener('click', () => {
+      root.querySelectorAll('[data-notif][data-read="0"]').forEach((n) => {
+        n.setAttribute('data-read', '1'); n.style.background = '#fff'; n.style.borderColor = '#efece4';
+        const d = n.querySelector('[data-dot]'); if (d) d.style.opacity = '0';
+      });
+      const b = root.querySelector('[data-bellbadge]'); if (b) b.style.display = 'none';
+      toast('All caught up');
+    });
+  }
+}
+</script>
+</body>
+</html>
