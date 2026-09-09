@@ -2,6 +2,7 @@ export const colors = {
   cream: "#fefddf",
   primary: "#ff5400",
   primarySoft: "#ffeee5",
+  primaryGradientEnd: "#ff7a2e",
   secondary: "#ffbe00",
   secondarySoft: "#fff9e5",
   text: "#1a1a1a",
@@ -11,6 +12,17 @@ export const colors = {
   cardStrong: "#e6e6e6",
   border: "#d0d0d0",
   danger: "#B42318",
+  // Added for the redesigned Home/Bills screens (design/ReManage Prototype.dc.html).
+  // Distinct from residentTheme.muted/border — used directly by screens matching that prototype.
+  muted: "#8a8377",
+  mutedLight: "#a89f90",
+  hairline: "#efece4",
+  success: "#17915a",
+  successSoft: "#e8f5ee",
+  successGradientEnd: "#2bbd7e",
+  info: "#2b7fd4",
+  infoSoft: "#e9f2fd",
+  dangerSoft: "#fdeceb",
 } as const;
 
 export const residentTheme = {

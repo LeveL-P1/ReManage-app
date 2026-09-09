@@ -46,12 +46,13 @@ async function renderFinanceOnlyHome() {
   );
 }
 
-it("only shows Home quick actions permitted by bootstrap", async () => {
+it("hides permission-gated quick actions but keeps the always-visible ones", async () => {
   const screen = await renderFinanceOnlyHome();
 
-  expect(screen.getByRole("button", { name: "Pay Bills" })).toBeTruthy();
-  expect(screen.getByRole("button", { name: "View More" })).toBeTruthy();
-  expect(screen.queryByRole("button", { name: "Pre-Approve" })).toBeNull();
-  expect(screen.queryByRole("button", { name: "Ask Society" })).toBeNull();
-  expect(screen.queryByRole("button", { name: "Raise Alert" })).toBeNull();
+  expect(screen.getByRole("button", { name: "Visitors" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Bills" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Community" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Notices" })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: "Amenities" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "SOS" })).toBeNull();
 });

@@ -1,11 +1,10 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, fireEvent, render } from "@testing-library/react-native";
+import { cleanup, fireEvent, render, waitFor } from "@testing-library/react-native";
 
 import type { MobileApi } from "@/platform/api/mobile-api-client";
 import { SessionContext, type SessionContextValue } from "@/platform/auth/session-provider";
 import { FakeMobileApi, fakeBootstrap } from "@/testing/fakes";
-import { residentHomeFixture } from "./resident-home-fixtures";
 import { ResidentHomeScreen } from "./resident-home-screen";
 
 const mockPush = jest.fn();
@@ -34,16 +33,13 @@ function createSession(permissions = fakeBootstrap("resident").permissions, api:
   };
 }
 
-async function renderHome(
-  permissions?: string[],
-  viewModel = residentHomeFixture,
-) {
+async function renderHome(permissions?: string[], api?: MobileApi) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { gcTime: Infinity, retry: false }, mutations: { gcTime: Infinity, retry: false } } });
   queryClients.push(queryClient);
   return render(
     <QueryClientProvider client={queryClient}>
-      <SessionContext.Provider value={createSession(permissions)}>
-        <ResidentHomeScreen viewModel={viewModel} />
+      <SessionContext.Provider value={createSession(permissions, api)}>
+        <ResidentHomeScreen />
       </SessionContext.Provider>
     </QueryClientProvider>,
   );
@@ -52,42 +48,110 @@ async function renderHome(
 describe("ResidentHomeScreen", () => {
   beforeEach(() => mockPush.mockReset());
 
-  it("renders the reference-informed Home feed without advertisements", async () => {
+  it("renders the greeting, quick actions, and default empty states", async () => {
     const screen = await renderHome();
 
-    expect(screen.getByText("Quick Actions")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Customise" })).toBeTruthy();
-    for (const label of [
-      "Pre-Approve",
-      "Security",
-      "Ask Society",
-      "Posts",
-      "Find Daily Help",
-      "Raise Alert",
-      "Pay Bills",
-      "View More",
-    ]) {
+    expect(screen.getByText(/Good (morning|afternoon|evening)/)).toBeTruthy();
+    expect(await screen.findByText(/Resident · /)).toBeTruthy();
+    for (const label of ["Visitors", "Bills", "Community", "Notices", "Amenities", "SOS"]) {
       expect(screen.getByRole("button", { name: label })).toBeTruthy();
     }
-    expect(screen.getByText("You have no new updates")).toBeTruthy();
-    expect(screen.getByText("Today’s Entry Updates")).toBeTruthy();
-    expect(await screen.findByText("Community Posts")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "New Post" })).toBeTruthy();
-    expect(screen.getByText("You are all caught up!")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "View Older Posts" })).toBeTruthy();
-    expect(screen.queryByText("Your society, at a glance")).toBeNull();
+    expect(await screen.findByText("All settled")).toBeTruthy();
+    expect(await screen.findByText("No notices yet.")).toBeTruthy();
   });
 
-  it("opens dedicated pop-out screens for Home features", async () => {
+  it("navigates to the correct route for each quick action", async () => {
     const screen = await renderHome();
 
-    fireEvent.press(screen.getByRole("button", { name: "Pre-Approve" }));
-    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/home/pre-approve");
+    fireEvent.press(screen.getByRole("button", { name: "Bills" }));
+    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/(tabs)/bills");
 
-    fireEvent.press(screen.getByRole("button", { name: "New Post" }));
-    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/home/new-post");
+    fireEvent.press(screen.getByRole("button", { name: "Visitors" }));
+    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/(tabs)/visitors");
 
-    fireEvent.press(screen.getByRole("button", { name: "View Older Posts" }));
-    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/home/older-posts");
+    fireEvent.press(screen.getByRole("button", { name: "Notices" }));
+    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/(tabs)/notices");
+  });
+
+  it("shows a pending gate visitor and approves it", async () => {
+    const api = new FakeMobileApi();
+    let approved = false;
+    (api.residentVisitors as jest.Mock).mockImplementation(async () => ({
+      flatNumber: "A-308",
+      visitors: approved ? [] : [{
+        id: "visitor-1",
+        visitorName: "Rahul Mehta",
+        purpose: "Swiggy delivery",
+        status: "pending" as const,
+        phone: null,
+        vehicleNo: null,
+        passcode: null,
+        arrivedAt: new Date().toISOString(),
+        expectedAt: null,
+        entryTime: null,
+        exitTime: null,
+        createdAt: new Date().toISOString(),
+      }],
+    }));
+    (api.residentApproveVisitor as jest.Mock).mockImplementation(async (_token: string, visitorId: string) => {
+      approved = true;
+      return {
+        id: visitorId,
+        visitorName: "Rahul Mehta",
+        purpose: "Swiggy delivery",
+        status: "approved" as const,
+        phone: null,
+        vehicleNo: null,
+        passcode: null,
+        arrivedAt: new Date().toISOString(),
+        expectedAt: null,
+        entryTime: null,
+        exitTime: null,
+        createdAt: new Date().toISOString(),
+      };
+    });
+
+    const screen = await renderHome(undefined, api);
+
+    expect(await screen.findByText("Rahul Mehta")).toBeTruthy();
+    expect(screen.getByText("AT YOUR GATE · needs approval")).toBeTruthy();
+
+    fireEvent.press(screen.getByRole("button", { name: "Approve Rahul Mehta" }));
+
+    // Wait for the full mutation → invalidate → refetch → re-render cycle to
+    // settle (the card disappears once the visitor is no longer pending) so
+    // no dangling async state update leaks into the next test.
+    await waitFor(() => expect(screen.queryByText("Rahul Mehta")).toBeNull());
+  });
+
+  it("shows the dues hero for the nearest outstanding bill", async () => {
+    const api = new FakeMobileApi();
+    (api.listBills as jest.Mock).mockImplementation(async () => ({
+      bills: [{
+        id: "bill-1",
+        amount: 3000,
+        billType: "maintenance" as const,
+        period: "March 2026",
+        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+        status: "pending" as const,
+        lateFee: 0,
+        gstAmount: 0,
+        totalAmount: 3000,
+        description: null,
+        paidAt: null,
+        paidVia: null,
+        paidAmount: null,
+        receiptNumber: null,
+        flatNumber: "A-308",
+        createdAt: new Date().toISOString(),
+      }],
+      totalPending: 1,
+      totalAmount: 3000,
+    }));
+
+    const screen = await renderHome(undefined, api);
+
+    expect(await screen.findByText("₹3,000")).toBeTruthy();
+    expect(screen.getByText("March 2026 maintenance due")).toBeTruthy();
   });
 });
