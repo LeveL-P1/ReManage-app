@@ -111,7 +111,7 @@ describe("ResidentVisitorsScreen", () => {
     expect(screen.queryByText("AD")).toBeNull();
   });
 
-  it("opens static visitor routes from actions and visitor cards", async () => {
+  it("opens static visitor routes from feature actions", async () => {
     const screen = await renderVisitors();
 
     await fireEvent.press(screen.getByRole("button", { name: "Invite Guest" }));
@@ -119,9 +119,16 @@ describe("ResidentVisitorsScreen", () => {
 
     await fireEvent.press(screen.getByRole("button", { name: "View all visitor updates" }));
     expect(mockPush).toHaveBeenLastCalledWith("/(resident)/visitors/updates");
+  });
 
-    await fireEvent.press(await screen.findByRole("button", { name: "Open Maya Shah visitor details" }));
-    expect(mockPush).toHaveBeenLastCalledWith("/(resident)/visitors/visitor-1");
+  it("opens a visitor's detail sheet in place when tapping a visitor card", async () => {
+    const screen = await renderVisitors();
+
+    await screen.findByRole("button", { name: "Open Maya Shah visitor details" });
+    await fireEvent.press(screen.getByRole("button", { name: "Open Maya Shah visitor details" }));
+
+    expect(mockPush).not.toHaveBeenCalledWith(expect.stringContaining("visitor-1"));
+    expect(await screen.findByText("Waiting at gate")).toBeTruthy();
   });
 
   it("loads resident visitors and approves a pending gate request", async () => {

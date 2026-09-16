@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ResidentIcon } from "@/features/resident/shared/resident-icon";
+import { ResidentBottomSheet } from "@/features/resident/shared/resident-overlays";
 import {
   ResidentActionGrid,
   ResidentActionTile,
@@ -33,6 +35,7 @@ export function ResidentVisitorsScreen({
   viewModel?: ResidentVisitorsViewModel;
 }) {
   const router = useRouter();
+  const [selectedVisitorId, setSelectedVisitorId] = useState<string | null>(null);
   const { runAuthenticated, state } = useSession();
   const societyName = state.status === "authenticated" ? state.bootstrap.society.name : "Your society";
   const societyId = state.status === "authenticated" ? state.bootstrap.society.id : "unknown";
@@ -52,6 +55,7 @@ export function ResidentVisitorsScreen({
   const liveViewModel = visitorsQuery.data ? toVisitorViewModel(visitorsQuery.data) : viewModel;
   const pendingVisitors = visitorsQuery.data?.visitors.filter((visitor) => visitor.status === "pending") ?? [];
   const actionError = visitorsQuery.error ?? approveVisitor.error ?? rejectVisitor.error;
+  const selectedVisitor = visitorsQuery.data?.visitors.find((visitor) => visitor.id === selectedVisitorId) ?? null;
 
   return (
     <View style={styles.screen}>
@@ -147,7 +151,7 @@ export function ResidentVisitorsScreen({
                 accessibilityLabel={`Open ${visitor.name} visitor details`}
                 accessibilityRole="button"
                 key={visitor.id}
-                onPress={() => router.push(`/(resident)/visitors/${visitor.id}` as never)}
+                onPress={() => setSelectedVisitorId(visitor.id)}
                 style={({ pressed }) => [styles.visitorCard, pressed && styles.pressed]}
               >
                 <View style={styles.visitorAvatar}><Text style={styles.visitorInitials}>{visitor.initials}</Text></View>
@@ -193,8 +197,57 @@ export function ResidentVisitorsScreen({
           </View>
         </View>
       </ScrollView>
+
+      <ResidentBottomSheet onDismiss={() => setSelectedVisitorId(null)} title={selectedVisitor?.visitorName ?? "Visitor details"} visible={selectedVisitor !== null}>
+        {selectedVisitor ? (
+          <View style={styles.detailBody}>
+            <View style={styles.detailAvatar}>
+              <Text style={styles.detailInitials}>{initials(selectedVisitor.visitorName)}</Text>
+            </View>
+            <Text style={styles.detailPurpose}>{selectedVisitor.purpose}</Text>
+            <View style={styles.detailStatusPill}>
+              <Text style={styles.detailStatusText}>{visitorStatusLabel(selectedVisitor.status)}</Text>
+            </View>
+            <View style={styles.detailFacts}>
+              <DetailFact label="Expected" value={selectedVisitor.expectedAt ? formatVisitorTime(selectedVisitor.expectedAt) : "—"} />
+              <DetailFact label="Arrived" value={selectedVisitor.arrivedAt ? formatVisitorTime(selectedVisitor.arrivedAt) : "—"} />
+              <DetailFact label="Phone" value={selectedVisitor.phone ?? "—"} />
+              <DetailFact label="Vehicle" value={selectedVisitor.vehicleNo ?? "—"} />
+              {selectedVisitor.passcode ? <DetailFact label="Gate passcode" value={selectedVisitor.passcode} /> : null}
+            </View>
+          </View>
+        ) : null}
+      </ResidentBottomSheet>
     </View>
   );
+}
+
+function DetailFact({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.detailFactRow}>
+      <Text style={styles.detailFactLabel}>{label}</Text>
+      <Text style={styles.detailFactValue}>{value}</Text>
+    </View>
+  );
+}
+
+function visitorStatusLabel(status: MobileResidentVisitor["status"]): string {
+  switch (status) {
+    case "pending":
+      return "Waiting at gate";
+    case "approved":
+      return "Pre-approved";
+    case "inside":
+      return "Checked in";
+    case "exited":
+      return "Visit complete";
+    case "rejected":
+      return "Entry declined";
+    case "cancelled":
+      return "Cancelled";
+    default:
+      return "No active status";
+  }
 }
 
 function invalidateVisitors(societyId: string) {
@@ -337,4 +390,15 @@ const styles = StyleSheet.create({
   caughtUpTitle: { color: residentTheme.ink, fontSize: 20, lineHeight: 26, fontWeight: "700", marginTop: 14 },
   caughtUpCopy: { color: residentTheme.muted, fontSize: 14, lineHeight: 20, textAlign: "center", marginTop: 4 },
   pressed: { opacity: 0.74 },
+
+  detailBody: { alignItems: "center", paddingBottom: 24 },
+  detailAvatar: { width: 64, height: 64, borderRadius: 22, backgroundColor: "#E7DDC9", alignItems: "center", justifyContent: "center" },
+  detailInitials: { color: residentTheme.icon, fontSize: 19, fontWeight: "800" },
+  detailPurpose: { color: residentTheme.ink, fontSize: 15, lineHeight: 21, fontWeight: "600", marginTop: 12, textAlign: "center" },
+  detailStatusPill: { marginTop: 10, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14, backgroundColor: "#E5F2F0" },
+  detailStatusText: { color: residentTheme.icon, fontSize: 12, fontWeight: "800" },
+  detailFacts: { alignSelf: "stretch", marginTop: 20, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: residentTheme.border },
+  detailFactRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: residentTheme.border },
+  detailFactLabel: { color: residentTheme.muted, fontSize: 13, fontWeight: "600" },
+  detailFactValue: { color: residentTheme.ink, fontSize: 13, fontWeight: "700" },
 });
