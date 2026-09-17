@@ -1,4 +1,5 @@
 import { createMobileApi, type MobileApi } from "@/platform/api/mobile-api-client";
+import { publicEnvironment } from "@/platform/config/env";
 
 import { createCredentialStore, type CredentialStore } from "./credential-store";
 import { createDevelopmentDemoMobileApi, developmentDemoInstallation, isDevelopmentWebPreview, type SessionRuntime } from "./development-demo-auth";
@@ -10,7 +11,7 @@ export function createRuntimeSessionController(
   createRealApi: () => MobileApi = createMobileApi,
   forceDemo: boolean = false,
 ): SessionController {
-  const shouldUseDemo = forceDemo || isDevelopmentWebPreview(runtime);
+  const shouldUseDemo = forceDemo || isDevelopmentWebPreview(runtime) || publicEnvironment.demoMode;
   if (shouldUseDemo) {
     return createSessionController({
       api: createDevelopmentDemoMobileApi(),

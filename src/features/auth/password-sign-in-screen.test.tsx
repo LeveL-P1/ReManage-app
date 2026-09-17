@@ -109,7 +109,7 @@ describe("PasswordSignInScreen", () => {
     const session = createSession();
     const { getByRole, getByText } = await renderScreen(session, jest.fn(), true);
 
-    expect(getByText("Web demo credentials: demo@remanage.local / ReManageDemo2026!")).toBeTruthy();
+    expect(getByText("Demo credentials: demo@remanage.local / ReManageDemo2026!")).toBeTruthy();
     const otpButton = getByRole("button", { name: "Email code unavailable in web demo" });
     expect(otpButton.props.accessibilityState.disabled).toBe(true);
 

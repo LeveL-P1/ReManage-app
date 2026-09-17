@@ -79,7 +79,7 @@ export function PasswordSignInScreen({ demoMode = false, onOtpChallenge }: Passw
         <AuthBrand />
         <Text accessibilityRole="header" style={styles.heading}>Welcome to ReManage</Text>
         <Text style={styles.copy}>Sign in with the account provided by your society management.</Text>
-        {demoMode ? <Text style={styles.demoHint}>Web demo credentials: {demoCredentials.email} / {demoCredentials.password}</Text> : null}
+        {demoMode ? <Text style={styles.demoHint}>Demo credentials: {demoCredentials.email} / {demoCredentials.password}</Text> : null}
 
         <View style={[styles.fieldWrap, focusedField === "email" && styles.fieldWrapFocused]}>
           <Text style={[styles.floatingLabel, (focusedField === "email" || email) && styles.floatingLabelActive]}>Email *</Text>
